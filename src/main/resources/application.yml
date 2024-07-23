@@ -1,0 +1,43 @@
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
+
+spring:
+  profiles:
+    active:
+      - local, mybatis
+    group:
+      local:
+        - db-local
+      dev:
+        - db-dev
+    include:
+      - db
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ENC(kGXTSlfxUWNbRoGuBwNRTJBETjMz04AChYMrwDeY3Cs=)
+    password: ENC(/hOuHdVpOgyzKrlqyayORlsTFpIrwe7RYnfAqXEFzIk=)
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  # Redis
+  data:
+    redis:
+      host: ENC(GUuFDW7HjE98e7N28Vkb/xoIEgLeOCb5)
+      port: 6379
+      duration: 600
+
+email.send: ENC(kGXTSlfxUWNbRoGuBwNRTJBETjMz04AChYMrwDeY3Cs=)
+
+springdoc:
+  default-consumes-media-type: application/json # ?? ??? ??
+  default-produces-media-type: application/json # ?? ??? ??
+  swagger-ui:
+    operations-sorter: method # operations ?? ??? HTTP Method ?
+    tags-sorter: alpha # tag ?? ??? ??? ?
+    #path: "swagger.html" # http://localhost:8080/swagger.html? ?? ??
+    path: "/" # http://localhost:8080? ?? ??
