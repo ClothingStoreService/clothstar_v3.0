@@ -2,9 +2,9 @@ plugins {
     id("org.springframework.boot") version "3.3.2"
     id("io.spring.dependency-management") version "1.1.6"
     kotlin("jvm") version "1.9.24"
-    kotlin("kapt") version "1.9.24"
+//    kotlin("kapt") version "1.9.24"
     kotlin("plugin.spring") version "1.9.24"
-    kotlin("plugin.jpa") version "1.9.24"
+    kotlin("plugin.jpa") version "1.9.24" //Entity의 기본생성자를 자동으로 만들어줌
 }
 
 group = "org.store"
@@ -52,12 +52,12 @@ dependencies {
 
     //querydsl
     //참고 URL : https://velog.io/@yangwon-park/Kotlin-Querydsl-%EC%84%B8%ED%8C%85
-    implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
-    implementation("com.querydsl:querydsl-apt:5.0.0:jakarta")
-    implementation("jakarta.persistence:jakarta.persistence-api")
-    implementation("jakarta.annotation:jakarta.annotation-api")
-    kapt("com.querydsl:querydsl-apt:5.0.0:jakarta")
-    kapt("org.springframework.boot:spring-boot-configuration-processor")
+//    implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
+//    implementation("com.querydsl:querydsl-apt:5.0.0:jakarta")
+//    implementation("jakarta.persistence:jakarta.persistence-api")
+//    implementation("jakarta.annotation:jakarta.annotation-api")
+//    kapt("com.querydsl:querydsl-apt:5.0.0:jakarta")
+//    kapt("org.springframework.boot:spring-boot-configuration-processor")
 
     //test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -77,39 +77,39 @@ dependencies {
  */
 
 // Querydsl 설정부 추가 - start
-val generated = file("src/main/generated")
-
-// querydsl QClass 파일 생성 위치를 지정
-tasks.withType<JavaCompile> {
-    options.generatedSourceOutputDirectory.set(generated)
-}
-
-// kotlin source set 에 querydsl QClass 위치 추가
-sourceSets {
-    main {
-        kotlin.srcDirs += generated
-    }
-}
-
-// gradle clean 시에 QClass 디렉토리 삭제
-tasks.named("clean") {
-    doLast {
-        generated.deleteRecursively()
-    }
-}
-
-
-kapt {
-    generateStubs = true
-}
-
-// Querydsl 설정부 추가 - end
-
-kotlin {
-    compilerOptions {
-        freeCompilerArgs.addAll("-Xjsr305=strict")
-    }
-}
+//val generated = file("src/main/generated")
+//
+//// querydsl QClass 파일 생성 위치를 지정
+//tasks.withType<JavaCompile> {
+//    options.generatedSourceOutputDirectory.set(generated)
+//}
+//
+//// kotlin source set 에 querydsl QClass 위치 추가
+//sourceSets {
+//    main {
+//        kotlin.srcDirs += generated
+//    }
+//}
+//
+//// gradle clean 시에 QClass 디렉토리 삭제
+//tasks.named("clean") {
+//    doLast {
+//        generated.deleteRecursively()
+//    }
+//}
+//
+//
+//kapt {
+//    generateStubs = true
+//}
+//
+//// Querydsl 설정부 추가 - end
+//
+//kotlin {
+//    compilerOptions {
+//        freeCompilerArgs.addAll("-Xjsr305=strict")
+//    }
+//}
 
 tasks.withType<Test> {
     useJUnitPlatform()

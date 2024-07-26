@@ -37,7 +37,6 @@ spring:
     activate:
       on-profile: "db-local"
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/clothstar82
     username: root
     password: qwerasdf
@@ -47,11 +46,11 @@ spring:
       logMessageFormat:
         p6spy: "%(currentTime)|%(executionTime)|%(category)|%(sqlSingleLine)"
   jpa:
-    show-sql: true
-    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: create
     properties:
       hibernate:
-        ddl-auto: create
+        dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
 
 --- # dev 공통 설정
