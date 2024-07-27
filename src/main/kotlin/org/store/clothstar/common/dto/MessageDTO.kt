@@ -1,8 +1,6 @@
 package org.store.clothstar.common.dto
 
-class MessageDTO(
+data class MessageDTO(
     val statusCode: Int,
-    val message: String,
-) {
-
-}
+    val message: String
+)
