@@ -1,6 +1,7 @@
 package org.store.clothstar.member.domain
 
 import jakarta.persistence.*
+import org.store.clothstar.common.entity.BaseEntity
 
 @Entity(name = "account")
 class Account(
@@ -15,7 +16,7 @@ class Account(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val accountId: Long? = null,
-) {
+) : BaseEntity() {
     fun updatedPassword(password: String) {
         this.password = password
     }
