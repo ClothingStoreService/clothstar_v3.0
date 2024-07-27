@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import org.store.clothstar.common.dto.SaveResponseDTO
-import org.store.clothstar.dto.request.CreateMemberRequest
 import org.store.clothstar.member.application.MemberServiceApplication
+import org.store.clothstar.member.dto.request.CreateMemberRequest
 
 @Tag(name = "Auth", description = "회원가입과 인증에 관한 API 입니다.")
 @RestController

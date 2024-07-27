@@ -1,8 +1,8 @@
 package org.store.clothstar.member.util
 
-import org.store.clothstar.dto.request.CreateMemberRequest
 import org.store.clothstar.member.domain.Account
 import org.store.clothstar.member.domain.MemberRole
+import org.store.clothstar.member.dto.request.CreateMemberRequest
 
 
 class CreateObject {

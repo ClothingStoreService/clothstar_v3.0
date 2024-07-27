@@ -1,4 +1,4 @@
-package org.store.clothstar.dto.request
+package org.store.clothstar.member.dto.request
 
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank

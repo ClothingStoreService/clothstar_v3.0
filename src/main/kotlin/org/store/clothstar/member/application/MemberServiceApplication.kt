@@ -1,7 +1,7 @@
 package org.store.clothstar.member.application
 
 import org.springframework.stereotype.Service
-import org.store.clothstar.dto.request.CreateMemberRequest
+import org.store.clothstar.member.dto.request.CreateMemberRequest
 import org.store.clothstar.member.service.MemberService
 
 @Service

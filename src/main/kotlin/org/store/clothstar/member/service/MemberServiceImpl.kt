@@ -4,11 +4,11 @@ import jakarta.transaction.Transactional
 import lombok.RequiredArgsConstructor
 import lombok.extern.slf4j.Slf4j
 import org.springframework.stereotype.Service
-import org.store.clothstar.dto.request.CreateMemberRequest
 import org.store.clothstar.member.domain.Account
 import org.store.clothstar.member.domain.Member
 import org.store.clothstar.member.domain.MemberRole
 import org.store.clothstar.member.domain.vo.MemberShoppingActivity
+import org.store.clothstar.member.dto.request.CreateMemberRequest
 import org.store.clothstar.member.repository.AccountRepository
 import org.store.clothstar.member.repository.MemberRepository
 
