@@ -1,0 +1,46 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/clothstar82
+    username: root
+    password: qwerasdf
+    p6spy:
+      enabled: true
+      appender: com.p6spy.engine.spy.appender.Slf4JLogger
+      logMessageFormat:
+        p6spy: "%(currentTime)|%(executionTime)|%(category)|%(sqlSingleLine)"
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ENC(kGXTSlfxUWNbRoGuBwNRTJBETjMz04AChYMrwDeY3Cs=)
+    password: ENC(/hOuHdVpOgyzKrlqyayORlsTFpIrwe7RYnfAqXEFzIk=)
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  # Redis
+  data:
+    redis:
+      host: ENC(GUuFDW7HjE98e7N28Vkb/xoIEgLeOCb5)
+      port: 6379
+      duration: 600
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true # log
+
+logging.level:
+  org.hibernate.SQL: debug
+
+jwt:
+  secret_key: Y2xvdGhzaG9wcGluZ21hbGxjbG90aHN0YXJjbG90aHNob3BwaW5nbWFsbGNsb3Roc3RhcmNsb3Roc2hvcHBpbmdtYWxsY2xvdGhzdGFyY2xvdGhzaG9wcGluZ21hbGxjbG90aHN0YXIK
+  accessTokenValidTimeMillis: 120000
+  refreshTokenValidTimeMillis: 1200000
+
+email.send: ENC(kGXTSlfxUWNbRoGuBwNRTJBETjMz04AChYMrwDeY3Cs=)
