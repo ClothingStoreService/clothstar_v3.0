@@ -21,4 +21,8 @@ class Account(
     fun updatedPassword(password: String) {
         this.password = password
     }
+
+    override fun toString(): String {
+        return "Account(accountId=$accountId, email='$email', password='$password', role=$role, userId=$userId)"
+    }
 }

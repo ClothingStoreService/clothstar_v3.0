@@ -20,6 +20,20 @@ class GlobalExceptionHandler {
     private val log = KotlinLogging.logger {}
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NotFoundAccountException::class)
+    protected fun memberNotFoundException(ex: NotFoundAccountException): ResponseEntity<ErrorResponseDTO> {
+        log.error { "NotFoundAccountException : ${ex.message}" }
+        ex.fillInStackTrace()
+
+        val errorResponseDTO = ErrorResponseDTO(
+            HttpStatus.NOT_FOUND.value(),
+            ex.message!!
+        )
+
+        return ResponseEntity<ErrorResponseDTO>(errorResponseDTO, HttpStatus.BAD_REQUEST)
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NotFoundMemberException::class)
     protected fun memberNotFoundException(ex: NotFoundMemberException): ResponseEntity<ErrorResponseDTO> {
         log.error { "memberNotFoundException : ${ex.message}" }
@@ -37,6 +51,20 @@ class GlobalExceptionHandler {
     @ExceptionHandler(DuplicatedEmailException::class)
     protected fun duplicatedEmailException(ex: DuplicatedEmailException): ResponseEntity<ErrorResponseDTO> {
         log.error { "DuplicatedEmailException : ${ex.message}" }
+        ex.fillInStackTrace()
+
+        val errorResponseDTO = ErrorResponseDTO(
+            HttpStatus.BAD_REQUEST.value(),
+            ex.message!!
+        )
+
+        return ResponseEntity(errorResponseDTO, HttpStatus.BAD_REQUEST)
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(DuplicatedTelNoException::class)
+    protected fun duplicatedEmailException(ex: DuplicatedTelNoException): ResponseEntity<ErrorResponseDTO> {
+        log.error { "DuplicatedTelNoException : ${ex.message}" }
         ex.fillInStackTrace()
 
         val errorResponseDTO = ErrorResponseDTO(

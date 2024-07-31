@@ -4,7 +4,6 @@ import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
@@ -43,7 +42,7 @@ class JwtAuthenticationFilter(
         val accountId = jwtUtil.getAccountId(token)
         log.info("refresh 토큰 memberId: {}", accountId)
 
-        val account = accountRepository.findByIdOrNull(accountId)
+        val account = accountRepository.findByAccountId(accountId)
             ?: throw IllegalStateException("해당 아이디를 찾을 수 없습니다.")
 
         val customUserDetails = CustomUserDetails(account)

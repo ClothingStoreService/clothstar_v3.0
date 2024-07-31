@@ -10,7 +10,7 @@ class CustomUserDetailsService(
     private val accountRepository: AccountRepository,
 ) : UserDetailsService {
     override fun loadUserByUsername(email: String): UserDetails {
-        return accountRepository.findByEmailOrNull(email)?.let { account -> CustomUserDetails(account) }
+        return accountRepository.findByEmail(email)?.let { account -> CustomUserDetails(account) }
             ?: throw IllegalStateException("해당 아이디를 찾을 수 없습니다.")
     }
 }

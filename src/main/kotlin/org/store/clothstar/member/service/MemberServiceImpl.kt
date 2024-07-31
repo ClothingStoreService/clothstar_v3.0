@@ -2,6 +2,8 @@ package org.store.clothstar.member.service
 
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
+import org.store.clothstar.common.error.ErrorCode
+import org.store.clothstar.common.error.exception.DuplicatedTelNoException
 import org.store.clothstar.member.domain.Account
 import org.store.clothstar.member.domain.Member
 import org.store.clothstar.member.domain.MemberRole
@@ -20,9 +22,8 @@ class MemberServiceImpl(
     @Transactional
     override fun signUp(createMemberDTO: CreateMemberRequest): Long {
 
-        //TODO validation check
-        memberRepository.findByTelNoOrNull(createMemberDTO.telNo)?.let {
-            throw IllegalStateException("이미 존재하는 핸드폰 번호입니다.")
+        memberRepository.findByTelNo(createMemberDTO.telNo)?.let {
+            throw DuplicatedTelNoException(ErrorCode.DUPLICATED_TEL_NO)
         }
 
         val member = Member(
@@ -31,7 +32,6 @@ class MemberServiceImpl(
             memberShoppingActivity = MemberShoppingActivity.init(),
         )
 
-        //TODO CHECK DB configuration <-> JPA Entity
         memberRepository.save(member)
 
         val account = member.memberId?.let { memberId ->

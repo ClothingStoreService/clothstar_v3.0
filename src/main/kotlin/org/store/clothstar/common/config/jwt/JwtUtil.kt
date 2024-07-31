@@ -84,7 +84,7 @@ class JwtUtil(
             .payload
     }
 
-    fun getAccountId(token: String): Long? {
+    fun getAccountId(token: String): Long {
         val claims = getClaims(token)
         return claims.get("id", Long::class.java)
     }
