@@ -1,0 +1,1 @@
+CREATE DATABASE dev_clothstar default CHARACTER SET UTF8;

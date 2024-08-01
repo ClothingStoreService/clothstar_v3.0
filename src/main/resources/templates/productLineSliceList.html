@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Lines List (Slice Paging)</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1>Product Lines List (Slice Paging)</h1>
+
+    <!-- Search and Sort Options -->
+    <div class="form-group row">
+        <div class="col-md-8">
+            <input type="text" id="search-input" class="form-control" placeholder="Search by name or content">
+        </div>
+        <div class="col-md-2">
+            <button id="search-button" class="btn btn-primary btn-block">Search</button>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="sort-select">Sort By:</label>
+        <select id="sort-select" class="form-control">
+            <option value="createdAt">Created At</option>
+            <option value="price">Price</option>
+            <option value="saleCount">Sale Count</option>
+        </select>
+    </div>
+
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Content</th>
+            <th>Price</th>
+            <th>Total Stock</th>
+            <th>Status</th>
+            <th>Created At</th>
+            <th>Brand Names</th>
+            <th>Option Names</th>
+        </tr>
+        </thead>
+        <tbody id="product-lines-table-body">
+        <!-- JavaScript로 데이터 로드 -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    let currentPage = 0;
+    const pageSize = 10;
+    let loading = false;
+    let lastPage = false;
+
+    document.addEventListener('DOMContentLoaded', function () {
+        loadProductLines(currentPage);
+
+        document.getElementById('search-button').addEventListener('click', function () {
+            currentPage = 0;
+            lastPage = false;
+            document.getElementById('product-lines-table-body').innerHTML = '';
+            loadProductLines(currentPage);
+        });
+
+        document.getElementById('search-input').addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                currentPage = 0;
+                lastPage = false;
+                document.getElementById('product-lines-table-body').innerHTML = '';
+                loadProductLines(currentPage);
+            }
+        });
+
+        window.addEventListener('scroll', () => {
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight && !loading && !lastPage) {
+                loadProductLines(currentPage + 1);
+            }
+        });
+    });
+
+    function loadProductLines(page = 0) {
+        loading = true;
+        const searchKeyword = document.getElementById('search-input').value;
+        const sortOption = document.getElementById('sort-select').value;
+        const url = `/v1/productLines/slice?page=${page}&keyword=${searchKeyword}&sort=${sortOption}`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.getElementById('product-lines-table-body');
+
+                data.content.forEach(productLine => {
+                    const brandNames = productLine.productList.map(product => product.brandName).join(', ');
+                    const optionNames = productLine.productList.map(product => product.name).join(', ');
+                    const row = `
+                        <tr>
+                            <td>${productLine.productLineId}</td>
+                            <td>${productLine.name}</td>
+                            <td>${productLine.content}</td>
+                            <td>${productLine.price}</td>
+                            <td>${productLine.totalStock}</td>
+                            <td>${productLine.status}</td>
+                            <td>${productLine.createdAt}</td>
+                            <td>${brandNames}</td>
+                            <td>${optionNames}</td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                });
+
+                currentPage = page;
+                loading = false;
+                if (data.last) {
+                    lastPage = true;
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching product lines data:', error);
+                loading = false;
+            });
+    }
+</script>
+</body>
+</html>
