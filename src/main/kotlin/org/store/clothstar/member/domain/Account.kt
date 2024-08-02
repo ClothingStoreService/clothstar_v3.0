@@ -18,7 +18,7 @@ class Account(
 
     val userId: Long,
 ) : BaseEntity() {
-    fun updatedPassword(password: String) {
+    fun updatePassword(password: String) {
         this.password = password
     }
 
