@@ -2,6 +2,7 @@ package org.store.clothstar.order.controller
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -20,7 +21,8 @@ class OrderSellerController(
     @Operation(summary = "(판매자) 주문 승인", description = "(판매자) 주문을 승인한다.")
     @PatchMapping("/{orderId}/approve")
     fun approveOrder(@PathVariable orderId: Long): ResponseEntity<MessageDTO> {
-        val messageDTO = orderSellerService.approveOrder(orderId)
+        orderSellerService.approveOrder(orderId)
+        val messageDTO = MessageDTO(HttpStatus.OK.value(), "주문이 정상적으로 승인 되었습니다.")
         return ResponseEntity.ok(messageDTO)
     }
 }
