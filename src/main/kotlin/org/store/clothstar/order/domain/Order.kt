@@ -18,7 +18,7 @@ class Order (
     var addressId: Long,
 
     @OneToMany(mappedBy = "order", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var orderDetails: ArrayList<OrderDetail> = arrayListOf(),
+    var orderDetails: MutableList<OrderDetail> = mutableListOf(),
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
