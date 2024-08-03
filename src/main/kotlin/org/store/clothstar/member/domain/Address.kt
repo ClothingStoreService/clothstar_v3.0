@@ -8,16 +8,13 @@ import org.store.clothstar.member.domain.vo.AddressInfo
 class Address(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private val addressId: Long,
-    private val receiverName: String,
-    private val telNo: String,
-    private val defaultAddress: Boolean,
+    val addressId: Long? = null,
+    val receiverName: String,
+    val telNo: String,
+    val memberId: Long,
+    val deliveryRequest: String,
 
     @Embedded
     val addressInfo: AddressInfo,
-
-    @ManyToOne
-    @JoinColumn(name = "member_id")
-    private val member: Member
 ) : BaseEntity() {
 }

@@ -8,13 +8,13 @@ import org.store.clothstar.common.entity.BaseEntity
 @Entity(name = "seller")
 class Seller(
     @Id
-    private var memberId: Long,
+    var memberId: Long,
 
     @Column(unique = true)
-    private val brandName: String,
+    val brandName: String,
 
     @Column(unique = true)
-    private val bizNo: String,
-    private val totalSellPrice: Long
+    val bizNo: String,
+    val totalSellPrice: Long,
 ) : BaseEntity() {
 }

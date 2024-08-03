@@ -8,5 +8,4 @@ class AddressResponse(
     private val addressDetail: String,
     private val telNo: String,
     private val deliveryRequest: String,
-    private val defaultAddress: Boolean,
 )
