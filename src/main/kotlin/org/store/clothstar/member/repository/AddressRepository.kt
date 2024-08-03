@@ -1,10 +1,10 @@
 package org.store.clothstar.member.repository
 
 import io.lettuce.core.dynamic.annotation.Param
-import jakarta.mail.Address
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
+import org.store.clothstar.member.domain.Address
 
 @Repository
 interface AddressRepository : JpaRepository<Address, Long> {

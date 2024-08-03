@@ -63,7 +63,7 @@ class MemberServiceImpl(
     override fun getMemberById(memberId: Long): MemberResponse {
         log.info { "회원 상세 조회 memberId = ${memberId}" }
 
-        return memberRepository.findMemberById(memberId)?.let { member ->
+        return memberRepository.findByMemberId(memberId)?.let { member ->
             MemberResponse(
                 memberId = member.memberId!!,
                 name = member.name,
@@ -83,7 +83,7 @@ class MemberServiceImpl(
     override fun modifyName(memberId: Long, modifyNameRequest: ModifyNameRequest) {
         log.info { "회원 이름 수정 memberId = ${memberId}, name = ${modifyNameRequest.name}" }
 
-        val member = memberRepository.findMemberById(memberId)
+        val member = memberRepository.findByMemberId(memberId)
             ?: throw NotFoundMemberException(ErrorCode.NOT_FOUND_MEMBER)
 
         member.updateName(modifyNameRequest)
@@ -92,7 +92,7 @@ class MemberServiceImpl(
     override fun updateDeleteAt(memberId: Long) {
         log.info { "회원 삭제 memberId = ${memberId}" }
 
-        val member = memberRepository.findMemberById(memberId)
+        val member = memberRepository.findByMemberId(memberId)
             ?: throw NotFoundMemberException(ErrorCode.NOT_FOUND_MEMBER)
 
         member.updateDeletedAt()
@@ -151,7 +151,7 @@ class MemberServiceImpl(
     }
 
     override fun getMemberByMemberId(memberId: Long): Member {
-        return memberRepository.findMemberById(memberId)
+        return memberRepository.findByMemberId(memberId)
             ?: throw NotFoundMemberException(ErrorCode.NOT_FOUND_MEMBER)
     }
 

@@ -22,5 +22,5 @@ interface MemberRepository : JpaRepository<Member, Long> {
 
     fun findByTelNo(telNo: String): Member?
 
-    fun findMemberById(memberId: Long): Member?
+    fun findByMemberId(memberId: Long): Member?
 }
