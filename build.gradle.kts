@@ -33,6 +33,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 
+    // logging
+    implementation("io.github.oshai:kotlin-logging-jvm:5.1.4")
+
     //security
 //	implementation("org.springframework.boot:spring-boot-starter-security")
 //	implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
@@ -69,6 +72,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-mail") //mail 전송
     implementation("org.springframework.boot:spring-boot-starter-data-redis") //redis
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
 }
 
 /**

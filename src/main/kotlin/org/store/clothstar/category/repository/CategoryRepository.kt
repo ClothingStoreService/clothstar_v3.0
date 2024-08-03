@@ -6,3 +6,5 @@ import org.store.clothstar.category.domain.Category
 
 @Repository
 interface CategoryJpaRepository : JpaRepository<Category, Long>
+
+// TODO: QuryDSL 클래스

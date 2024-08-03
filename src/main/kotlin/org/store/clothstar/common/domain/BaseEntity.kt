@@ -25,9 +25,6 @@ open class BaseTimeEntity {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     var deletedAt: LocalDateTime? = null // 삭제일시
 
-    protected fun setModifiedAt(modifiedAt: LocalDateTime) {
-        this.modifiedAt = modifiedAt
-    }
 
     protected fun setDeletedAt(deletedAt: LocalDateTime) {
         this.deletedAt = deletedAt
