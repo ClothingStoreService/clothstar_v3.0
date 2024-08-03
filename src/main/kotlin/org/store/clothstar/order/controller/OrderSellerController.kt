@@ -18,11 +18,19 @@ class OrderSellerController(
     private val orderSellerService: OrderSellerService
 ) {
 
-    @Operation(summary = "(판매자) 주문 승인", description = "(판매자) 주문을 승인한다.")
+    @Operation(summary = "판매자 주문 승인", description = "판매자가 주문을 승인한다.")
     @PatchMapping("/{orderId}/approve")
     fun approveOrder(@PathVariable orderId: Long): ResponseEntity<MessageDTO> {
         orderSellerService.approveOrder(orderId)
         val messageDTO = MessageDTO(HttpStatus.OK.value(), "주문이 정상적으로 승인 되었습니다.")
+        return ResponseEntity.ok(messageDTO)
+    }
+
+    @Operation(summary = "판매자 주문 취소", description = "판매자가 주문을 승인한다.")
+    @PatchMapping("/{orderId}/cancel")
+    fun cancelOrder(@PathVariable orderId: Long): ResponseEntity<MessageDTO> {
+        orderSellerService.cancelOrder(orderId)
+        val messageDTO = MessageDTO(HttpStatus.OK.value(), "주문이 정상적으로 취소 되었습니다.")
         return ResponseEntity.ok(messageDTO)
     }
 }
