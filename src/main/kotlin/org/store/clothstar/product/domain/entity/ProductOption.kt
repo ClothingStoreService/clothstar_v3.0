@@ -22,18 +22,21 @@ import org.store.clothstar.product.domain.type.OptionType
  * }
  */
 @Entity
-class ProductOption (
+class ProductOption(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val productOptionId: Long? = null,
+
     val name: String,
     val order: Int = 0,
     val required: Boolean = true,
     @Enumerated(EnumType.STRING)
     val optionType: OptionType,
 
-) {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="product_id")
+    val product: Product,
 
-    @OneToMany(mappedBy = "product_line_id", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var optionValues: MutableList<OptionValue> = mutableListOf()
-}
+    @OneToMany(mappedBy = "productOption", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var optionValues: MutableList<OptionValue> = mutableListOf(),
+    )

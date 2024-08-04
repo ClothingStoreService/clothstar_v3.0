@@ -14,15 +14,13 @@ import org.store.clothstar.product.domain.type.ProductColor
  */
 @Entity
 class OptionValue (
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long? = null,
     val productColor: ProductColor,  // 색상 코드
-    @Column(nullable = false)
     var value: String,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_option_id")
     val productOption: ProductOption
-) {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0
-}
+)

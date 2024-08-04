@@ -24,28 +24,17 @@ import org.store.clothstar.product.domain.type.SaleStatus
  */
 @Entity
 class Item (
-    @Column
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long = 0L,
     var name: String,
-    @Column
     var price: Int,
-    @Column
     var stock: Int,
-    @Column
     var saleStatus: SaleStatus,
-    @Column
     var displayStatus: DisplayStatus,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_line_id")
+    @JoinColumn(name = "product_id")
     val product: Product
 
-) {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0L
-
-//    @ElementCollection
-//    @CollectionTable(name = "item_attributes", joinColumns = [JoinColumn(name = "item_id")])
-//
-
-}
+)

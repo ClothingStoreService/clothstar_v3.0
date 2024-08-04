@@ -11,14 +11,16 @@ import org.store.clothstar.product.dto.request.UpdateProductRequest
 
 @Entity
 class Product (
-    // 연관 관계 필드 (N:1)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    val member: Member,
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var productId:Long? = null,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    val category: Category,
+    // 연관 관계 필드 (N:1)
+    @Column(name = "member_id")
+    val memberId: Long,
+
+    @Column(name = "category_id")
+    val categoryId: Long,
 
     // 기본 정보 필드
     var name: String,
@@ -41,15 +43,13 @@ class Product (
     var saleStatus: SaleStatus,  // 판매 상태
 
     // 연관 관계 (1:N)
-    @OneToMany(mappedBy = "product_line_id", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var productOptions: MutableSet<ProductOption> = mutableSetOf(),
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     var items: MutableList<Item> = mutableListOf()
     ): BaseEntity() {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id:Long = 0
+
 
     /**
      * @param UpdateProductRequest
@@ -71,17 +71,17 @@ class Product (
         // productOptions 업데이트 로직 (삭제 불가)
         request.productOptions?.let {
             val newOptions = it.toSet()
-            val existingOptions = this.productOptions.map { it.id }.toSet()
+            val existingOptions = this.productOptions.map { it.productOptionId }.toSet()
 
             // 기존 옵션들에 포함되지 않은 새 옵션 추가
             newOptions.forEach { newOption ->
-                if (newOption.id !in existingOptions) {
+                if (newOption.productOptionId !in existingOptions) {
                     this.productOptions.add(newOption)
                 }
             }
 
             // 기존 옵션 삭제 방지
-            val toRemove = this.productOptions.filterNot { it.id in newOptions.map { it.id } }
+            val toRemove = this.productOptions.filterNot { it.productOptionId in newOptions.map { it.productOptionId } }
             if (toRemove.isNotEmpty()) {
                 throw IllegalArgumentException("Existing product options cannot be removed")
             }
