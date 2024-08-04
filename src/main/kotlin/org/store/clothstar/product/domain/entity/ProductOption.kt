@@ -32,7 +32,7 @@ class ProductOption (
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0L
+    val id: Long? = null
 
     @OneToMany(mappedBy = "product_line_id", cascade = [CascadeType.ALL], orphanRemoval = true)
     var optionValues: MutableList<OptionValue> = mutableListOf()
