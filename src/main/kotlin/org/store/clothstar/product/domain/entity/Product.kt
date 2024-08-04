@@ -1,6 +1,7 @@
 package org.store.clothstar.product.domain.entity
 
 import jakarta.persistence.*
+import org.store.clothstar.category.domain.Category
 import org.store.clothstar.common.entity.BaseEntity
 import org.store.clothstar.member.domain.Member
 import org.store.clothstar.product.domain.type.DisplayStatus

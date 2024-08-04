@@ -44,7 +44,8 @@ class Item (
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L
 
-    @ElementCollection
-    @CollectionTable(name = "item_attributes", joinColumns = [JoinColumn(name = "item_id")])
+//    @ElementCollection
+//    @CollectionTable(name = "item_attributes", joinColumns = [JoinColumn(name = "item_id")])
+//
 
 }

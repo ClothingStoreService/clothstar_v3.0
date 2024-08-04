@@ -12,7 +12,7 @@ class UpdateProductRequest (
     val content: String?,
     val price: Int?,
     val productColors: List<ProductColor>?,
-    val displayStatus: DisplayStatus
+    val displayStatus: DisplayStatus,
     val saleStatus: SaleStatus?,
     val imageList: List<ProductImage>?,
     val productOptions: Set<ProductOption>?,
