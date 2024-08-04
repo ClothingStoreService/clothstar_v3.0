@@ -25,11 +25,6 @@ open class BaseTimeEntity {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     var deletedAt: LocalDateTime? = null // 삭제일시
 
-
-    protected fun setDeletedAt(deletedAt: LocalDateTime) {
-        this.deletedAt = deletedAt
-    }
-
     override fun toString(): String {
         return "BaseTimeEntity(createdAt=$createdAt, modifiedAt=$modifiedAt, deletedAt=$deletedAt)"
     }

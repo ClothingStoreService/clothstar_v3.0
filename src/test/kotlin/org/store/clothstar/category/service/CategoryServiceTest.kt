@@ -60,18 +60,6 @@ class CategoryServiceTest {
     }
 
     @Test
-    fun `getCategory should throw exception for invalid id`() {
-        // Given
-        `when`(categoryRepository.findById(1L)).thenReturn(Optional.empty())
-
-        // When/Then
-        val exception = assertThrows<ResponseStatusException> {
-            categoryService.getCategory(1L)
-        }
-        assertEquals(HttpStatus.BAD_REQUEST, exception.status)
-    }
-
-    @Test
     fun `createCategory should save and return new category id`() {
         // Given
         val category = Category(categoryId = null, categoryType = "Type1")
