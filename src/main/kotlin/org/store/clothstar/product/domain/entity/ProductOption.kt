@@ -28,7 +28,7 @@ class ProductOption(
     val productOptionId: Long? = null,
 
     val name: String,
-    val order: Int = 0,
+    val orderNo: Int,
     val required: Boolean = true,
     @Enumerated(EnumType.STRING)
     val optionType: OptionType,

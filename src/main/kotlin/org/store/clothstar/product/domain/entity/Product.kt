@@ -90,17 +90,17 @@ class Product (
         // items 업데이트 로직 (삭제 불가)
         request.items?.let {
             val newItems = it.toSet()
-            val existingItems = this.items.map { it.id }.toSet()
+            val existingItems = this.items.map { it.itemId }.toSet()
 
             // 기존 아이템들에 포함되지 않은 새 아이템 추가
             newItems.forEach { newItem ->
-                if (newItem.id !in existingItems) {
+                if (newItem.itemId !in existingItems) {
                     this.items.add(newItem)
                 }
             }
 
             // 기존 아이템 삭제 방지
-            val toRemove = this.items.filterNot { it.id in newItems.map { it.id } }
+            val toRemove = this.items.filterNot { it.itemId in newItems.map { it.itemId } }
             if (toRemove.isNotEmpty()) {
                 throw IllegalArgumentException("Existing items cannot be removed")
             }
