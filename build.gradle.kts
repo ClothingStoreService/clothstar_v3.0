@@ -27,6 +27,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+    implementation("io.github.oshai:kotlin-logging-jvm:5.1.4")
 
     //web
     implementation("org.springframework.boot:spring-boot-starter-web")

@@ -26,6 +26,7 @@ class JwtFilter(
         setFilterProcessesUrl("/v1/members/login")
     }
 
+    //    private val log = KotlinLogging.logger {}
     private val log = LoggerFactory.getLogger(javaClass)
 
     override fun attemptAuthentication(request: HttpServletRequest, response: HttpServletResponse): Authentication {

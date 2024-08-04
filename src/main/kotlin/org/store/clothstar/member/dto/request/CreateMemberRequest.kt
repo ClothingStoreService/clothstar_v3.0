@@ -4,12 +4,8 @@ import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
-import lombok.AllArgsConstructor
-import lombok.NoArgsConstructor
 
-@AllArgsConstructor
-@NoArgsConstructor
-data class CreateMemberRequest(
+class CreateMemberRequest(
     @Email(message = "유효하지 않은 이메일 형식입니다.")
     val email: String,
 

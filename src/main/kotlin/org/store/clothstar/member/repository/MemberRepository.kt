@@ -15,4 +15,6 @@ interface MemberRepository : JpaRepository<Member, Long> {
 //        countQuery = "select count(m) from member m"
 //    )
 //    fun findAllSlicePaging(pageable: Pageable): Slice<Member>
+
+    fun findByTelNoOrNull(telNo: String)
 }

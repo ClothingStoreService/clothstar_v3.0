@@ -11,9 +11,9 @@ import java.time.LocalDateTime
 @EntityListeners(AuditingEntityListener::class) //이벤트 발생할때마다 Auditing기능 활성화
 open class BaseEntity(
     @CreatedDate
-    private var createdAt: LocalDateTime? = LocalDateTime.now(),
+    private var createdAt: LocalDateTime = LocalDateTime.now(),
     @LastModifiedDate
-    private var updatedAt: LocalDateTime? = LocalDateTime.now(),
+    private var updatedAt: LocalDateTime = LocalDateTime.now(),
     private var deletedAt: LocalDateTime? = null,
 ) {
     fun updateDeletedAt() {
