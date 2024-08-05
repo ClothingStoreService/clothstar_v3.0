@@ -12,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.data.repository.findByIdOrNull
 import org.store.clothstar.order.domain.Order
 import org.store.clothstar.order.domain.vo.Status
-import org.store.clothstar.order.exception.InvalidOrderStatusException
 import org.store.clothstar.order.exception.OrderNotFoundException
 import org.store.clothstar.order.repository.OrderRepository
 import kotlin.test.Test
