@@ -2,12 +2,12 @@ package org.store.clothstar.order.domain
 
 import jakarta.persistence.*
 import org.store.clothstar.common.entity.BaseEntity
+import org.store.clothstar.common.error.ErrorCode
 import org.store.clothstar.order.domain.vo.PaymentMethod
 import org.store.clothstar.order.domain.vo.Status
 import org.store.clothstar.order.domain.vo.TotalPrice
-import org.store.clothstar.order.exception.InvalidOrderStatusException
-import org.store.clothstar.order.exception.OrderErrorCode
-import org.store.clothstar.order.exception.OrderNotFoundException
+import org.store.clothstar.common.error.exception.order.InvalidOrderStatusException
+import org.store.clothstar.common.error.exception.order.OrderNotFoundException
 
 @Entity(name = "orders")
 class Order(
@@ -41,10 +41,10 @@ class Order(
 
     fun validateForStatusAndDeletedAt(status: Status) {
         if (this.deletedAt != null) {
-            throw OrderNotFoundException(OrderErrorCode.NOT_FOUND_ORDER)
+            throw OrderNotFoundException(ErrorCode.NOT_FOUND_ORDER)
         }
         if (this.status != status) {
-            throw InvalidOrderStatusException(OrderErrorCode.INVALID_ORDER_STATUS_WAITING)
+            throw InvalidOrderStatusException(ErrorCode.INVALID_ORDER_STATUS_WAITING)
         }
     }
 }

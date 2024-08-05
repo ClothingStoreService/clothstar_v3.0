@@ -17,7 +17,11 @@ enum class ErrorCode(
 
     NOT_FOUND_REFRESH_TOKEN(HttpStatus.NOT_FOUND, "refresh 토큰이 없습니다."),
     INVALID_REFRESH_TOKEN(HttpStatus.BAD_REQUEST, "refresh 토큰이 만료되었거나 유효하지 않습니다."),
-    INVALID_AUTH_CERTIFY_NUM(HttpStatus.BAD_REQUEST, "인증번호가 잘못 되었습니다.");
+    INVALID_AUTH_CERTIFY_NUM(HttpStatus.BAD_REQUEST, "인증번호가 잘못 되었습니다."),
+
+    // Order 관련 에러코드
+    NOT_FOUND_ORDER(HttpStatus.NOT_FOUND, "존재하지 않는 주문번호입니다."),
+    INVALID_ORDER_STATUS_WAITING(HttpStatus.BAD_REQUEST, "주문이 승인대기 상태가 아니므로 요청을 처리할 수 없습니다.");
 
     fun ErrorCode(status: HttpStatus, message: String) {
         this.status = status
