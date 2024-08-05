@@ -30,7 +30,7 @@ class OrderSellerServiceTest {
     // 판매자 주문 승인 - approveOrder
     @Test
     @DisplayName("판매자 주문 승인 - 메서드 호출 테스트")
-    fun approveOrder_verify_test(){
+    fun approveOrder_verify_test() {
         //given
         val orderId = 1L
         every { order.status } returns Status.WAITING
@@ -47,7 +47,7 @@ class OrderSellerServiceTest {
 
     @Test
     @DisplayName("판매자 주문 승인 - 주문번호가 존재하지 않을 때 예외처리 테스트")
-    fun approveOrder_orderNotFound_exception_test(){
+    fun approveOrder_orderNotFound_exception_test() {
         //given
         val orderId = 1L
         every { order.status } returns Status.WAITING
@@ -61,7 +61,7 @@ class OrderSellerServiceTest {
 
     @Test
     @DisplayName("판매자 주문 승인 - 주문이 '승인대기' 상태가 아닐 때 예외처리 테스트")
-    fun approveOrder_invalidOrderStatus_exception_test(){
+    fun approveOrder_invalidOrderStatus_exception_test() {
         //given
         val orderId = 1L
         every { order.status } returns Status.CONFIRM
@@ -76,7 +76,7 @@ class OrderSellerServiceTest {
     // 판매자 주문 취소 - cancelOrder
     @Test
     @DisplayName("판매자 주문 취소 - 메서드 호출 테스트")
-    fun cancelOrder_verify_test(){
+    fun cancelOrder_verify_test() {
         //given
         val orderId = 1L
         every { order.status } returns Status.WAITING
@@ -93,7 +93,7 @@ class OrderSellerServiceTest {
 
     @Test
     @DisplayName("판매자 주문 취소 - 주문번호가 존재하지 않을 때 예외처리 테스트")
-    fun cancelOrder_orderNotFound_exception_test(){
+    fun cancelOrder_orderNotFound_exception_test() {
         //given
         val orderId = 1L
         every { order.status } returns Status.WAITING
@@ -107,7 +107,7 @@ class OrderSellerServiceTest {
 
     @Test
     @DisplayName("판매자 주문 취소 - 주문이 '승인대기' 상태가 아닐 때 예외처리 테스트")
-    fun cancelOrder_invalidOrderStatus_exception_test(){
+    fun cancelOrder_invalidOrderStatus_exception_test() {
         //given
         val orderId = 1L
         every { order.status } returns Status.CONFIRM

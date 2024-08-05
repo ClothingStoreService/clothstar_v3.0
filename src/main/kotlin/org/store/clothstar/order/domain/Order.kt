@@ -39,7 +39,7 @@ class Order(
     }
 
     fun validateForStatus(status: Status) {
-        if(this.status != status){
+        if (this.status != status) {
             throw InvalidOrderStatusException(OrderErrorCode.INVALID_ORDER_STATUS_WAITING)
         }
     }
