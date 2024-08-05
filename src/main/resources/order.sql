@@ -3,7 +3,7 @@ INSERT INTO orders (order_id, member_id, address_id, created_at, status, total_s
 VALUES ('14241232', '242', '334', CURRENT_TIMESTAMP, 'WAITING', '3000', '50000', 'CARD', '53000');
 
 select *
-from orders
+from orders;
 
 select o1_0.order_id,
        o1_0.address_id,

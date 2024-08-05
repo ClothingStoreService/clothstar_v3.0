@@ -9,6 +9,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.data.repository.findByIdOrNull
 import org.store.clothstar.order.domain.Order
 import org.store.clothstar.order.domain.vo.Status
 import org.store.clothstar.order.exception.InvalidOrderStatusException
@@ -34,14 +35,16 @@ class OrderSellerServiceTest {
         //given
         val orderId = 1L
         every { order.status } returns Status.WAITING
-        every { orderRepository.findByOrderId(orderId) } returns order
+        every { orderRepository.findByIdOrNull(orderId) } returns order
+        justRun { order.validateForStatus(Status.WAITING) }
         justRun { order.updateStatus(Status.APPROVE) }
 
         //when
         orderSellerService.approveOrder(orderId)
 
         //then
-        verify(exactly = 1) { orderRepository.findByOrderId(orderId) }
+        verify(exactly = 1) { orderRepository.findByIdOrNull(orderId) }
+        verify(exactly = 1) { order.validateForStatus(Status.WAITING) }
         verify(exactly = 1) { order.updateStatus(Status.APPROVE) }
     }
 
@@ -51,24 +54,10 @@ class OrderSellerServiceTest {
         //given
         val orderId = 1L
         every { order.status } returns Status.WAITING
-        every { orderRepository.findByOrderId(orderId) } returns null
+        every { orderRepository.findByIdOrNull(orderId) } returns null
 
         //when & then
         assertThrows<OrderNotFoundException> {
-            orderSellerService.approveOrder(orderId)
-        }
-    }
-
-    @Test
-    @DisplayName("판매자 주문 승인 - 주문이 '승인대기' 상태가 아닐 때 예외처리 테스트")
-    fun approveOrder_invalidOrderStatus_exception_test() {
-        //given
-        val orderId = 1L
-        every { order.status } returns Status.CONFIRM
-        every { orderRepository.findByOrderId(orderId) } returns order
-
-        //when & then
-        assertThrows<InvalidOrderStatusException> {
             orderSellerService.approveOrder(orderId)
         }
     }
@@ -80,14 +69,16 @@ class OrderSellerServiceTest {
         //given
         val orderId = 1L
         every { order.status } returns Status.WAITING
-        every { orderRepository.findByOrderId(orderId) } returns order
+        every { orderRepository.findByIdOrNull(orderId) } returns order
+        justRun { order.validateForStatus(Status.WAITING) }
         justRun { order.updateStatus(Status.CANCEL) }
 
         //when
         orderSellerService.cancelOrder(orderId)
 
         //then
-        verify(exactly = 1) { orderRepository.findByOrderId(orderId) }
+        verify(exactly = 1) { orderRepository.findByIdOrNull(orderId) }
+        verify(exactly = 1) { order.validateForStatus(Status.WAITING) }
         verify(exactly = 1) { order.updateStatus(Status.CANCEL) }
     }
 
@@ -97,24 +88,10 @@ class OrderSellerServiceTest {
         //given
         val orderId = 1L
         every { order.status } returns Status.WAITING
-        every { orderRepository.findByOrderId(orderId) } returns null
+        every { orderRepository.findByIdOrNull(orderId) } returns null
 
         //when & then
         assertThrows<OrderNotFoundException> {
-            orderSellerService.cancelOrder(orderId)
-        }
-    }
-
-    @Test
-    @DisplayName("판매자 주문 취소 - 주문이 '승인대기' 상태가 아닐 때 예외처리 테스트")
-    fun cancelOrder_invalidOrderStatus_exception_test() {
-        //given
-        val orderId = 1L
-        every { order.status } returns Status.CONFIRM
-        every { orderRepository.findByOrderId(orderId) } returns order
-
-        //when & then
-        assertThrows<InvalidOrderStatusException> {
             orderSellerService.cancelOrder(orderId)
         }
     }
