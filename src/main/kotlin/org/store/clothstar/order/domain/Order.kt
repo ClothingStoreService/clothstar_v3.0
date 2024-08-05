@@ -5,6 +5,8 @@ import org.store.clothstar.common.entity.BaseEntity
 import org.store.clothstar.order.domain.vo.PaymentMethod
 import org.store.clothstar.order.domain.vo.Status
 import org.store.clothstar.order.domain.vo.TotalPrice
+import org.store.clothstar.order.exception.InvalidOrderStatusException
+import org.store.clothstar.order.exception.OrderErrorCode
 
 @Entity(name = "orders")
 class Order(
@@ -34,5 +36,11 @@ class Order(
 ) : BaseEntity() {
     fun updateStatus(status: Status) {
         this.status = status
+    }
+
+    fun validateForStatus(status: Status) {
+        if(this.status != status){
+            throw InvalidOrderStatusException(OrderErrorCode.INVALID_ORDER_STATUS_WAITING)
+        }
     }
 }
