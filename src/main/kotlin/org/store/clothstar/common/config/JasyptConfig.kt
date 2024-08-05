@@ -1,4 +1,4 @@
-package org.store.clothstar.common
+package org.store.clothstar.common.config
 
 import org.jasypt.encryption.StringEncryptor
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor

@@ -9,7 +9,7 @@ import org.store.clothstar.member.domain.MemberGrade
 @Embeddable
 class MemberShoppingActivity(
     @ColumnDefault(value = "0")
-    val totalPaymentPrice: Long,
+    val totalPaymentPrice: Int,
     @ColumnDefault(value = "0")
     val point: Int,
     @Enumerated(EnumType.STRING)
