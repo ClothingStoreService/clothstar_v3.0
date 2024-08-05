@@ -5,5 +5,4 @@ import org.jetbrains.annotations.NotNull
 class ModifyNameRequest(
     @NotNull
     val name: String
-) {
-}
+)

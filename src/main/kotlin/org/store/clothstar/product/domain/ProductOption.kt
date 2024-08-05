@@ -1,7 +1,6 @@
-package org.store.clothstar.product.domain.entity
+package org.store.clothstar.product.domain
 
 import jakarta.persistence.*
-import org.store.clothstar.product.domain.type.OptionType
 
 
 /**
@@ -27,16 +26,13 @@ class ProductOption(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val productOptionId: Long? = null,
 
-    val name: String,
-    val orderNo: Int,
-    val required: Boolean = true,
-    @Enumerated(EnumType.STRING)
-    val optionType: OptionType,
+    val optionName: String,
+    val optionOrderNo: Int,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="product_id")
+    @JoinColumn(name = "product_id")
     val product: Product,
 
     @OneToMany(mappedBy = "productOption", cascade = [CascadeType.ALL], orphanRemoval = true)
     var optionValues: MutableList<OptionValue> = mutableListOf(),
-    )
+)

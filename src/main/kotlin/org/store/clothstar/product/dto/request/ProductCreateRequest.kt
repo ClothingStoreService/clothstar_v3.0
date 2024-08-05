@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Positive
 import org.store.clothstar.product.domain.type.DisplayStatus
 import org.store.clothstar.product.domain.type.SaleStatus
 
-class ProductCreateRequest (
+class ProductCreateRequest(
     @Positive(message = "회원 id 는 0보다 큰 양수입니다.")
     val memberId: Long,
     @Positive(message = "카테고리 id는 0보다 큰 양수입니다.")
@@ -30,4 +30,4 @@ class ProductCreateRequest (
     val productOptions: List<ProductOptionCreateRequest> = emptyList(),
 
     val items: List<ItemCreateRequest> = emptyList(),
-    )
+)

@@ -1,4 +1,4 @@
-package org.store.clothstar.product.domain.entity
+package org.store.clothstar.product.domain
 
 import jakarta.persistence.*
 import org.store.clothstar.product.domain.type.DisplayStatus
@@ -23,7 +23,7 @@ import org.store.clothstar.product.domain.type.SaleStatus
  * }
  */
 @Entity
-class Item (
+class Item(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val itemId: Long = 0L,

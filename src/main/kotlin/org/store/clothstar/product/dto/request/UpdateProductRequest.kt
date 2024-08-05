@@ -1,13 +1,13 @@
 package org.store.clothstar.product.dto.request
 
-import org.store.clothstar.product.domain.entity.Item
-import org.store.clothstar.product.domain.entity.ProductImage
-import org.store.clothstar.product.domain.entity.ProductOption
+import org.store.clothstar.product.domain.Item
+import org.store.clothstar.product.domain.ProductImage
+import org.store.clothstar.product.domain.ProductOption
 import org.store.clothstar.product.domain.type.DisplayStatus
 import org.store.clothstar.product.domain.type.ProductColor
 import org.store.clothstar.product.domain.type.SaleStatus
 
-class UpdateProductRequest (
+class UpdateProductRequest(
     val name: String?,
     val content: String?,
     val price: Int?,
@@ -17,6 +17,4 @@ class UpdateProductRequest (
     val imageList: List<ProductImage>?,
     val productOptions: Set<ProductOption>?,
     val items: List<Item>?
-) {
-
-}
+)

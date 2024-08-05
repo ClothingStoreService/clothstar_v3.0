@@ -1,19 +1,17 @@
-package org.store.clothstar.product.domain.entity
+package org.store.clothstar.product.domain
 
 import jakarta.persistence.*
-import org.store.clothstar.category.domain.Category
 import org.store.clothstar.common.entity.BaseEntity
-import org.store.clothstar.member.domain.Member
 import org.store.clothstar.product.domain.type.DisplayStatus
 import org.store.clothstar.product.domain.type.ProductColor
 import org.store.clothstar.product.domain.type.SaleStatus
 import org.store.clothstar.product.dto.request.UpdateProductRequest
 
 @Entity
-class Product (
+class Product(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var productId:Long? = null,
+    var productId: Long? = null,
 
     // 연관 관계 필드 (N:1)
     @Column(name = "member_id")
@@ -48,7 +46,7 @@ class Product (
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     var items: MutableList<Item> = mutableListOf(),
-    ): BaseEntity() {
+) : BaseEntity() {
 
 
     /**

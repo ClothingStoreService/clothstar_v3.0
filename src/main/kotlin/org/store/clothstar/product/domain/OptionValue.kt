@@ -1,4 +1,4 @@
-package org.store.clothstar.product.domain.entity
+package org.store.clothstar.product.domain
 
 import jakarta.persistence.*
 import org.store.clothstar.product.domain.type.ProductColor
@@ -13,7 +13,7 @@ import org.store.clothstar.product.domain.type.ProductColor
  * }
  */
 @Entity
-class OptionValue (
+class OptionValue(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val optionValueId: Long? = null,
