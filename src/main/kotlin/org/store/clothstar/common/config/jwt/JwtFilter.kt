@@ -1,11 +1,11 @@
 package org.store.clothstar.common.config.jwt
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.jsonwebtoken.io.IOException
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.BadCredentialsException
@@ -26,11 +26,10 @@ class JwtFilter(
         setFilterProcessesUrl("/v1/members/login")
     }
 
-    //    private val log = KotlinLogging.logger {}
-    private val log = LoggerFactory.getLogger(javaClass)
+    private val log = KotlinLogging.logger {}
 
     override fun attemptAuthentication(request: HttpServletRequest, response: HttpServletResponse): Authentication {
-        log.info("로그인 진행")
+        log.info { "로그인 진행" }
 
         try {
             val memberLoginRequest = ObjectMapper().readValue(request.inputStream, MemberLoginRequest::class.java)
@@ -79,7 +78,7 @@ class JwtFilter(
         response: HttpServletResponse,
         failed: AuthenticationException
     ) {
-        log.info("로그인 실패")
+        log.info { "로그인 실패" }
 
         response.status = HttpServletResponse.SC_UNAUTHORIZED
         response.characterEncoding = "UTF-8"
@@ -93,14 +92,13 @@ class JwtFilter(
         response.writer.print(ObjectMapper().writeValueAsString(messageDTO))
     }
 
-    private fun errorMessage(failed: AuthenticationException): String? {
-
+    private fun errorMessage(failed: AuthenticationException): String {
         return if (failed is BadCredentialsException) {
             "이메일 또는 비밀번호가 올바르지 않습니다. 다시 확인해주세요."
         } else if (failed is DisabledException) {
             "계정이 비활성화 되어있습니다. 이메일 인증을 완료해주세요"
         } else {
-            null
+            "로그인 성공"
         }
     }
 }

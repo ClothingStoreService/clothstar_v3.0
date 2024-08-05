@@ -102,7 +102,7 @@ class LoginFilter(
         response.characterEncoding = "UTF-8"
         response.contentType = "application/json"
 
-        val messageDTO: MessageDTO = MessageDTO(
+        val messageDTO = MessageDTO(
             HttpServletResponse.SC_UNAUTHORIZED,
             errorMessage(failed),
         )
@@ -110,13 +110,13 @@ class LoginFilter(
         response.writer.print(ObjectMapper().writeValueAsString(messageDTO))
     }
 
-    private fun errorMessage(failed: AuthenticationException): String? {
+    private fun errorMessage(failed: AuthenticationException): String {
         return if (failed is BadCredentialsException) {
             "이메일 또는 비밀번호가 올바르지 않습니다. 다시 확인해주세요."
         } else if (failed is DisabledException) {
             "계정이 비활성화 되어있습니다. 이메일 인증을 완료해주세요"
         } else {
-            null
+            "로그인 성공"
         }
     }
 }

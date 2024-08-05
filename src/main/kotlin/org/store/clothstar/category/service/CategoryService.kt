@@ -1,6 +1,5 @@
 package org.store.clothstar.category.service
 
-import lombok.extern.slf4j.Slf4j
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -12,7 +11,6 @@ import org.store.clothstar.category.dto.response.CategoryResponse
 import org.store.clothstar.category.repository.CategoryJpaRepository
 import org.store.clothstar.common.util.Logger.Companion.log
 
-@Slf4j
 @Service
 class CategoryService(
     private val categoryRepository: CategoryJpaRepository
