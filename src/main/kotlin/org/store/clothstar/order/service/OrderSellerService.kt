@@ -17,7 +17,7 @@ class OrderSellerService(
     fun approveOrder(orderId: Long) {
         val order = orderUserRepository.findByOrderId(orderId)
             ?: throw OrderNotFoundException(OrderErrorCode.NOT_FOUND_ORDER)
-        if(order.status != Status.WAITING) {
+        if (order.status != Status.WAITING) {
             throw InvalidOrderStatusException(OrderErrorCode.INVALID_ORDER_STATUS)
         }
         order.updateStatus(Status.APPROVE)
@@ -27,7 +27,7 @@ class OrderSellerService(
     fun cancelOrder(orderId: Long) {
         val order = orderUserRepository.findByOrderId(orderId)
             ?: throw OrderNotFoundException(OrderErrorCode.NOT_FOUND_ORDER)
-        if(order.status != Status.WAITING) {
+        if (order.status != Status.WAITING) {
             throw InvalidOrderStatusException(OrderErrorCode.INVALID_ORDER_STATUS)
         }
         order.updateStatus(Status.CANCEL)

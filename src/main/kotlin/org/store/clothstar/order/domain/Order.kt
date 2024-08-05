@@ -6,8 +6,8 @@ import org.store.clothstar.order.domain.vo.PaymentMethod
 import org.store.clothstar.order.domain.vo.Status
 import org.store.clothstar.order.domain.vo.TotalPrice
 
-@Entity(name="orders")
-class Order (
+@Entity(name = "orders")
+class Order(
     @Id
     val orderId: Long,
 
@@ -31,8 +31,8 @@ class Order (
     @Embedded
     var totalPrice: TotalPrice
 
-): BaseEntity() {
-fun updateStatus(status: Status) {
-        this.status=status;
+) : BaseEntity() {
+    fun updateStatus(status: Status) {
+        this.status = status
     }
 }
