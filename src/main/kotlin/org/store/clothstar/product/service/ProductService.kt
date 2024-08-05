@@ -17,8 +17,8 @@ class ProductService(
     private val itemRepository: ItemRepository,
     ) {
 
-    @Transactional
-    fun createProduct(productCreateRequest: ProductCreateRequest): Product {
-
-    }
+//    @Transactional
+//    fun createProduct(productCreateRequest: ProductCreateRequest): Product {
+//
+//    }
 }

@@ -47,7 +47,7 @@ class Product (
     var productOptions: MutableSet<ProductOption> = mutableSetOf(),
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    var items: MutableList<Item> = mutableListOf()
+    var items: MutableList<Item> = mutableListOf(),
     ): BaseEntity() {
 
 

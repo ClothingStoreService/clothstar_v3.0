@@ -22,5 +22,5 @@ class OptionValue (
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_option_id")
-    val productOption: ProductOption
+    val productOption: ProductOption,
 )

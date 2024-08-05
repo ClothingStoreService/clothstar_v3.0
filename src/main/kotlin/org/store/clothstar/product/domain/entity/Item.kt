@@ -33,8 +33,14 @@ class Item (
     var saleStatus: SaleStatus,
     var displayStatus: DisplayStatus,
 
+    @ElementCollection
+    @CollectionTable(
+        name = "item_attributes",
+        joinColumns = [JoinColumn(name = "item_id")]
+    )
+    val attributes: MutableSet<ItemAttribute> = mutableSetOf(),
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
-    val product: Product
-
+    val product: Product,
 )

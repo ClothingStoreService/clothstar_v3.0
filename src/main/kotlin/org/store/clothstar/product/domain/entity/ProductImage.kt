@@ -9,5 +9,5 @@ import org.store.clothstar.product.domain.type.ImageType
 class ProductImage (
     val imageUrl: String,
     @Enumerated(EnumType.STRING)
-    val imageType: ImageType
+    val imageType: ImageType,
 )

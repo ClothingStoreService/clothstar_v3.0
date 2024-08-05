@@ -10,5 +10,5 @@ data class ItemAttribute (
     var optionId: Long,
     var name: String,
     var value: String,
-    var valueId: Long
+    var valueId: Long,
 )
