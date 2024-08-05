@@ -17,7 +17,7 @@ class OrderSellerService(
     fun approveOrder(orderId: Long) {
         val order = orderRepository.findByIdOrNull(orderId)
             ?: throw OrderNotFoundException(OrderErrorCode.NOT_FOUND_ORDER)
-        order.validateForStatus(Status.WAITING)
+        order.validateForStatusAndDeletedAt(Status.WAITING)
         order.updateStatus(Status.APPROVE)
     }
 
@@ -25,7 +25,7 @@ class OrderSellerService(
     fun cancelOrder(orderId: Long) {
         val order = orderRepository.findByIdOrNull(orderId)
             ?: throw OrderNotFoundException(OrderErrorCode.NOT_FOUND_ORDER)
-        order.validateForStatus(Status.WAITING)
+        order.validateForStatusAndDeletedAt(Status.WAITING)
         order.updateStatus(Status.CANCEL)
     }
 }

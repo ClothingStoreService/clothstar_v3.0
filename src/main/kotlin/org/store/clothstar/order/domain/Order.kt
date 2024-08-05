@@ -7,6 +7,7 @@ import org.store.clothstar.order.domain.vo.Status
 import org.store.clothstar.order.domain.vo.TotalPrice
 import org.store.clothstar.order.exception.InvalidOrderStatusException
 import org.store.clothstar.order.exception.OrderErrorCode
+import org.store.clothstar.order.exception.OrderNotFoundException
 
 @Entity(name = "orders")
 class Order(
@@ -38,7 +39,10 @@ class Order(
         this.status = status
     }
 
-    fun validateForStatus(status: Status) {
+    fun validateForStatusAndDeletedAt(status: Status) {
+        if (this.deletedAt != null) {
+            throw OrderNotFoundException(OrderErrorCode.NOT_FOUND_ORDER)
+        }
         if (this.status != status) {
             throw InvalidOrderStatusException(OrderErrorCode.INVALID_ORDER_STATUS_WAITING)
         }
