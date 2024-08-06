@@ -35,7 +35,7 @@ class OrderSellerServiceTest {
         val orderId = 1L
         every { order.status } returns Status.WAITING
         every { orderRepository.findByIdOrNull(orderId) } returns order
-        justRun { order.validateForStatusAndDeletedAt(Status.WAITING) }
+        justRun { order.validateForStatusWAITINGAndDeletedAt() }
         justRun { order.updateStatus(Status.APPROVE) }
 
         //when
@@ -43,7 +43,7 @@ class OrderSellerServiceTest {
 
         //then
         verify(exactly = 1) { orderRepository.findByIdOrNull(orderId) }
-        verify(exactly = 1) { order.validateForStatusAndDeletedAt(Status.WAITING) }
+        verify(exactly = 1) { order.validateForStatusWAITINGAndDeletedAt() }
         verify(exactly = 1) { order.updateStatus(Status.APPROVE) }
     }
 
@@ -69,7 +69,7 @@ class OrderSellerServiceTest {
         val orderId = 1L
         every { order.status } returns Status.WAITING
         every { orderRepository.findByIdOrNull(orderId) } returns order
-        justRun { order.validateForStatusAndDeletedAt(Status.WAITING) }
+        justRun { order.validateForStatusWAITINGAndDeletedAt() }
         justRun { order.updateStatus(Status.CANCEL) }
 
         //when
@@ -77,7 +77,7 @@ class OrderSellerServiceTest {
 
         //then
         verify(exactly = 1) { orderRepository.findByIdOrNull(orderId) }
-        verify(exactly = 1) { order.validateForStatusAndDeletedAt(Status.WAITING) }
+        verify(exactly = 1) { order.validateForStatusWAITINGAndDeletedAt() }
         verify(exactly = 1) { order.updateStatus(Status.CANCEL) }
     }
 
