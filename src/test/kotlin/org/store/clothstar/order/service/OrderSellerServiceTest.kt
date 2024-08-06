@@ -6,6 +6,7 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.justRun
 import io.mockk.verify
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
@@ -29,14 +30,17 @@ class OrderSellerServiceTest {
 
     // 판매자 주문 승인 - approveOrder
     @Test
-    @DisplayName("판매자 주문 승인 - 메서드 호출 테스트")
+    @DisplayName("판매자 주문 승인 - 성공 테스트")
     fun approveOrder_verify_test() {
         //given
         val orderId = 1L
+
         every { order.status } returns Status.WAITING
         every { orderRepository.findByIdOrNull(orderId) } returns order
         justRun { order.validateForStatusWAITINGAndDeletedAt() }
-        justRun { order.updateStatus(Status.APPROVE) }
+        every { order.updateStatus(Status.APPROVE) } answers {
+            every { order.status } returns Status.APPROVE
+        }
 
         //when
         orderSellerService.approveOrder(orderId)
@@ -45,6 +49,7 @@ class OrderSellerServiceTest {
         verify(exactly = 1) { orderRepository.findByIdOrNull(orderId) }
         verify(exactly = 1) { order.validateForStatusWAITINGAndDeletedAt() }
         verify(exactly = 1) { order.updateStatus(Status.APPROVE) }
+        assertEquals( Status.APPROVE, order.status )
     }
 
     @Test
@@ -63,14 +68,16 @@ class OrderSellerServiceTest {
 
     // 판매자 주문 취소 - cancelOrder
     @Test
-    @DisplayName("판매자 주문 취소 - 메서드 호출 테스트")
+    @DisplayName("판매자 주문 취소 - 성공 테스트")
     fun cancelOrder_verify_test() {
         //given
         val orderId = 1L
         every { order.status } returns Status.WAITING
         every { orderRepository.findByIdOrNull(orderId) } returns order
         justRun { order.validateForStatusWAITINGAndDeletedAt() }
-        justRun { order.updateStatus(Status.CANCEL) }
+        every { order.updateStatus(Status.CANCEL) } answers {
+            every { order.status } returns Status.CANCEL
+        }
 
         //when
         orderSellerService.cancelOrder(orderId)
@@ -79,6 +86,7 @@ class OrderSellerServiceTest {
         verify(exactly = 1) { orderRepository.findByIdOrNull(orderId) }
         verify(exactly = 1) { order.validateForStatusWAITINGAndDeletedAt() }
         verify(exactly = 1) { order.updateStatus(Status.CANCEL) }
+        assertEquals( Status.CANCEL, order.status )
     }
 
     @Test
