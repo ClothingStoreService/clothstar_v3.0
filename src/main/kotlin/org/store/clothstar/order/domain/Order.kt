@@ -39,12 +39,12 @@ class Order(
         this.status = status
     }
 
-    fun validateForStatusWAITINGAndDeletedAt() {
+    fun validateForStatusCONFIRMEDAndDeletedAt() {
         if (this.deletedAt != null) {
             throw OrderNotFoundException(ErrorCode.NOT_FOUND_ORDER)
         }
-        if (this.status != Status.WAITING) {
-            throw InvalidOrderStatusException(ErrorCode.INVALID_ORDER_STATUS_WAITING)
+        if (this.status != Status.CONFIRMED) {
+            throw InvalidOrderStatusException(ErrorCode.INVALID_ORDER_STATUS_CONFIRMED)
         }
     }
 }

@@ -23,20 +23,20 @@ class OrderSellerController(
     private val orderSellerService: OrderSellerService
 ) {
 
-    @Operation(summary = "판매자 주문 승인", description = "판매자가 주문을 승인한다.")
+    @Operation(summary = "판매자 주문 승인", description = "판매자가 주문을 출고처리한다.")
     @ApiResponses( value = [
-        ApiResponse(responseCode = "200", description = "주문이 정상적으로 승인 되었습니다.",
+        ApiResponse(responseCode = "200", description = "주문이 정상적으로 출고처리 되었습니다.",
             content = [Content(schema = Schema(implementation = MessageDTO::class))]),
         ApiResponse(responseCode = "400", description = "존재하지 않는 주문번호입니다.",
             content = [Content(schema = Schema(implementation = ErrorResponseDTO::class))]),
-        ApiResponse(responseCode = "404", description = "주문이 승인대기 상태가 아니므로 요청을 처리할 수 없습니다.",
+        ApiResponse(responseCode = "404", description = "주문이 입금확인 상태가 아니므로 요청을 처리할 수 없습니다.",
             content = [Content(schema = Schema(implementation = ErrorResponseDTO::class))]),
         ]
     )
-    @PatchMapping("/{orderId}/approve")
+    @PatchMapping("/{orderId}/process")
     fun approveOrder(@PathVariable orderId: Long): ResponseEntity<MessageDTO> {
         orderSellerService.approveOrder(orderId)
-        val messageDTO = MessageDTO(HttpStatus.OK.value(), "주문이 정상적으로 승인 되었습니다.")
+        val messageDTO = MessageDTO(HttpStatus.OK.value(), "주문이 정상적으로 출고처리 되었습니다.")
         return ResponseEntity.ok(messageDTO)
     }
 

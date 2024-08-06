@@ -35,11 +35,11 @@ class OrderSellerServiceTest {
         //given
         val orderId = 1L
 
-        every { order.status } returns Status.WAITING
+        every { order.status } returns Status.CONFIRMED
         every { orderRepository.findByIdOrNull(orderId) } returns order
-        justRun { order.validateForStatusWAITINGAndDeletedAt() }
-        every { order.updateStatus(Status.APPROVE) } answers {
-            every { order.status } returns Status.APPROVE
+        justRun { order.validateForStatusCONFIRMEDAndDeletedAt() }
+        every { order.updateStatus(Status.PROCESSING) } answers {
+            every { order.status } returns Status.PROCESSING
         }
 
         //when
@@ -47,9 +47,9 @@ class OrderSellerServiceTest {
 
         //then
         verify(exactly = 1) { orderRepository.findByIdOrNull(orderId) }
-        verify(exactly = 1) { order.validateForStatusWAITINGAndDeletedAt() }
-        verify(exactly = 1) { order.updateStatus(Status.APPROVE) }
-        assertEquals( Status.APPROVE, order.status )
+        verify(exactly = 1) { order.validateForStatusCONFIRMEDAndDeletedAt() }
+        verify(exactly = 1) { order.updateStatus(Status.PROCESSING) }
+        assertEquals( Status.PROCESSING, order.status )
     }
 
     @Test
@@ -57,7 +57,7 @@ class OrderSellerServiceTest {
     fun approveOrder_orderNotFound_exception_test() {
         //given
         val orderId = 1L
-        every { order.status } returns Status.WAITING
+        every { order.status } returns Status.CONFIRMED
         every { orderRepository.findByIdOrNull(orderId) } returns null
 
         //when & then
@@ -72,11 +72,11 @@ class OrderSellerServiceTest {
     fun cancelOrder_verify_test() {
         //given
         val orderId = 1L
-        every { order.status } returns Status.WAITING
+        every { order.status } returns Status.CONFIRMED
         every { orderRepository.findByIdOrNull(orderId) } returns order
-        justRun { order.validateForStatusWAITINGAndDeletedAt() }
-        every { order.updateStatus(Status.CANCEL) } answers {
-            every { order.status } returns Status.CANCEL
+        justRun { order.validateForStatusCONFIRMEDAndDeletedAt() }
+        every { order.updateStatus(Status.CANCELED) } answers {
+            every { order.status } returns Status.CANCELED
         }
 
         //when
@@ -84,9 +84,9 @@ class OrderSellerServiceTest {
 
         //then
         verify(exactly = 1) { orderRepository.findByIdOrNull(orderId) }
-        verify(exactly = 1) { order.validateForStatusWAITINGAndDeletedAt() }
-        verify(exactly = 1) { order.updateStatus(Status.CANCEL) }
-        assertEquals( Status.CANCEL, order.status )
+        verify(exactly = 1) { order.validateForStatusCONFIRMEDAndDeletedAt() }
+        verify(exactly = 1) { order.updateStatus(Status.CANCELED) }
+        assertEquals( Status.CANCELED, order.status )
     }
 
     @Test
@@ -94,7 +94,7 @@ class OrderSellerServiceTest {
     fun cancelOrder_orderNotFound_exception_test() {
         //given
         val orderId = 1L
-        every { order.status } returns Status.WAITING
+        every { order.status } returns Status.CONFIRMED
         every { orderRepository.findByIdOrNull(orderId) } returns null
 
         //when & then

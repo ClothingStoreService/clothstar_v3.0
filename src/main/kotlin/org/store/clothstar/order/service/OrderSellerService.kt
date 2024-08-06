@@ -17,15 +17,15 @@ class OrderSellerService(
     fun approveOrder(orderId: Long) {
         val order = orderRepository.findByIdOrNull(orderId)
             ?: throw OrderNotFoundException(ErrorCode.NOT_FOUND_ORDER)
-        order.validateForStatusWAITINGAndDeletedAt()
-        order.updateStatus(Status.APPROVE)
+        order.validateForStatusCONFIRMEDAndDeletedAt()
+        order.updateStatus(Status.PROCESSING)
     }
 
     @Transactional
     fun cancelOrder(orderId: Long) {
         val order = orderRepository.findByIdOrNull(orderId)
             ?: throw OrderNotFoundException(ErrorCode.NOT_FOUND_ORDER)
-        order.validateForStatusWAITINGAndDeletedAt()
-        order.updateStatus(Status.CANCEL)
+        order.validateForStatusCONFIRMEDAndDeletedAt()
+        order.updateStatus(Status.CANCELED)
     }
 }

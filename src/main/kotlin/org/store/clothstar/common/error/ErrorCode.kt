@@ -21,7 +21,7 @@ enum class ErrorCode(
 
     // Order 관련 에러코드
     NOT_FOUND_ORDER(HttpStatus.NOT_FOUND, "존재하지 않는 주문번호입니다."),
-    INVALID_ORDER_STATUS_WAITING(HttpStatus.BAD_REQUEST, "주문이 승인대기 상태가 아니므로 요청을 처리할 수 없습니다.");
+    INVALID_ORDER_STATUS_CONFIRMED(HttpStatus.BAD_REQUEST, "주문이 입금확인 상태가 아니므로 요청을 처리할 수 없습니다.");
 
     fun ErrorCode(status: HttpStatus, message: String) {
         this.status = status
