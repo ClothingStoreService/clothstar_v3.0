@@ -9,5 +9,6 @@ class ProductOptionCreateRequest(
     val optionName: String,
     @Positive(message = "옵션 순서는 양수입니다.")
     val optionOrderNo: Int,
-    val optionValues: MutableList<OptionValue>,
+    @NotBlank(message = "옵션 종류는 쉼표로 구분해서 작성해주세요.")
+    val optionValues: String,
 )

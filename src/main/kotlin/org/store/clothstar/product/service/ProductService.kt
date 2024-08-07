@@ -13,4 +13,10 @@ class ProductService(
             it ?: throw IllegalArgumentException("상품을 조회할 수 없습니다.")
         }
     }
+    
+    fun Product createProduct(product: Product): Product {
+        // create product
+        val product = productRepository.save(product)
+        return product
+    }
 }

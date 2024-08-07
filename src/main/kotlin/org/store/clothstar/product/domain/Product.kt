@@ -49,68 +49,6 @@ class Product(
 ) : BaseEntity() {
 
 
-    /**
-     * @param UpdateProductRequest
-     * @return null
-     */
-    fun update(request: UpdateProductRequest) {
-        this.name = request.name ?: this.name
-        this.content = request.content ?: this.content
-        this.price = request.price ?: this.price
-        this.displayStatus = request.displayStatus
-        this.saleStatus = request.saleStatus ?: this.saleStatus
-
-        // imageList 업데이트 (이미지 리스트가 완전히 교체되는 경우)
-        request.imageList?.let {
-            this.imageList.clear()
-            this.imageList.addAll(it)
-        }
-
-        // productOptions 업데이트 로직 (삭제 불가)
-        request.productOptions?.let {
-            val newOptions = it.toSet()
-            val existingOptions = this.productOptions.map { it.productOptionId }.toSet()
-
-            // 기존 옵션들에 포함되지 않은 새 옵션 추가
-            newOptions.forEach { newOption ->
-                if (newOption.productOptionId !in existingOptions) {
-                    this.productOptions.add(newOption)
-                }
-            }
-
-            // 기존 옵션 삭제 방지
-            val toRemove = this.productOptions.filterNot { it.productOptionId in newOptions.map { it.productOptionId } }
-            if (toRemove.isNotEmpty()) {
-                throw IllegalArgumentException("Existing product options cannot be removed")
-            }
-        }
-
-        // items 업데이트 로직 (삭제 불가)
-        request.items?.let {
-            val newItems = it.toSet()
-            val existingItems = this.items.map { it.itemId }.toSet()
-
-            // 기존 아이템들에 포함되지 않은 새 아이템 추가
-            newItems.forEach { newItem ->
-                if (newItem.itemId !in existingItems) {
-                    this.items.add(newItem)
-                }
-            }
-
-            // 기존 아이템 삭제 방지
-            val toRemove = this.items.filterNot { it.itemId in newItems.map { it.itemId } }
-            if (toRemove.isNotEmpty()) {
-                throw IllegalArgumentException("Existing items cannot be removed")
-            }
-        }
-
-        // productColors 업데이트 로직
-        request.productColors?.let {
-            this.productColors?.clear()
-            this.productColors?.addAll(it)
-        }
-    }
-
     fun updateSaleStatus(saleStatus: SaleStatus) {
         this.saleStatus = saleStatus
     }
