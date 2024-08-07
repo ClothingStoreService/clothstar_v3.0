@@ -8,13 +8,13 @@ import org.store.clothstar.order.domain.vo.Price
 class OrderDetail(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val orderDetailId: Long,
-
-    @Column(name = "product_line_id")
-    val productLineId: Long,
+    val orderDetailId: Long? = null,
 
     @Column(name = "product_id")
     val productId: Long,
+
+    @Column(name = "item_id")
+    val itemId: Long,
 
     val quantity: Int,
 

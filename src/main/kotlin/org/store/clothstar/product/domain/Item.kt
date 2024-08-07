@@ -27,11 +27,11 @@ class Item(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val itemId: Long? = null,
-    var name: String,
-    var price: Int,
+    val name: String,
+    val price: Int,
     var stock: Int,
-    var saleStatus: SaleStatus,
-    var displayStatus: DisplayStatus,
+    val saleStatus: SaleStatus,
+    val displayStatus: DisplayStatus,
 
     @ElementCollection
     @CollectionTable(
@@ -43,4 +43,8 @@ class Item(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     val product: Product,
-)
+) {
+    fun updateStock(stock: Int) {
+        this.stock = stock
+    }
+}
