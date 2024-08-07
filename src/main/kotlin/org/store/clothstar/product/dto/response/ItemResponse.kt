@@ -74,8 +74,6 @@ class ProductOptionResponse(
 class ImageResponse(
     val url: String,
     val originUrl: String,
-    val pdpThumbnailUrl: String,
-    val pdpStaticImageUrl: String,
     val imageType: ImageType
 ) {
     companion object {
@@ -83,8 +81,6 @@ class ImageResponse(
             return ImageResponse(
                 url = image.url,
                 originUrl = image.originUrl,
-                pdpThumbnailUrl = image.pdpThumbnailUrl,
-                pdpStaticImageUrl = image.pdpStaticImageUrl,
                 imageType = image.imageType
             )
         }
