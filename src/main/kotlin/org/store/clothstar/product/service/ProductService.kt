@@ -8,6 +8,7 @@ import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.server.ResponseStatusException
 import org.store.clothstar.product.domain.Item
+import org.store.clothstar.product.domain.OptionValue
 import org.store.clothstar.product.domain.Product
 import org.store.clothstar.product.domain.ProductOption
 import org.store.clothstar.product.dto.request.ProductCreateRequest
@@ -57,10 +58,19 @@ class ProductService(
                 optionName = option.optionName,
                 optionOrderNo = option.optionOrderNo,
                 product = product,
-                optionValues = option.optionValues,
             )
 
             productOptionRepository.save(productOption)
+
+            for (optionValueData in option.optionValues) {
+                val optionValue = OptionValue(
+                    productOption = productOption,
+                    productColor = optionValueData.productColor,
+                    value = optionValueData.value
+                )
+
+                optionValueRepository.save(optionValue)
+            }
         }
 
         //item , item attribute 만들어야함 어떤것들 조합해서 나왔는지?
@@ -79,46 +89,12 @@ class ProductService(
 
             itemRepository.save(item)
         }
-        
+
         return product.productId!!
     }
 
-
-//
-//    @Transactional
-//    fun updateProduct(productId: Long, updateProductRequest: UpdateProductRequest?) {
-//        val product: ProductEntity = productRepository.findById(productId)
-//            .orElseThrow {
-//                ResponseStatusException(
-//                    HttpStatus.BAD_REQUEST,
-//                    "productId :" + productId + "인 상품 옵션 정보를 찾을 수 없습니다."
-//                )
-//            }
-//
-//        product.updateOption(updateProductRequest)
-//    }
-
-//    @Transactional
-//    fun deleteProduct(productId: Long?) {
-//        productRepository.deleteById(productId)
-//    }
-//
-//    @Transactional
-//    fun restoreProductStockByOrder(orderDetailList: List<OrderDetail?>) {
-//        orderDetailList.forEach(Consumer<OrderDetail> { orderDetail: OrderDetail ->
-//            val productEntity: ProductEntity = productRepository.findById(orderDetail.getProductId())
-//                .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "상품 정보를 찾을 수 없습니다.") }
-//            productEntity.restoreStock(orderDetail.getQuantity())
-//        })
-//    }
-//
-//    fun restoreProductStockByOrderDetail(orderDetail: OrderDetail) {
-//        val productEntity: ProductEntity = productRepository.findById(orderDetail.getProductId())
-//            .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "상품 정보를 찾을 수 없습니다.") }
-//        productEntity.restoreStock(orderDetail.getQuantity())
-//    }
-//
-//    fun findByIdIn(productIds: List<Long?>?): List<ProductEntity> {
-//        return productJPARepository.findByIdIn(productIds)
-//    }
+    @Transactional
+    fun deleteProduct(productId: Long) {
+        productRepository.deleteById(productId)
+    }
 }
