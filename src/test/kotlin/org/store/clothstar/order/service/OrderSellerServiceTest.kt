@@ -11,6 +11,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.data.repository.findByIdOrNull
+import org.store.clothstar.common.error.ErrorCode
 import org.store.clothstar.order.domain.Order
 import org.store.clothstar.order.domain.vo.Status
 import org.store.clothstar.common.error.exception.order.OrderNotFoundException
@@ -31,7 +32,7 @@ class OrderSellerServiceTest {
     // 판매자 주문 승인 - approveOrder
     @Test
     @DisplayName("판매자 주문 승인 - 성공 테스트")
-    fun approveOrder_verify_test() {
+    fun approveOrder_success_test() {
         //given
         val orderId = 1L
 
@@ -61,15 +62,16 @@ class OrderSellerServiceTest {
         every { orderRepository.findByIdOrNull(orderId) } returns null
 
         //when & then
-        assertThrows<OrderNotFoundException> {
+        val exception = assertThrows<OrderNotFoundException> {
             orderSellerService.approveOrder(orderId)
         }
+        assertEquals(ErrorCode.NOT_FOUND_ORDER, exception.errorCode)
     }
 
     // 판매자 주문 취소 - cancelOrder
     @Test
     @DisplayName("판매자 주문 취소 - 성공 테스트")
-    fun cancelOrder_verify_test() {
+    fun cancelOrder_success_test() {
         //given
         val orderId = 1L
         every { order.status } returns Status.CONFIRMED
@@ -98,8 +100,9 @@ class OrderSellerServiceTest {
         every { orderRepository.findByIdOrNull(orderId) } returns null
 
         //when & then
-        assertThrows<OrderNotFoundException> {
+        val exception = assertThrows<OrderNotFoundException> {
             orderSellerService.cancelOrder(orderId)
         }
+        assertEquals(ErrorCode.NOT_FOUND_ORDER, exception.errorCode)
     }
 }
