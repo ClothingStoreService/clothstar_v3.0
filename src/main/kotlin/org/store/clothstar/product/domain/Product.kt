@@ -24,9 +24,12 @@ class Product(
     var name: String,
     var content: String,
     var price: Int,
-    @ElementCollection
-    @CollectionTable(name = "product_color", joinColumns = [JoinColumn(name = "product_id")])
-    var productColors: MutableList<ProductColor>? = mutableListOf(),
+    // 색상 목록
+
+    @ElementCollection(targetClass = ProductColor::class)
+    @CollectionTable(name = "product_colors", joinColumns = [JoinColumn(name = "product_id")])
+    @Enumerated(EnumType.STRING)
+    var productColors: MutableSet<ProductColor> = mutableSetOf(),
 
     // 이미지 목록
     @ElementCollection
