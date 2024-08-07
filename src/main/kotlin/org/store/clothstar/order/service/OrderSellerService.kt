@@ -1,0 +1,31 @@
+package org.store.clothstar.order.service
+
+import org.springframework.data.repository.findByIdOrNull
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+import org.store.clothstar.common.error.ErrorCode
+import org.store.clothstar.order.domain.vo.Status
+import org.store.clothstar.common.error.exception.order.OrderNotFoundException
+import org.store.clothstar.order.repository.OrderRepository
+
+@Service
+class OrderSellerService(
+    private val orderRepository: OrderRepository,
+) {
+
+    @Transactional
+    fun approveOrder(orderId: Long) {
+        val order = orderRepository.findByIdOrNull(orderId)
+            ?: throw OrderNotFoundException(ErrorCode.NOT_FOUND_ORDER)
+        order.validateForStatusCONFIRMEDAndDeletedAt()
+        order.updateStatus(Status.PROCESSING)
+    }
+
+    @Transactional
+    fun cancelOrder(orderId: Long) {
+        val order = orderRepository.findByIdOrNull(orderId)
+            ?: throw OrderNotFoundException(ErrorCode.NOT_FOUND_ORDER)
+        order.validateForStatusCONFIRMEDAndDeletedAt()
+        order.updateStatus(Status.CANCELED)
+    }
+}
