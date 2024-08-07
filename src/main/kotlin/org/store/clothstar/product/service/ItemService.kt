@@ -29,7 +29,7 @@ class ItemService (
                 }
 
     @Transactional
-    fun createItem(product: Product, itemRequest: ProductCreateRequest.ItemCreateRequest) {
+    fun createItem(product: Product, itemRequest: ProductCreateRequest.ItemCreateRequest): Item {
         // 옵션 값들을 조회
         val optionValues = itemRequest.optionAttributes.map { attr ->
             val productOption = productOptionRepository.findByProductAndOptionOrderNo(product, attr.optionOrderNo)
@@ -60,6 +60,6 @@ class ItemService (
         )
 
         // 아이템 저장
-        itemRepository.save(item)
+        return itemRepository.save(item)
     }
 }

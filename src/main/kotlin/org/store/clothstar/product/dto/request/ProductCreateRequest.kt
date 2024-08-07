@@ -31,7 +31,6 @@ class ProductCreateRequest(
 
     // TODO: 색상 필터링을 위한 색상 목록 받
 //    val productColors: Set<ProductColor>? = emptySet(),
-    val imageList: List<ProductImageCreateRequest> = emptyList(),
     val productOptions: List<ProductOptionCreateRequest> = emptyList(),
     val items: List<ItemCreateRequest> = emptyList(),
 ) {
@@ -39,12 +38,6 @@ class ProductCreateRequest(
     class ProductColorDTO(
         @NotBlank(message = "색상을 선택해주세요.")
         val color: String
-    )
-
-    class ProductImageCreateRequest(
-        val multipartFile: MultipartFile,
-        @Enumerated(EnumType.STRING)
-        val imageType: ImageType
     )
 
     class ProductOptionCreateRequest(

@@ -9,8 +9,6 @@ import org.store.clothstar.product.domain.type.ImageType
 class ProductImage(
     val url: String,
     val originUrl: String,
-    val pdpThumbnailUrl: String,
-    val pdpStaticImageUrl: String,
     @Enumerated(EnumType.STRING)
     val imageType: ImageType
 )
