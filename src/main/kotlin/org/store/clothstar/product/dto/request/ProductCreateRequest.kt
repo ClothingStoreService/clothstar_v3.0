@@ -23,10 +23,6 @@ class ProductCreateRequest(
     @NotNull(message = "판매 상태를 설정해주세요")
     val saleStatus: SaleStatus,
 
-    val productColors: List<ProductColorDTO>? = emptyList(),
-
-    val imageList: List<ProductImageCreateRequest> = emptyList(),
-
     val productOptions: List<ProductOptionCreateRequest> = emptyList(),
 
     val items: List<ItemCreateRequest> = emptyList(),

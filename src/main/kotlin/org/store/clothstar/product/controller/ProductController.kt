@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*
 import org.store.clothstar.category.service.CategoryService
 import org.store.clothstar.common.dto.MessageDTO
 import org.store.clothstar.common.util.URIBuilder.buildURI
+import org.store.clothstar.product.dto.request.ProductCreateRequest
 import org.store.clothstar.product.dto.request.UpdateProductRequest
 import org.store.clothstar.product.dto.response.ProductResponse
 import org.store.clothstar.product.service.ProductService
@@ -27,31 +28,31 @@ class ProductController(
         return ResponseEntity.ok().body<ProductResponse>(productResponse)
     }
 
-//    @Operation(summary = "상품 옵션 등록", description = "상품 옵션 이름, 추가금액, 재고 수를 입력하여 상품을 신규 등록한다.")
-//    @PostMapping
-//    fun createProduct(@Validated @RequestBody createProductRequest: CreateProductRequest): ResponseEntity<URI> {
-//        val productId: Long = productService.createProduct(createProductRequest)
-//        val location = buildURI(productId)
-//
-//        return ResponseEntity.created(location).build()
-//    }
-//
-//    @Operation(summary = "상품 옵션 수정", description = "상품 옵션 이름, 추가금액, 재고 수를 입력하여 상품 옵션 정보를 수정한다.")
-//    @PutMapping("/{productId}")
-//    fun updateProduct(
-//        @PathVariable("productId") productId: Long,
-//        @Validated @RequestBody updateProductRequest: UpdateProductRequest
-//    ): ResponseEntity<MessageDTO> {
-//        productService.updateProduct(productId, updateProductRequest)
-//
-//        return ResponseEntity.ok().body(MessageDTO(HttpStatus.OK.value(), "Product updated successfully"))
-//    }
-//
-//    @Operation(summary = "상품 옵션 삭제", description = "상품 옵션 id로 상품 옵션을 삭제한다.")
-//    @DeleteMapping("/{productId}")
-//    fun deleteProduct(@PathVariable productId: Long): ResponseEntity<Void> {
-//        productService.deleteProduct(productId)
-//
-//        return ResponseEntity.noContent().build()
-//    }
+    @Operation(summary = "상품 옵션 등록", description = "상품 옵션 이름, 추가금액, 재고 수를 입력하여 상품을 신규 등록한다.")
+    @PostMapping
+    fun createProduct(@Validated @RequestBody productCreateRequest: ProductCreateRequest): ResponseEntity<URI> {
+        val productId: Long = productService.createProduct(productCreateRequest)
+        val location = buildURI(productId)
+
+        return ResponseEntity.created(location).build()
+    }
+
+    @Operation(summary = "상품 옵션 수정", description = "상품 옵션 이름, 추가금액, 재고 수를 입력하여 상품 옵션 정보를 수정한다.")
+    @PutMapping("/{productId}")
+    fun updateProduct(
+        @PathVariable("productId") productId: Long,
+        @Validated @RequestBody updateProductRequest: UpdateProductRequest
+    ): ResponseEntity<MessageDTO> {
+        //productService.updateProduct(productId, updateProductRequest)
+
+        return ResponseEntity.ok().body(MessageDTO(HttpStatus.OK.value(), "Product updated successfully"))
+    }
+
+    @Operation(summary = "상품 옵션 삭제", description = "상품 옵션 id로 상품 옵션을 삭제한다.")
+    @DeleteMapping("/{productId}")
+    fun deleteProduct(@PathVariable productId: Long): ResponseEntity<Void> {
+        //productService.deleteProduct(productId)
+
+        return ResponseEntity.noContent().build()
+    }
 }

@@ -34,7 +34,7 @@ class Product(
     var imageList: MutableList<ProductImage> = mutableListOf(),
 
     // 기타 정보
-    var saleCount: Long,
+    var saleCount: Long = 0,
     @Enumerated(EnumType.STRING)
     var displayStatus: DisplayStatus,  // 진열 여부
     @Enumerated(EnumType.STRING)

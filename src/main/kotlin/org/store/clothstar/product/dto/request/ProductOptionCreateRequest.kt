@@ -9,5 +9,5 @@ class ProductOptionCreateRequest(
     val optionName: String,
     @Positive(message = "옵션 순서는 양수입니다.")
     val optionOrderNo: Int,
-    val optionValues: List<OptionValue>,
+    val optionValues: MutableList<OptionValue>,
 )

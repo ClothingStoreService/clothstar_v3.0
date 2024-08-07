@@ -26,7 +26,7 @@ import org.store.clothstar.product.domain.type.SaleStatus
 class Item(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val itemId: Long = 0L,
+    val itemId: Long? = null,
     var name: String,
     var price: Int,
     var stock: Int,

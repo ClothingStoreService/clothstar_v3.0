@@ -4,7 +4,13 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.validation.annotation.Validated
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.server.ResponseStatusException
+import org.store.clothstar.product.domain.Item
+import org.store.clothstar.product.domain.Product
+import org.store.clothstar.product.domain.ProductOption
+import org.store.clothstar.product.dto.request.ProductCreateRequest
 import org.store.clothstar.product.dto.response.ProductResponse
 import org.store.clothstar.product.repository.ItemRepository
 import org.store.clothstar.product.repository.OptionValueRepository
@@ -28,33 +34,56 @@ class ProductService(
         )
     }
 
-//    @Transactional
-//    fun createProduct(@Validated @RequestBody productCreateRequest: ProductCreateRequest): Long {
-//
-//        //option -> 색상
-//        val options = productCreateRequest.productOptions
-//
-//
-//        for (option in options) {
-//            val productOption = ProductOption(
-//                optionName = option.optionName,
-//
-//                )
-//
-//        }
+    @Transactional
+    fun createProduct(@Validated @RequestBody productCreateRequest: ProductCreateRequest): Long {
+        //product 객체 생성후 저장
+        val product = Product(
+            memberId = productCreateRequest.memberId,
+            categoryId = productCreateRequest.categoryId,
+            name = productCreateRequest.name,
+            content = productCreateRequest.content,
+            price = productCreateRequest.price,
+            displayStatus = productCreateRequest.displayStatus,
+            saleStatus = productCreateRequest.saleStatus,
+        )
+
+        productRepository.save(product)
+
+        //productOption 객체 생성후 저장
+        //option -> 색상, optionsValues -> [빨강, 파랑]
+        val options = productCreateRequest.productOptions
+        for (option in options) {
+            val productOption = ProductOption(
+                optionName = option.optionName,
+                optionOrderNo = option.optionOrderNo,
+                product = product,
+                optionValues = option.optionValues,
+            )
+
+            productOptionRepository.save(productOption)
+        }
+
+        //item , item attribute 만들어야함 어떤것들 조합해서 나왔는지?
+        //product
+        val items = productCreateRequest.items
+        for (itemData in items) {
+            val item = Item(
+                name = itemData.name,
+                price = itemData.price,
+                stock = itemData.stock,
+                saleStatus = itemData.saleStatus,
+                displayStatus = itemData.displayStatus,
+                attributes = itemData.attributes,
+                product = itemData.product
+            )
+
+            itemRepository.save(item)
+        }
+        
+        return product.productId!!
+    }
 
 
-//        val savedProductOption = productOptionRepository.save(productOption)
-
-    //optionValue -> 빨강,파랑
-
-    //item , item attribute 만들어야함 어떤것들 조합해서 나왔는지?
-
-    //product
-
-//
-//        return savedProduct.getProductId()
-//    }
 //
 //    @Transactional
 //    fun updateProduct(productId: Long, updateProductRequest: UpdateProductRequest?) {
