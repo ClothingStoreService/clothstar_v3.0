@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
 import org.store.clothstar.member.domain.Member
+import org.store.clothstar.member.domain.vo.MemberShoppingActivity
 import org.store.clothstar.member.service.MemberService
 import org.store.clothstar.product.domain.ProductImage
 import org.store.clothstar.product.domain.type.ImageType
@@ -24,7 +25,8 @@ class ProductApplicationService(
     ) {
         // get current member (principal)
         val memberId: Long = 1  // currentMember.getId()
-        val member: Member = memberService.getMemberByMemberId(memberId)
+//        val member: Member = memberService.getMemberByMemberId(memberId)
+        val member = Member(memberId, "010-1234-5678", "Ogu", MemberShoppingActivity.init())
 
         // 1. 상품 생성
         val product = productCreateRequest.toProductEntity()
@@ -59,5 +61,4 @@ class ProductApplicationService(
             product.items.add(item)
         }
     }
-
 }
