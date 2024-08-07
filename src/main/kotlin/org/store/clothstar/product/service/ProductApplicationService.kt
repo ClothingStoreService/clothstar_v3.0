@@ -1,7 +1,6 @@
 package org.store.clothstar.product.service
 
 import org.springframework.stereotype.Service
-import org.store.clothstar.category.service.CategoryService
 import org.store.clothstar.member.domain.Member
 import org.store.clothstar.member.service.MemberService
 import org.store.clothstar.product.domain.ProductImage
@@ -11,9 +10,7 @@ import org.store.clothstar.product.dto.request.ProductCreateRequest
 class ProductApplicationService(
     private val productService: ProductService,
     private val productOptionService: ProductOptionService,
-    private val optionValueService: OptionValueService,
     private val itemService: ItemService,
-    private val categoryService: CategoryService,
     private val memberService: MemberService
 ) {
     fun createProduct(productCreateRequest: ProductCreateRequest) {

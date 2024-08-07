@@ -1,7 +1,18 @@
 package org.store.clothstar.product.controller
 
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
+import org.springframework.validation.annotation.Validated
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.store.clothstar.category.service.CategoryService
+import org.store.clothstar.common.dto.MessageDTO
+import org.store.clothstar.product.dto.request.ProductCreateRequest
+import org.store.clothstar.product.service.ProductApplicationService
 import org.store.clothstar.product.service.ProductService
 import java.net.URI
 
@@ -20,9 +31,14 @@ private class ProductController (
         @Validated @RequestBody productCreateRequest: ProductCreateRequest
     ) : ResponseEntity<MessageDTO> {
         // 상품 등록
-
-        // 최종 product 생성
         productApplicationService.createProduct(productCreateRequest);
+
+        val messageDTO = MessageDTO(
+            HttpStatus.CREATED.value(),
+            "상품 생성이 정상적으로 처리됐습니다."
+        )
+
+        return ResponseEntity(messageDTO, HttpStatus.CREATED)
 
     }
 }
