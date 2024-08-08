@@ -60,10 +60,12 @@ spring:
       on-profile: "db-dev"
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ENC(tdT8e3e+B4Lnbjjca9DuylTI2WMxolkaTxUyT4yJKbFLHUV0YynNjMss5AsaQJxEyndmGmgUlYTuJhx6667fcyUxGiV43314vgEwX+/NaVaSjIa2wiAmMfZu3WPVlgp/)
+    url: ENC(NUaA2nUOj6AHVznanOWash2cFjluXsmQQwXNRgbd6sQiQ8wKMP6CXSN4MQO8CCzQZG/4mEmLv0qoR/bGLDtOz9lTQzbvvW8Rt0a9snzlAauoSfyvKayW2pePk9rHxJnQ)
     username: ENC(xhLiaQAS5lcTT2hgCMRDOw==)
     password: ENC(XzhtQOZIlb9QjMX3klXi1EMBAuVOqWrM)
   jpa:
+    hibernate:
+      ddl-auto: create
     show-sql: true
     database-platform: org.hibernate.dialect.MySQLDialect
     properties:

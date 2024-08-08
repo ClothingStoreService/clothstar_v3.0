@@ -32,7 +32,7 @@ class OrderResponse(
     private var orderDetailList: List<OrderDetailDTO> = ArrayList<OrderDetailDTO>(),
 ) {
 
-    fun setterOrderDetailList(orderDetailDTOList: List<OrderDetailDTO>) {
+    fun updateOrderDetailList(orderDetailDTOList: List<OrderDetailDTO>) {
         this.orderDetailList = orderDetailDTOList
     }
 

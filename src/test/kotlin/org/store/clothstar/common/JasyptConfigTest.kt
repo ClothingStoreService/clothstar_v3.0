@@ -9,7 +9,7 @@ class JasyptConfigTest {
 
     @Test
     fun jasypt() {
-        val url = ""
+        val url = "jdbc:mysql://clothstar-v83.cpmu4ewuelxk.ap-northeast-2.rds.amazonaws.com/clothstar83"
         val username = ""
         val password = ""
 

@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional
 import org.store.clothstar.order.domain.Order
 
 interface OrderRepository : JpaRepository<Order, Long> {
-    @Query("SELECT o FROM orders o WHERE o.status = 'WAITING' AND o.deletedAt = null")
+    @Query("SELECT o FROM orders o WHERE o.status = 'CONFIRMED' AND o.deletedAt is null")
     fun findWaitingOrders(): List<Order?>
 
     @Transactional
@@ -20,4 +20,6 @@ interface OrderRepository : JpaRepository<Order, Long> {
     @Modifying
     @Query("UPDATE orders o SET o.status = 'CANCEL' WHERE o.orderId = :orderId")
     fun cancelOrder(@Param("orderId") orderId: Long)
+
+    fun findByOrderIdAndDeletedAtIsNull(orderId : Long) : Order?
 }

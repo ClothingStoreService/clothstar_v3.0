@@ -58,7 +58,7 @@ class OrderSellerService(
                         OrderDetailDTO.from(orderDetail, itemEntity, productEntity, brandName)
                     }.toList()
 
-                    orderResponse.setterOrderDetailList(orderDetailDTOList)
+                    orderResponse.updateOrderDetailList(orderDetailDTOList)
                     orderResponse
                 } ?: throw IllegalArgumentException("오더 리스트가 없습니다.")
             }.toList()
