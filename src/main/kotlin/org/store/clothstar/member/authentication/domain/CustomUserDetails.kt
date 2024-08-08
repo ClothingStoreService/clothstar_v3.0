@@ -1,8 +1,9 @@
-package org.store.clothstar.member.domain
+package org.store.clothstar.member.authentication.domain
 
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
+import org.store.clothstar.member.domain.Account
 
 class CustomUserDetails(
     val account: Account,

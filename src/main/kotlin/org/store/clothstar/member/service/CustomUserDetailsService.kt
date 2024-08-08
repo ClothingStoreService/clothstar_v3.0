@@ -2,7 +2,7 @@ package org.store.clothstar.member.service
 
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
-import org.store.clothstar.member.domain.CustomUserDetails
+import org.store.clothstar.member.authentication.domain.CustomUserDetails
 import org.store.clothstar.member.repository.AccountRepository
 
 

@@ -5,19 +5,14 @@ import jakarta.transaction.Transactional
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Slice
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
-import org.store.clothstar.common.config.mail.MailContentBuilder
-import org.store.clothstar.common.config.mail.MailSendDTO
-import org.store.clothstar.common.config.mail.MailService
-import org.store.clothstar.common.config.redis.RedisUtil
 import org.store.clothstar.common.error.ErrorCode
 import org.store.clothstar.common.error.exception.DuplicatedEmailException
 import org.store.clothstar.common.error.exception.DuplicatedTelNoException
 import org.store.clothstar.common.error.exception.NotFoundMemberException
-import org.store.clothstar.member.domain.Account
 import org.store.clothstar.member.domain.Member
-import org.store.clothstar.member.domain.MemberRole
 import org.store.clothstar.member.domain.vo.MemberShoppingActivity
 import org.store.clothstar.member.dto.request.CreateMemberRequest
 import org.store.clothstar.member.dto.request.ModifyNameRequest
@@ -30,9 +25,6 @@ class MemberServiceImpl(
     private val accountRepository: AccountRepository,
     private val memberRepository: MemberRepository,
     private val passwordEncoder: PasswordEncoder,
-    private val mailContentBuilder: MailContentBuilder,
-    private val mailService: MailService,
-    private val redisUtil: RedisUtil,
 ) : MemberService {
     private val log = KotlinLogging.logger {}
 
@@ -117,11 +109,8 @@ class MemberServiceImpl(
 
     // TODO member signup, admin signup -> 객체지향 적으로 설계를 어떻게 할 수 있을까
     @Transactional
-    override fun signUp(createMemberDTO: CreateMemberRequest): Long {
-
-        memberRepository.findByTelNo(createMemberDTO.telNo)?.let {
-            throw DuplicatedTelNoException(ErrorCode.DUPLICATED_TEL_NO)
-        }
+    override fun saveMember(createMemberDTO: CreateMemberRequest): Long {
+        signUpValidCheck(createMemberDTO)
 
         val member = Member(
             telNo = createMemberDTO.telNo,
@@ -131,47 +120,17 @@ class MemberServiceImpl(
 
         memberRepository.save(member)
 
-        val account = member.memberId?.let { memberId ->
-            Account(
-                email = createMemberDTO.email,
-                password = createMemberDTO.password,
-                role = MemberRole.USER,
-                userId = memberId,
-            )
-        }
-
-        accountRepository.save(account)
-
         return member.memberId!!
     }
 
-    override fun signupCertifyNumEmailSend(email: String) {
-        sendEmailAuthentication(email)
-        log.info { "인증번호 전송 완료, email = ${email}" }
-    }
-
     override fun getMemberByMemberId(memberId: Long): Member {
-        return memberRepository.findByMemberId(memberId)
+        return memberRepository.findByIdOrNull(memberId)
             ?: throw NotFoundMemberException(ErrorCode.NOT_FOUND_MEMBER)
     }
 
-    private fun sendEmailAuthentication(toEmail: String): String {
-        val certifyNum = redisUtil.createdCertifyNum()
-        val message = mailContentBuilder.build(certifyNum)
-        val mailSendDTO = MailSendDTO(toEmail, "clothstar 회원가입 인증 메일 입니다.", message)
-
-        mailService.sendMail(mailSendDTO)
-
-        //메일 전송에 성공하면 redis에 key = email, value = 인증번호를 생성한다.
-        //지속시간은 10분
-        redisUtil.createRedisData(toEmail, certifyNum)
-
-        return certifyNum
-    }
-
-    fun verifyEmailCertifyNum(email: String, certifyNum: String): Boolean {
-        val certifyNumFoundByRedis = redisUtil.getData(email) ?: return false
-
-        return certifyNumFoundByRedis == certifyNum
+    fun signUpValidCheck(createMemberDTO: CreateMemberRequest) {
+        memberRepository.findByTelNo(createMemberDTO.telNo)?.let {
+            throw DuplicatedTelNoException(ErrorCode.DUPLICATED_TEL_NO)
+        }
     }
 }

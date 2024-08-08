@@ -11,7 +11,7 @@ class CreateObject {
                 password = "test1234",
                 name = "현수",
                 telNo = "010-1234-1234",
-                certifyNum = null,
+                certifyNum = "adsf",
             )
         }
     }
