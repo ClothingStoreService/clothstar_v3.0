@@ -44,6 +44,10 @@ class Item(
     @JoinColumn(name = "product_id")
     val product: Product,
 ) {
+    fun restoreStock(quantity: Int) {
+        this.stock += quantity
+    }
+
     fun updateStock(stock: Int) {
         this.stock = stock
     }

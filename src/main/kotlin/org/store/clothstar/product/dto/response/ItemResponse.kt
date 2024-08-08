@@ -1,6 +1,6 @@
 package org.store.clothstar.product.dto.response
 
-import org.store.clothstar.product.domain.Product
+import org.store.clothstar.product.domain.Item
 
 /**
  * {
@@ -19,15 +19,21 @@ import org.store.clothstar.product.domain.Product
  *   ]
  * }
  */
-class ProductResponse(
+class ItemResponse(
+    private val itemId: Long,
     private val productId: Long,
     private val name: String,
+    private val price: Int,
+    private val stock: Int,
 ) {
     companion object {
-        fun from(product: Product): ProductResponse {
-            return ProductResponse(
-                productId = product.productId!!,
-                name = product.name,
+        fun from(item: Item): ItemResponse {
+            return ItemResponse(
+                itemId = item.itemId!!,
+                productId = item.product.productId!!,
+                name = item.name,
+                price = item.price,
+                stock = item.stock,
             )
         }
     }
