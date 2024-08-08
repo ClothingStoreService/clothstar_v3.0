@@ -11,7 +11,7 @@ import org.store.clothstar.product.dto.request.UpdateProductRequest
 class Product(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var productId: Long? = null,
+    val productId: Long? = null,
 
     // 연관 관계 필드 (N:1)
     @Column(name = "member_id")

@@ -25,7 +25,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler(NotFoundAccountException::class)
     protected fun memberNotFoundException(ex: NotFoundAccountException): ResponseEntity<ErrorResponseDTO> {
         log.error { "NotFoundAccountException : ${ex.message}" }
-        ex.fillInStackTrace()
+        ex.printStackTrace()
 
         val errorResponseDTO = ErrorResponseDTO(
             HttpStatus.NOT_FOUND.value(),
@@ -53,7 +53,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler(DuplicatedEmailException::class)
     protected fun duplicatedEmailException(ex: DuplicatedEmailException): ResponseEntity<ErrorResponseDTO> {
         log.error { "DuplicatedEmailException : ${ex.message}" }
-        ex.fillInStackTrace()
+        ex.printStackTrace()
 
         val errorResponseDTO = ErrorResponseDTO(
             HttpStatus.BAD_REQUEST.value(),
@@ -67,7 +67,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler(DuplicatedTelNoException::class)
     protected fun duplicatedEmailException(ex: DuplicatedTelNoException): ResponseEntity<ErrorResponseDTO> {
         log.error { "DuplicatedTelNoException : ${ex.message}" }
-        ex.fillInStackTrace()
+        ex.printStackTrace()
 
         val errorResponseDTO = ErrorResponseDTO(
             HttpStatus.BAD_REQUEST.value(),
@@ -81,7 +81,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler(DuplicatedSellerException::class)
     protected fun duplicatedSellerException(ex: DuplicatedSellerException): ResponseEntity<ErrorResponseDTO> {
         log.error { "DuplicatedSellerException : ${ex.message}" }
-        ex.fillInStackTrace()
+        ex.printStackTrace()
 
         val errorResponseDTO = ErrorResponseDTO(
             HttpStatus.BAD_REQUEST.value(),
@@ -95,7 +95,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler(DuplicatedBizNoException::class)
     protected fun duplicatedBizNoException(ex: DuplicatedBizNoException): ResponseEntity<ErrorResponseDTO> {
         log.error { "DuplicatedBizNoException : ${ex.message}" }
-        ex.fillInStackTrace()
+        ex.printStackTrace()
 
         val errorResponseDTO = ErrorResponseDTO(
             HttpStatus.BAD_REQUEST.value(),
@@ -109,7 +109,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler(DuplicatedBrandNameException::class)
     protected fun duplicatedBrandNameException(ex: DuplicatedBrandNameException): ResponseEntity<ErrorResponseDTO> {
         log.error { "DuplicatedBrandNameException : ${ex.message}" }
-        ex.fillInStackTrace()
+        ex.printStackTrace()
 
         val errorResponseDTO = ErrorResponseDTO(
             HttpStatus.BAD_REQUEST.value(),
@@ -123,7 +123,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException::class)
     protected fun handleMethodArgumentNotValidException(ex: MethodArgumentNotValidException): ResponseEntity<ValidErrorResponseDTO> {
         log.error { "handleMethodArgumentNotValidException : ${ex.message}" }
-        ex.fillInStackTrace()
+        ex.printStackTrace()
 
         val errorMap: MutableMap<String, String> = HashMap()
         ex.bindingResult.allErrors.forEach(Consumer { error: ObjectError ->
@@ -144,7 +144,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler
     private fun mailException(ex: MailException): ResponseEntity<ErrorResponseDTO> {
         log.error { "MailExceptionHandler : ${ex.message}" }
-        ex.fillInStackTrace()
+        ex.printStackTrace()
 
         val errorResponseDTO = ErrorResponseDTO(
             HttpStatus.INTERNAL_SERVER_ERROR.value(),
@@ -158,7 +158,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler
     private fun illegalArgumentHandler(ex: IllegalArgumentException): ResponseEntity<ErrorResponseDTO> {
         log.error { "IllegalArgumentHandler : ${ex.message}" }
-        ex.fillInStackTrace()
+        ex.printStackTrace()
 
         val errorResponseDTO = ErrorResponseDTO(
             HttpStatus.BAD_REQUEST.value(),
@@ -172,8 +172,8 @@ class GlobalExceptionHandler {
     @ExceptionHandler(Exception::class)
     private fun exHandler(ex: Exception): ResponseEntity<ErrorResponseDTO> {
         log.error { "ExceptionHandler : ${ex.message}" }
-        ex.fillInStackTrace()
-
+        ex.printStackTrace()
+        
         val errorResponseDTO = ErrorResponseDTO(
             HttpStatus.INTERNAL_SERVER_ERROR.value(),
             ex.message!!

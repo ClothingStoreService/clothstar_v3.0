@@ -5,4 +5,6 @@ import org.springframework.stereotype.Repository
 import org.store.clothstar.product.domain.Product
 
 @Repository
-interface ProductRepository : JpaRepository<Product, Long>
+interface ProductRepository : JpaRepository<Product, Long> {
+    fun findByIdIn(productLineIds: List<Long>): List<Product?>
+}

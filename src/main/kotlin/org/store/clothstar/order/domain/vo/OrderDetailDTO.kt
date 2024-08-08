@@ -27,19 +27,10 @@ class OrderDetailDTO(
                 optionName = item.name,
                 brandName = brandName,
                 productPrice = product.price,
-//                extraCharge = item.
+                quantity = orderDetail.quantity,
+                totalPrice = orderDetail.price.oneKindTotalPrice,
+                extraCharge = item.price
             )
-
-//            builder()
-//                .orderDetailId(orderDetail.orderDetailId)
-//                .productName(productLineEntity.getName())
-//                .optionName(productEntity.getName())
-//                .brandName(productLineEntity.getSeller().getBrandName())
-//                .productPrice(productLineEntity.getPrice())
-//                .extraCharge(productEntity.getExtraCharge())
-//                .quantity(orderDetail.quantity)
-//                .totalPrice(orderDetail.price.oneKindTotalPrice)
-//                .build()
         }
     }
 }

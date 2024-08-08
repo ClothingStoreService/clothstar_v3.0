@@ -97,4 +97,10 @@ class ProductService(
     fun deleteProduct(productId: Long) {
         productRepository.deleteById(productId)
     }
+
+    fun findByIdIn(productIds: List<Long>): List<Product> {
+        return productRepository.findByIdIn(productIds).map {
+            it ?: throw IllegalArgumentException("상품을 조회할 수 없습니다.")
+        }
+    }
 }
