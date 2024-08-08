@@ -6,5 +6,5 @@ import org.store.clothstar.product.domain.Product
 
 @Repository
 interface ProductRepository : JpaRepository<Product, Long> {
-    fun findByIdIn(productLineIds: List<Long>): List<Product?>
+    fun findByProductIdIn(productLineIds: List<Long>): List<Product?>
 }

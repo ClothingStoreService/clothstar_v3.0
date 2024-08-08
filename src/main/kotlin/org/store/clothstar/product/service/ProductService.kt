@@ -99,7 +99,7 @@ class ProductService(
     }
 
     fun findByIdIn(productIds: List<Long>): List<Product> {
-        return productRepository.findByIdIn(productIds).map {
+        return productRepository.findByProductIdIn(productIds).map {
             it ?: throw IllegalArgumentException("상품을 조회할 수 없습니다.")
         }
     }

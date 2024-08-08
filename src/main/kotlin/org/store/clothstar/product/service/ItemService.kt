@@ -27,7 +27,7 @@ class ItemService(
 
 
     fun findByIdIn(productIds: List<Long>): List<Item> {
-        return itemRepository.findByIdIn(productIds).map {
+        return itemRepository.findByItemIdIn(productIds).map {
             it ?: throw IllegalArgumentException("상품을 찾을수 없습니다.")
         }
     }
