@@ -41,7 +41,7 @@
 //
 //    @Transactional(readOnly = true)
 //    fun getOrder(orderId: Long) : OrderResponse {
-//        val order = orderRepository.findByIdAndDeletedAtIsNull(orderId)
+//        val order = orderRepository.findByOrderIdAndDeletedAtIsNull(orderId)
 //            ?: throw OrderNotFoundException(ErrorCode.NOT_FOUND_ORDER)
 //
 //        val member = memberService.getMemberByMemberId(order.memberId)
