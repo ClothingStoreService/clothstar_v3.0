@@ -31,33 +31,34 @@ class ProductApplicationService(
         // 1. 상품 생성
         val product = productCreateRequest.toProductEntity()
 
-        // 2. 상품 저장
+        // 상품 저장
         val savedProduct = productService.createProduct(product)
 
-        // 3. 상품 옵션 생성
-        val productOptions = productCreateRequest.productOptions.map { optionRequest ->
-            val productOption = productOptionService.createProductOption(product, optionRequest)
-            product.productOptions.add(productOption)
-        }
-
-        // 4. 상품 아이템 생성
-        productCreateRequest.items.forEach { itemRequest ->
-            val item = itemService.createItem(product, itemRequest)
-            product.items.add(item)
-        }
-
         // S3에 이미지 업로드 및 URL 생성
-        // 5 메인 이미지 업로드 및 저장
+        // 2. 메인 이미지 업로드 및 저장
 //        val mainImageUrl = s3Service.uploadFile(mainImage)
 //        val mainImageUrl = s3Service.uploadFile(mainImage)
         val mainImageUrl = "https://on.com2us.com/wp-content/uploads/2023/12/VxdEKDNZCp9hAW5TU5-3MZTePLGSdlYKzEZUyVLDB-Cyo950Ee19yaOL8ayxgJzEfMYfzfLcRYuwkmKEs2cg0w.webp"
         product.imageList.add(ProductImage(mainImageUrl, mainImageUrl, ImageType.MAIN))
 
-        // 6. 서브 이미지 업로드 및 저장
+        // 3. 서브 이미지 업로드 및 저장
         subImages?.forEach { subImage ->
 //            val subImageUrl = s3Service.uploadFile(subImage)
             val subImageUrl = "https://on.com2us.com/wp-content/uploads/2023/12/%EC%98%A4%EA%B5%AC%EC%99%80-%EB%B9%84%EB%B0%80%EC%9D%98%EC%88%B2-002.jpg"
             product.imageList.add(ProductImage(subImageUrl, subImageUrl, ImageType.SUB))
+        }
+
+
+        // 4. 상품 옵션 생성
+        val productOptions = productCreateRequest.productOptions.map { optionRequest ->
+            val productOption = productOptionService.createProductOption(product, optionRequest)
+            product.productOptions.add(productOption)
+        }
+
+        // 5. 상품 아이템 생성
+        productCreateRequest.items.forEach { itemRequest ->
+            val item = itemService.createItem(product, itemRequest)
+            product.items.add(item)
         }
     }
 }
