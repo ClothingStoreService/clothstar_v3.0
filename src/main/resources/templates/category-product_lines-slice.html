@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Category Product Lines List (Slice Paging)</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .sidebar {
+            height: 100%;
+            width: 200px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #f8f9fa;
+            padding-top: 20px;
+        }
+
+        .sidebar a {
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #333;
+            display: block;
+        }
+
+        .sidebar a:hover, .sidebar a.active {
+            background-color: #ddd;
+        }
+
+        .main-content {
+            margin-left: 220px;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="sidebar">
+    <h2>Categories</h2>
+    <a href="#" class="category-link" data-category-id="1">OUTER</a>
+    <a href="#" class="category-link" data-category-id="2">TOP</a>
+    <a href="#" class="category-link" data-category-id="3">PANTS</a>
+    <a href="#" class="category-link" data-category-id="4">SKIRT</a>
+    <a href="#" class="category-link" data-category-id="5">SHOES</a>
+</div>
+
+<div class="main-content">
+    <h1>Category Product Lines List (Slice Paging)</h1>
+
+    <!-- Search and Sort Options -->
+    <div class="form-group row">
+        <div class="col-md-8">
+            <input type="text" id="search-input" class="form-control" placeholder="Search by name or content">
+        </div>
+        <div class="col-md-2">
+            <button id="search-button" class="btn btn-primary btn-block">Search</button>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="sort-select">Sort By:</label>
+        <select id="sort-select" class="form-control">
+            <option value="createdAt">Created At</option>
+            <option value="price">Price</option>
+            <option value="saleCount">Sale Count</option>
+        </select>
+    </div>
+
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Content</th>
+            <th>Price</th>
+            <th>Total Stock</th>
+            <th>Status</th>
+            <th>Created At</th>
+            <th>Brand Names</th>
+            <th>Option Names</th>
+        </tr>
+        </thead>
+        <tbody id="product-lines-table-body">
+        <!-- JavaScript로 데이터 로드 -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    let currentPage = 0;
+    let hasNext = true;
+    let loading = false;
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // 카테고리 링크에 이벤트 리스너 추가
+        document.querySelectorAll('.category-link').forEach(link => {
+            link.addEventListener('click', function (event) {
+                event.preventDefault();
+                document.querySelectorAll('.category-link').forEach(link => link.classList.remove('active'));
+                this.classList.add('active');
+                const categoryId = this.getAttribute('data-category-id');
+                currentPage = 0;
+                hasNext = true;
+                loadProductLines(0, categoryId, true);
+            });
+        });
+
+        document.getElementById('search-button').addEventListener('click', function () {
+            currentPage = 0;
+            hasNext = true;
+            loadProductLines(0, getSelectedCategoryId(), true);
+        });
+
+        document.getElementById('search-input').addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                currentPage = 0;
+                hasNext = true;
+                loadProductLines(0, getSelectedCategoryId(), true);
+            }
+        });
+
+        window.addEventListener('scroll', function () {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 2) {
+                if (hasNext && !loading) {
+                    loadProductLines(currentPage + 1, getSelectedCategoryId());
+                }
+            }
+        });
+
+        loadProductLines();
+    });
+
+    function loadProductLines(page = 0, categoryId = getSelectedCategoryId(), reset = false) {
+        const searchKeyword = document.getElementById('search-input').value;
+        const sortOption = document.getElementById('sort-select').value;
+        const url = `/v1/categories/${categoryId}/productLines/slice?page=${page}&keyword=${searchKeyword}&sort=${sortOption}`;
+
+        loading = true;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.getElementById('product-lines-table-body');
+                if (reset) {
+                    tableBody.innerHTML = ''; // 기존 내용을 지웁니다.
+                }
+                data.content.forEach((productLine) => {
+                    const brandNames = productLine.productList.map(product => product.brandName).join(', ');
+                    const optionNames = productLine.productList.map(product => product.name).join(', ');
+                    const row = `
+                        <tr>
+                            <td>${productLine.productLineId}</td>
+                            <td>${productLine.name}</td>
+                            <td>${productLine.content}</td>
+                            <td>${productLine.price}</td>
+                            <td>${productLine.totalStock}</td>
+                            <td>${productLine.status}</td>
+                            <td>${productLine.createdAt}</td>
+                            <td>${brandNames}</td>
+                            <td>${optionNames}</td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                });
+
+                currentPage = page;
+                hasNext = !data.last;
+                loading = false;
+            })
+            .catch(error => {
+                console.error('Error fetching product lines data:', error);
+                loading = false;
+            });
+    }
+
+    function getSelectedCategoryId() {
+        const selectedLink = document.querySelector('.category-link.active');
+        return selectedLink ? selectedLink.getAttribute('data-category-id') : 1;
+    }
+</script>
+</body>
+</html>

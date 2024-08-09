@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Members List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .pagination {
+            justify-content: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Members List</h1>
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Created At</th>
+        </tr>
+        </thead>
+        <tbody id="members-table-body">
+        <!-- JavaScript로 데이터 로드 -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    let currentPage = 0;
+    const pageSize = 10;
+    let loading = false;
+    let lastPage = false;
+
+    document.addEventListener('DOMContentLoaded', function () {
+        loadMembers(currentPage);
+
+        window.addEventListener('scroll', () => {
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight && !loading && !lastPage) {
+                loadMembers(currentPage + 1);
+            }
+        });
+    });
+
+    function loadMembers(page = 0) {
+        loading = true;
+        const url = `/v2/members?page=${page}`;
+        const accessToken = localStorage.getItem("ACCESS_TOKEN");
+        let headersObj = new Object();
+        headersObj["Content-Type"] = "application/json";
+
+        if (accessToken) {
+            headersObj["Authorization"] = accessToken;
+        }
+
+        fetch(url, {
+            method: "GET",
+            headers: headersObj,
+        }).then(response => response.json())
+            .then(data => {
+                const tableBody = document.getElementById('members-table-body');
+
+                data.content.forEach(member => {
+                    const row = `
+                            <tr>
+                                <td>${member.memberId}</td>
+                                <td>${member.name}</td>
+                                <td>${member.createdAt}</td>
+                            </tr>
+                        `;
+                    tableBody.innerHTML += row;
+                });
+
+                currentPage = page;
+                loading = false;
+                if (data.last) {
+                    lastPage = true;
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching member data:', error);
+                loading = false;
+            });
+    }
+</script>
+
+</body>
+</html>
