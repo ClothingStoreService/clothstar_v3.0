@@ -29,7 +29,7 @@ class OrderDetailDTO(
                 productPrice = product.price,
                 quantity = orderDetail.quantity,
                 totalPrice = orderDetail.price.oneKindTotalPrice,
-                extraCharge = item.price
+                extraCharge = item.finalPrice
             )
         }
     }

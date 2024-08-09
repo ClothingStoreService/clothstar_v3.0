@@ -22,21 +22,21 @@ class ItemController(
         val productResponse = itemService.getProduct(itemId)
         return ResponseEntity.ok().body<ItemResponse>(productResponse)
     }
-
-    @Operation(summary = "상품 옵션 등록", description = "상품 옵션 이름, 추가금액, 재고 수를 입력하여 상품을 신규 등록한다.")
-    @PostMapping
-    fun createProduct(@Validated @RequestBody productCreateRequest: ProductCreateRequest): ResponseEntity<URI> {
-        val itemId = itemService.createProduct(productCreateRequest)
-        val location = buildURI(itemId)
-
-        return ResponseEntity.created(location).build()
-    }
-
-    @Operation(summary = "상품 옵션 삭제", description = "상품 옵션 id로 상품 옵션을 삭제한다.")
-    @DeleteMapping("/{productId}")
-    fun deleteProduct(@PathVariable itemId: Long): ResponseEntity<Void> {
-        itemService.deleteItem(itemId)
-
-        return ResponseEntity.noContent().build()
-    }
+//
+//    @Operation(summary = "상품 옵션 등록", description = "상품 옵션 이름, 추가금액, 재고 수를 입력하여 상품을 신규 등록한다.")
+//    @PostMapping
+//    fun createProduct(@Validated @RequestBody productCreateRequest: ProductCreateRequest): ResponseEntity<URI> {
+//        val itemId = itemService.createItem(productCreateRequest)
+//        val location = buildURI(itemId)
+//
+//        return ResponseEntity.created(location).build()
+//    }
+//
+//    @Operation(summary = "상품 옵션 삭제", description = "상품 옵션 id로 상품 옵션을 삭제한다.")
+//    @DeleteMapping("/{productId}")
+//    fun deleteProduct(@PathVariable itemId: Long): ResponseEntity<Void> {
+//        itemService.deleteItem(itemId)
+//
+//        return ResponseEntity.noContent().build()
+//    }
 }
