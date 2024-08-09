@@ -25,7 +25,7 @@ class OrderSellerController(
     @GetMapping
     fun getWaitingOrder(): ResponseEntity<List<OrderResponse>> {
         val orderResponseList: List<OrderResponse> = orderSellerService.getWaitingOrder()
-        return ResponseEntity.ok<List<OrderResponse>>(orderResponseList)
+        return ResponseEntity.ok(orderResponseList)
     }
 
     @Operation(summary = "판매자 주문 승인", description = "판매자가 주문을 출고처리한다.")
