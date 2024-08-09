@@ -15,7 +15,13 @@ import org.store.clothstar.common.error.ErrorCode
 import org.store.clothstar.order.domain.Order
 import org.store.clothstar.order.domain.vo.Status
 import org.store.clothstar.common.error.exception.order.OrderNotFoundException
+import org.store.clothstar.member.repository.MemberRepository
+import org.store.clothstar.member.service.AddressService
+import org.store.clothstar.member.service.MemberService
+import org.store.clothstar.member.service.SellerService
 import org.store.clothstar.order.repository.OrderRepository
+import org.store.clothstar.product.service.ItemService
+import org.store.clothstar.product.service.ProductService
 import kotlin.test.Test
 
 @ExtendWith(MockKExtension::class)
@@ -25,6 +31,21 @@ class OrderSellerServiceTest {
 
     @MockK
     lateinit var orderRepository: OrderRepository
+
+    @MockK
+    lateinit var memberService: MemberService
+
+    @MockK
+    lateinit var sellerService: SellerService
+
+    @MockK
+    lateinit var addressService: AddressService
+
+    @MockK
+    lateinit var itemService: ItemService
+
+    @MockK
+    lateinit var productService: ProductService
 
     @MockK
     lateinit var order: Order
