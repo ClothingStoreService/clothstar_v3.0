@@ -9,7 +9,7 @@ import org.store.clothstar.order.domain.Order
 
 interface OrderRepository : JpaRepository<Order, Long> {
     @Query("SELECT o FROM orders o WHERE o.status = 'CONFIRMED' AND o.deletedAt is null")
-    fun findWaitingOrders(): List<Order?>
+    fun findConfirmedOrders(): List<Order?>
 
     @Transactional
     @Modifying

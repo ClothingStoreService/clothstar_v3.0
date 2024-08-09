@@ -24,7 +24,7 @@ class OrderSellerController(
     @Operation(summary = "(판매자) WAITING 주문 리스트 조회", description = "(판매자) 주문상태가 '승인대기'인 주문 리스트를 조회한다.")
     @GetMapping
     fun getWaitingOrder(): ResponseEntity<List<OrderResponse>> {
-        val orderResponseList: List<OrderResponse> = orderSellerService.getWaitingOrder()
+        val orderResponseList: List<OrderResponse> = orderSellerService.getConfirmedOrder()
         return ResponseEntity.ok(orderResponseList)
     }
 

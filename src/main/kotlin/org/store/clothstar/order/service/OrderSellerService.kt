@@ -28,10 +28,10 @@ class OrderSellerService(
     private val productService: ProductService,
 ) {
     @Transactional(readOnly = true)
-    fun getWaitingOrder(): List<OrderResponse> {
-        val waitingOrders = orderRepository.findWaitingOrders()
+    fun getConfirmedOrder(): List<OrderResponse> {
+        val confirmedOrders = orderRepository.findConfirmedOrders()
 
-        return waitingOrders
+        return confirmedOrders
             .map { order ->
                 order?.let {
                     val member = memberService.getMemberByMemberId(order.memberId)
