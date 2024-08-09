@@ -7,15 +7,16 @@ import org.store.clothstar.order.domain.vo.PaymentMethod
 @Schema(description = "주문 저장용 Request")
 class CreateOrderRequest(
     @Schema(description = "결제 수단")
-    private val paymentMethod: @NotNull(message = "결제 수단은 비어있을 수 없습니다.") PaymentMethod,
+    @field: NotNull(message = "결제 수단은 비어있을 수 없습니다.")
+    val paymentMethod: PaymentMethod,
 
     @Schema(description = "회원 번호")
-    @NotNull(message = "회원 번호는 비어있을 수 없습니다.")
-    private val memberId: Long,
+    @field: NotNull(message = "회원 번호는 비어있을 수 없습니다.")
+    val memberId: Long,
 
     @Schema(description = "배송지 번호")
-    @NotNull(message = "배송지 번호는 비어있을 수 없습니다.")
-    private val addressId: Long,
+    @field: NotNull(message = "배송지 번호는 비어있을 수 없습니다.")
+    val addressId: Long,
 ) {
 
 
