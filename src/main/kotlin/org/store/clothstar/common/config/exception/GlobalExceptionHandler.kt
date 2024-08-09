@@ -129,7 +129,7 @@ class GlobalExceptionHandler {
         ex.bindingResult.allErrors.forEach(Consumer { error: ObjectError ->
             val fieldName = (error as FieldError).field
             val message = error.getDefaultMessage()
-            errorMap[fieldName] = message
+            errorMap[fieldName] = message!!
         })
 
         val validErrorResponseDTO = ValidErrorResponseDTO(
@@ -173,7 +173,7 @@ class GlobalExceptionHandler {
     private fun exHandler(ex: Exception): ResponseEntity<ErrorResponseDTO> {
         log.error { "ExceptionHandler : ${ex.message}" }
         ex.printStackTrace()
-        
+
         val errorResponseDTO = ErrorResponseDTO(
             HttpStatus.INTERNAL_SERVER_ERROR.value(),
             ex.message!!
