@@ -25,7 +25,6 @@ class OrderDetail(
     @JoinColumn(name = "order_id")
     var order: Order
 ) : BaseEntity() {
-
     fun updateOrder(order: Order) {
         this.order = order
     }
