@@ -46,7 +46,7 @@ class OrderSellerService(
                     val productIds = orderDetails.map(OrderDetail::productId).toList()
 
                     val items = itemService.findByIdIn(itemIds)
-                    val products = productService.findByIdIn(productIds)
+                    val products = productService.findByProductIdIn(productIds)
 
                     val itemMap: Map<Long, Item> = items.map { it.itemId!! to it }.toMap()
                     val productMap: Map<Long, Product> = products.map { it.productId!! to it }.toMap()
