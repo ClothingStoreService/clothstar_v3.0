@@ -27,8 +27,8 @@ class Item(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val itemId: Long? = null,
-    val name: String,
-    val price: Int,
+    var name: String,
+    var finalPrice: Int,
     var stock: Int,
     val saleStatus: SaleStatus,
     val displayStatus: DisplayStatus,

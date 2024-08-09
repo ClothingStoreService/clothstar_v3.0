@@ -4,28 +4,25 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.validation.annotation.Validated
-import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.server.ResponseStatusException
 import org.store.clothstar.order.domain.OrderDetail
 import org.store.clothstar.product.domain.Item
-import org.store.clothstar.product.domain.OptionValue
+import org.store.clothstar.product.domain.ItemAttribute
 import org.store.clothstar.product.domain.Product
-import org.store.clothstar.product.domain.ProductOption
+import org.store.clothstar.product.domain.type.SaleStatus
 import org.store.clothstar.product.dto.request.ProductCreateRequest
 import org.store.clothstar.product.dto.response.ItemResponse
 import org.store.clothstar.product.repository.ItemRepository
 import org.store.clothstar.product.repository.OptionValueRepository
 import org.store.clothstar.product.repository.ProductOptionRepository
-import org.store.clothstar.product.repository.ProductRepository
 
 @Service
 class ItemService(
     private val itemRepository: ItemRepository,
-    private val productRepository: ProductRepository,
     private val productOptionRepository: ProductOptionRepository,
-    private val optionValueRepository: OptionValueRepository,
+    private val optionValueRepository: OptionValueRepository
 ) {
+
     @Transactional(readOnly = true)
     fun getProduct(productId: Long): ItemResponse {
         return itemRepository.findByIdOrNull(productId)?.let { product ->
@@ -37,66 +34,38 @@ class ItemService(
     }
 
     @Transactional
-    fun createProduct(@Validated @RequestBody productCreateRequest: ProductCreateRequest): Long {
-        //product 객체 생성후 저장
-        val product = Product(
-            memberId = productCreateRequest.memberId,
-            categoryId = productCreateRequest.categoryId,
-            name = productCreateRequest.name,
-            content = productCreateRequest.content,
-            price = productCreateRequest.price,
-            displayStatus = productCreateRequest.displayStatus,
-            saleStatus = productCreateRequest.saleStatus,
+    fun createItem(product: Product, itemRequest: ProductCreateRequest.ItemCreateRequest): Item {
+        // 옵션 값들을 조회
+        val optionValues = itemRequest.optionAttributes.map { attr ->
+            val productOption = productOptionRepository.findByProductAndOptionOrderNo(product, attr.optionOrderNo)
+                ?: throw IllegalArgumentException("Invalid option order number: ${attr.optionOrderNo}")
+
+            val optionValue = optionValueRepository.findByProductOptionAndValue(productOption, attr.optionValue)
+                ?: throw IllegalArgumentException("Invalid option value: ${attr.optionValue}")
+
+            optionValue
+        }
+
+        // 아이템 생성
+        val item = Item(
+            name = optionValues.joinToString("/") { it.value },
+            finalPrice = itemRequest.price,
+            stock = itemRequest.stock,
+            saleStatus = SaleStatus.ON_SALE,
+            displayStatus = itemRequest.displayStatus,
+            product = product,
+            attributes = optionValues.map { optionValue ->
+                ItemAttribute(
+                    optionId = optionValue.productOption.productOptionId!!,
+                    name = optionValue.productOption.optionName,
+                    value = optionValue.value,
+                    valueId = optionValue.optionValueId!!
+                )
+            }.toMutableSet()
         )
 
-        productRepository.save(product)
-
-        //productOption 객체 생성후 저장
-        //option -> 색상, optionsValues -> [빨강, 파랑]
-        val options = productCreateRequest.productOptions
-        for (option in options) {
-            val productOption = ProductOption(
-                optionName = option.optionName,
-                optionOrderNo = option.optionOrderNo,
-                product = product,
-            )
-
-            productOptionRepository.save(productOption)
-
-            for (optionValueData in option.optionValues) {
-                val optionValue = OptionValue(
-                    productOption = productOption,
-                    productColor = optionValueData.productColor,
-                    value = optionValueData.value
-                )
-
-                optionValueRepository.save(optionValue)
-            }
-        }
-
-        //item , item attribute 만들어야함 어떤것들 조합해서 나왔는지?
-        //product
-        val items = productCreateRequest.items
-        for (itemData in items) {
-            val item = Item(
-                name = itemData.name,
-                price = itemData.price,
-                stock = itemData.stock,
-                saleStatus = itemData.saleStatus,
-                displayStatus = itemData.displayStatus,
-                attributes = itemData.attributes,
-                product = itemData.product
-            )
-
-            itemRepository.save(item)
-        }
-
-        return product.productId!!
-    }
-
-    @Transactional
-    fun deleteItem(itemId: Long) {
-        itemRepository.deleteById(itemId)
+        // 아이템 저장
+        return itemRepository.save(item)
     }
 
     fun restoreProductStockByOrderDetail(orderDetail: OrderDetail) {

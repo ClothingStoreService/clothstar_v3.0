@@ -7,7 +7,8 @@ import org.store.clothstar.product.domain.type.ImageType
 
 @Embeddable
 class ProductImage(
-    val imageUrl: String,
+    val url: String,
+    val originUrl: String,
     @Enumerated(EnumType.STRING)
-    val imageType: ImageType,
+    val imageType: ImageType
 )

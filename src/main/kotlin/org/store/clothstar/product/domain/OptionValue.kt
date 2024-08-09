@@ -17,7 +17,7 @@ class OptionValue(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val optionValueId: Long? = null,
-    val productColor: ProductColor,  // 색상 코드
+//    val productColor: ProductColor,  // 색상 코드
     var value: String,
 
     @ManyToOne(fetch = FetchType.LAZY)

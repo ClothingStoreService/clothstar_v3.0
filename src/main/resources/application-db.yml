@@ -18,6 +18,7 @@ mybatis:
 logging:
   level:
     'org.springframework.jdbc': debug
+    'org.springframework.security': debug
     'org.store.clothstar': debug
 
 jwt:

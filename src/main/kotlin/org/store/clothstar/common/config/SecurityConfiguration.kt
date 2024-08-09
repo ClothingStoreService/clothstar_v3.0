@@ -61,6 +61,7 @@ class SecurityConfiguration(
                         "/v1/members/login", "/signup", "/v1/members/email/**", "/v1/access",
                         "/v1/categories/**", "/v1/products/**", "/v1/productLines/**", "/v2/productLines/**",
                         "/productLinePagingSlice", "/productLinePagingOffset",
+                        "/v3/products",
                         "/v1/orderdetails", "/v1/orders", "membersPagingOffset", "membersPagingSlice",
                         "/v1/orderdetails", "/v1/orders", "/v2/orders", "/v3/orders", "/v1/orders/list",
                         "/v1/orders/list", "/ordersPagingOffset", "/ordersPagingSlice", "/v2/orders/list",

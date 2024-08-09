@@ -5,9 +5,9 @@ import jakarta.persistence.*
 
 /**
  * {
- *   "id": 1,
+ *   "optionId": 1,
  *   "name": "색상",
- *   "order": 0,
+ *   "orderNo": 0,
  *   "required": true,
  *   "optionType": "BASIC",
  *   "catalogProduct": 1,
