@@ -15,11 +15,9 @@ class RedisUtil(
     private var duration: Int = 0
 
     fun getData(key: String): String {
-
         val valueOperations = redisTemplate.opsForValue()
-        return valueOperations[key]!!
-//        return redisTemplate.opsForValue()[key]?.let { it }
-//            ?: throw IllegalArgumentException("조회된 redis 데이터가 없습니다.")
+        return valueOperations[key]?.let { it }
+            ?: throw IllegalArgumentException("조회된 redis 데이터가 없습니다.")
     }
 
     fun existData(key: String): Boolean {
