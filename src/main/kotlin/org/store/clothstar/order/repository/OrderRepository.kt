@@ -7,19 +7,19 @@ import org.springframework.data.repository.query.Param
 import org.springframework.transaction.annotation.Transactional
 import org.store.clothstar.order.domain.Order
 
-interface OrderRepository : JpaRepository<Order, Long> {
+interface OrderRepository : JpaRepository<Order, String> {
     @Query("SELECT o FROM orders o WHERE o.status = 'CONFIRMED' AND o.deletedAt is null")
     fun findConfirmedOrders(): List<Order?>
 
     @Transactional
     @Modifying
     @Query("UPDATE orders o SET o.status = 'APPROVE' WHERE o.orderId = :orderId")
-    fun approveOrder(@Param("orderId") orderId: Long)
+    fun approveOrder(@Param("orderId") orderId: String)
 
     @Transactional
     @Modifying
     @Query("UPDATE orders o SET o.status = 'CANCEL' WHERE o.orderId = :orderId")
-    fun cancelOrder(@Param("orderId") orderId: Long)
+    fun cancelOrder(@Param("orderId") orderId: String)
 
-    fun findByOrderIdAndDeletedAtIsNull(orderId: Long): Order?
+    fun findByOrderIdAndDeletedAtIsNull(orderId: String): Order?
 }

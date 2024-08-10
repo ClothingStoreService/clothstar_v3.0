@@ -65,7 +65,7 @@ class OrderSellerService(
     }
 
     @Transactional
-    fun approveOrder(orderId: Long) {
+    fun approveOrder(orderId: String) {
         val order = orderRepository.findByIdOrNull(orderId)
             ?: throw OrderNotFoundException(ErrorCode.NOT_FOUND_ORDER)
         order.validateForStatusCONFIRMEDAndDeletedAt()
@@ -73,7 +73,7 @@ class OrderSellerService(
     }
 
     @Transactional
-    fun cancelOrder(orderId: Long) {
+    fun cancelOrder(orderId: String) {
         val order = orderRepository.findByIdOrNull(orderId)
             ?: throw OrderNotFoundException(ErrorCode.NOT_FOUND_ORDER)
         order.validateForStatusCONFIRMEDAndDeletedAt()

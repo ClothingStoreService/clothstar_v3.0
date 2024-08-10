@@ -12,7 +12,7 @@ import org.store.clothstar.order.domain.vo.TotalPrice
 @Entity(name = "orders")
 class Order(
     @Id
-    val orderId: Long,
+    val orderId: String,
 
     @Column(nullable = false)
     val memberId: Long,

@@ -25,7 +25,7 @@ class OrderDetailService(
 ) {
     // 주문 생성시 같이 호출되는 주문 상세 생성 메서드 - 하나의 트랜잭션으로 묶임
     @Transactional
-    fun saveOrderDetailWithOrder(createOrderDetailRequest: CreateOrderDetailRequest, orderId: Long) {
+    fun saveOrderDetailWithOrder(createOrderDetailRequest: CreateOrderDetailRequest, orderId: String) {
         val order = orderRepository.findByIdOrNull(orderId)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "주문 정보를 찾을 수 없습니다.")
 

@@ -13,7 +13,7 @@ import org.store.clothstar.product.domain.Product
 class AddOrderDetailRequest(
     @Schema(description = "주문 번호")
     @field: NotNull(message = "주문 번호는 비어있을 수 없습니다.")
-    val orderId: Long,
+    val orderId: String,
 
     @Schema(description = "상품 번호")
     @field: NotNull(message = "상품 번호는 비어있을 수 없습니다.")

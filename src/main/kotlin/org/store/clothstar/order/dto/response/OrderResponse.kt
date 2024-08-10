@@ -10,7 +10,7 @@ import java.time.LocalDate
 @Schema(description = "주문 조회용 Response")
 class OrderResponse(
     @Schema(description = "주문 id", example = "1")
-    val orderId: Long,
+    val orderId: String,
 
     @Schema(description = "주문자 이름", example = "수빈")
     val ordererName: String,

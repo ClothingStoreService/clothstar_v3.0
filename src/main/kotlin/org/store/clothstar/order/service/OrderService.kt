@@ -8,7 +8,7 @@ import org.store.clothstar.order.service.OrderSave.OrderSaveFacade
 class OrderService(
     private val orderSaveFacade: OrderSaveFacade
 ) {
-    fun saveOrder(orderRequestWrapper: OrderRequestWrapper): Long {
+    fun saveOrder(orderRequestWrapper: OrderRequestWrapper): String {
         return orderSaveFacade.saveOrder(orderRequestWrapper)
     }
 }
