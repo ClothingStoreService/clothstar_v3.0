@@ -8,7 +8,6 @@ import org.store.clothstar.common.error.exception.order.OrderNotFoundException
 import org.store.clothstar.order.domain.vo.PaymentMethod
 import org.store.clothstar.order.domain.vo.Status
 import org.store.clothstar.order.domain.vo.TotalPrice
-import java.time.LocalDateTime
 
 @Entity(name = "orders")
 class Order(

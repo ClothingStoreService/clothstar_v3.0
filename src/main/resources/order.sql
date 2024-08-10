@@ -48,10 +48,11 @@ INSERT INTO address (address_id, created_at, deleted_at, member_id, updated_at, 
 VALUES (1, CURRENT_TIMESTAMP, NULL, 1, NULL, '123', '123', '문앞', '수빈', 010 - 1234 - 5678, 010101);
 
 INSERT INTO item (display_status, final_price, name, sale_status, stock, item_id)
-VALUES (0,19900,'오구',0,10,1);
+VALUES (0, 19900, '오구', 0, 10, 1);
 
-INSERT INTO product (product_id, created_at, deleted_at, updated_at, category_id, content, display_status, member_id, name, price, sale_count, sale_status)
-VALUES (1,CURRENT_TIMESTAMP,NULL,CURRENT_TIMESTAMP,1,'반팔','HIDDEN',1,'오구반팔',19900,1000,'ON_SALE');
+INSERT INTO product (product_id, created_at, deleted_at, updated_at, category_id, content, display_status, member_id,
+                     name, price, sale_count, sale_status)
+VALUES (1, CURRENT_TIMESTAMP, NULL, CURRENT_TIMESTAMP, 1, '반팔', 'HIDDEN', 1, '오구반팔', 19900, 1000, 'ON_SALE');
 
 show create table order_detail;
 
