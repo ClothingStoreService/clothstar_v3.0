@@ -12,13 +12,12 @@ import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.data.repository.findByIdOrNull
 import org.store.clothstar.common.error.ErrorCode
-import org.store.clothstar.order.domain.Order
-import org.store.clothstar.order.domain.vo.Status
 import org.store.clothstar.common.error.exception.order.OrderNotFoundException
-import org.store.clothstar.member.repository.MemberRepository
 import org.store.clothstar.member.service.AddressService
 import org.store.clothstar.member.service.MemberService
 import org.store.clothstar.member.service.SellerService
+import org.store.clothstar.order.domain.Order
+import org.store.clothstar.order.domain.vo.Status
 import org.store.clothstar.order.repository.OrderRepository
 import org.store.clothstar.product.service.ItemService
 import org.store.clothstar.product.service.ProductService
@@ -71,7 +70,7 @@ class OrderSellerServiceTest {
         verify(exactly = 1) { orderRepository.findByIdOrNull(orderId) }
         verify(exactly = 1) { order.validateForStatusCONFIRMEDAndDeletedAt() }
         verify(exactly = 1) { order.updateStatus(Status.PROCESSING) }
-        assertEquals( Status.PROCESSING, order.status )
+        assertEquals(Status.PROCESSING, order.status)
     }
 
     @Test
@@ -109,7 +108,7 @@ class OrderSellerServiceTest {
         verify(exactly = 1) { orderRepository.findByIdOrNull(orderId) }
         verify(exactly = 1) { order.validateForStatusCONFIRMEDAndDeletedAt() }
         verify(exactly = 1) { order.updateStatus(Status.CANCELED) }
-        assertEquals( Status.CANCELED, order.status )
+        assertEquals(Status.CANCELED, order.status)
     }
 
     @Test

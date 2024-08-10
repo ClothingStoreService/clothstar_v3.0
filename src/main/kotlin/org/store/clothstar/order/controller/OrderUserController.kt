@@ -23,7 +23,7 @@ class OrderUserController(
     @PostMapping
     fun saveOrder(@RequestBody @Validated orderRequestWrapper: OrderRequestWrapper): ResponseEntity<SaveResponseDTO> {
         val orderId: Long = orderService.saveOrder(orderRequestWrapper)
-        val saveResponseDTO= SaveResponseDTO(orderId, HttpStatus.OK.value(),"주문이 정상적으로 생성되었습니다.")
+        val saveResponseDTO = SaveResponseDTO(orderId, HttpStatus.OK.value(), "주문이 정상적으로 생성되었습니다.")
         return ResponseEntity.ok(saveResponseDTO)
     }
 }

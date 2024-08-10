@@ -8,8 +8,13 @@ import org.store.clothstar.product.domain.Item
 import org.store.clothstar.product.domain.Product
 
 @Service
-class OrderDetailCreaterImpl(): OrderDetailCreater {
-    override fun createOrderDetail(createDetailOrderRequest: CreateOrderDetailRequest, order: Order, product: Product, item: Item): OrderDetail {
+class OrderDetailCreaterImpl() : OrderDetailCreater {
+    override fun createOrderDetail(
+        createDetailOrderRequest: CreateOrderDetailRequest,
+        order: Order,
+        product: Product,
+        item: Item
+    ): OrderDetail {
         return createDetailOrderRequest.toOrderDetail(order, product, item)
     }
 }

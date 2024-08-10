@@ -5,7 +5,7 @@ import org.store.clothstar.order.domain.Order
 import org.store.clothstar.order.domain.OrderDetail
 
 @Service
-class OrderDetailAdderImpl(): OrderDetailAdder {
+class OrderDetailAdderImpl() : OrderDetailAdder {
     override fun addOrderDetail(order: Order, orderDetail: OrderDetail) {
         return order.addOrderDetail(orderDetail)
     }

@@ -29,7 +29,7 @@ class OrderSaveFacade(
     private val orderSavor: OrderSaver,
     private val orderPriceUpdater: OrderPriceUpdater,
     private val stockUpdator: StockUpdater,
-){
+) {
     @Transactional
     fun saveOrder(orderRequestWrapper: OrderRequestWrapper): Long {
         // 요청 DTO 불러오기
@@ -49,7 +49,8 @@ class OrderSaveFacade(
         val order: Order = orderCreator.createOrder(createOrderRequest, member, address)
 
         // 주문상세 생성
-        val orderDetail: OrderDetail = orderDetailCreator.createOrderDetail(createOrderDetailRequest, order, product, item)
+        val orderDetail: OrderDetail =
+            orderDetailCreator.createOrderDetail(createOrderDetailRequest, order, product, item)
 
         // 주문에 주문상세 추가
         orderDetailAdder.addOrderDetail(order, orderDetail)

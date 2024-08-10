@@ -3,11 +3,11 @@ package org.store.clothstar.order.domain
 import jakarta.persistence.*
 import org.store.clothstar.common.entity.BaseEntity
 import org.store.clothstar.common.error.ErrorCode
+import org.store.clothstar.common.error.exception.order.InvalidOrderStatusException
+import org.store.clothstar.common.error.exception.order.OrderNotFoundException
 import org.store.clothstar.order.domain.vo.PaymentMethod
 import org.store.clothstar.order.domain.vo.Status
 import org.store.clothstar.order.domain.vo.TotalPrice
-import org.store.clothstar.common.error.exception.order.InvalidOrderStatusException
-import org.store.clothstar.common.error.exception.order.OrderNotFoundException
 
 @Entity(name = "orders")
 class Order(

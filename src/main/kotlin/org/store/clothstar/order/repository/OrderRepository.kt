@@ -21,5 +21,5 @@ interface OrderRepository : JpaRepository<Order, Long> {
     @Query("UPDATE orders o SET o.status = 'CANCEL' WHERE o.orderId = :orderId")
     fun cancelOrder(@Param("orderId") orderId: Long)
 
-    fun findByOrderIdAndDeletedAtIsNull(orderId : Long) : Order?
+    fun findByOrderIdAndDeletedAtIsNull(orderId: Long): Order?
 }

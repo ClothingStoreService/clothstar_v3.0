@@ -40,13 +40,15 @@ class ProductApplicationService(
         // 2. 메인 이미지 업로드 및 저장
 //        val mainImageUrl = s3Service.uploadFile(mainImage)
 //        val mainImageUrl = s3Service.uploadFile(mainImage)
-        val mainImageUrl = "https://on.com2us.com/wp-content/uploads/2023/12/VxdEKDNZCp9hAW5TU5-3MZTePLGSdlYKzEZUyVLDB-Cyo950Ee19yaOL8ayxgJzEfMYfzfLcRYuwkmKEs2cg0w.webp"
+        val mainImageUrl =
+            "https://on.com2us.com/wp-content/uploads/2023/12/VxdEKDNZCp9hAW5TU5-3MZTePLGSdlYKzEZUyVLDB-Cyo950Ee19yaOL8ayxgJzEfMYfzfLcRYuwkmKEs2cg0w.webp"
         product.imageList.add(ProductImage(mainImageUrl, mainImageUrl, ImageType.MAIN))
 
         // 3. 서브 이미지 업로드 및® 저장
         subImages?.forEach { subImage ->
 //            val subImageUrl = s3Service.uploadFile(subImage)
-            val subImageUrl = "https://on.com2us.com/wp-content/uploads/2023/12/%EC%98%A4%EA%B5%AC%EC%99%80-%EB%B9%84%EB%B0%80%EC%9D%98%EC%88%B2-002.jpg"
+            val subImageUrl =
+                "https://on.com2us.com/wp-content/uploads/2023/12/%EC%98%A4%EA%B5%AC%EC%99%80-%EB%B9%84%EB%B0%80%EC%9D%98%EC%88%B2-002.jpg"
             product.imageList.add(ProductImage(subImageUrl, subImageUrl, ImageType.SUB))
         }
 

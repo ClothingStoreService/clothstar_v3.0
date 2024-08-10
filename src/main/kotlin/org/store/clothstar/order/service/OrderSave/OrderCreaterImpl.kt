@@ -7,8 +7,8 @@ import org.store.clothstar.order.domain.Order
 import org.store.clothstar.order.dto.request.CreateOrderRequest
 
 @Service
-class OrderCreaterImpl(): OrderCreater {
-    override fun createOrder(request: CreateOrderRequest, member: Member, address: Address): Order{
+class OrderCreaterImpl() : OrderCreater {
+    override fun createOrder(request: CreateOrderRequest, member: Member, address: Address): Order {
         return request.toOrder(member, address)
     }
 }

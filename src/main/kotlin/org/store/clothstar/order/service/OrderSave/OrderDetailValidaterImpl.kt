@@ -8,10 +8,10 @@ import org.store.clothstar.order.dto.request.CreateOrderDetailRequest
 import org.store.clothstar.product.domain.Item
 
 @Service
-class OrderDetailValidaterImpl(): OrderDetailValidater {
+class OrderDetailValidaterImpl() : OrderDetailValidater {
     override fun validateOrder(request: CreateOrderDetailRequest, item: Item) {
         // 상품재고가 0일때 품절 예외처리
-        if (item.stock == 0){
+        if (item.stock == 0) {
             throw OutOfStockException(ErrorCode.OUT_OF_STOCK)
         }
 

@@ -82,7 +82,7 @@ class ItemService(
         }
     }
 
-    fun getItemById(itemId: Long): Item{
+    fun getItemById(itemId: Long): Item {
         return itemRepository.findByIdOrNull(itemId)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "상품 옵션 정보를 찾을 수 없습니다.")
     }

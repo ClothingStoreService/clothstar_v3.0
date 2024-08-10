@@ -2,7 +2,6 @@ package org.store.clothstar.category.dto.request
 
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.NotBlank
-import org.store.clothstar.category.domain.Category
 
 class CreateCategoryRequest(
     @Schema(description = "카테고리 타입(이름)", nullable = false)

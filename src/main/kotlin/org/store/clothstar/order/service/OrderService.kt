@@ -2,7 +2,6 @@ package org.store.clothstar.order.service
 
 import org.springframework.stereotype.Service
 import org.store.clothstar.order.dto.request.OrderRequestWrapper
-import org.store.clothstar.order.repository.OrderRepository
 import org.store.clothstar.order.service.OrderSave.OrderSaveFacade
 
 @Service

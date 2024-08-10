@@ -8,7 +8,6 @@ import org.store.clothstar.common.entity.BaseEntity
 import org.store.clothstar.product.domain.type.DisplayStatus
 import org.store.clothstar.product.domain.type.ProductColor
 import org.store.clothstar.product.domain.type.SaleStatus
-import org.store.clothstar.product.dto.request.UpdateProductRequest
 
 @Entity
 class Product(

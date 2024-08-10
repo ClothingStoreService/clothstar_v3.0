@@ -7,5 +7,10 @@ import org.store.clothstar.product.domain.Item
 import org.store.clothstar.product.domain.Product
 
 interface OrderDetailCreater {
-    fun createOrderDetail(createOrderDetailRequest: CreateOrderDetailRequest, order: Order, product: Product, item: Item): OrderDetail
+    fun createOrderDetail(
+        createOrderDetailRequest: CreateOrderDetailRequest,
+        order: Order,
+        product: Product,
+        item: Item
+    ): OrderDetail
 }
