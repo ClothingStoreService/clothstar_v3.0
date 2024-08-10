@@ -37,15 +37,16 @@ class ProductResponse(
 ) {
     companion object {
         fun from(product: Product): ProductResponse {
+            val distinctImages = product.imageList.distinctBy { it.url }
             return ProductResponse(
                 id = product.productId!!,
                 name = product.name,
                 description = product.content,
+                imageList = distinctImages.map { ImageResponse.from(it) },
+                productColors = product.productColors.toSet(),
                 price = product.price,
                 displayStatus = product.displayStatus,
                 saleStatus = product.saleStatus,
-                productColors = product.productColors.toSet(),
-                imageList = product.imageList.map { ImageResponse.from(it) },
                 productOptions = product.productOptions.map { ProductOptionResponse.from(it) },
                 items = product.items.map { ItemResponse.from(it) }
             )

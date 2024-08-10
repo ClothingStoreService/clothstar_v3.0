@@ -1,6 +1,7 @@
 package org.store.clothstar.product.domain
 
 import jakarta.persistence.*
+import org.hibernate.annotations.BatchSize
 import org.store.clothstar.product.domain.type.ProductColor
 
 
@@ -12,6 +13,7 @@ import org.store.clothstar.product.domain.type.ProductColor
  *   "productOption": 1
  * }
  */
+@BatchSize(size = 20)
 @Entity
 class OptionValue(
     @Id

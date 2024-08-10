@@ -1,6 +1,7 @@
 package org.store.clothstar.product.domain
 
 import jakarta.persistence.*
+import org.hibernate.annotations.BatchSize
 import org.store.clothstar.product.domain.type.DisplayStatus
 import org.store.clothstar.product.domain.type.SaleStatus
 
@@ -22,6 +23,7 @@ import org.store.clothstar.product.domain.type.SaleStatus
  *   ]
  * }
  */
+@BatchSize(size = 20)
 @Entity
 class Item(
     @Id
@@ -33,6 +35,7 @@ class Item(
     val saleStatus: SaleStatus,
     val displayStatus: DisplayStatus,
 
+    @BatchSize(size = 20)
     @ElementCollection
     @CollectionTable(
         name = "item_attributes",
