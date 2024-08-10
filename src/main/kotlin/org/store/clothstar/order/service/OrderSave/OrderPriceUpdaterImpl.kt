@@ -11,11 +11,6 @@ class OrderPriceUpdaterImpl() : OrderPriceUpdater {
         val updatedTotalPaymentPrice: Int =
             order.totalPrice.products + order.totalPrice.shipping + orderDetail.price.oneKindTotalPrice
 
-        System.out.print("!!!!!!!!!!!!!!!!!!!!!! 업데이트 상품 가격=" + updatedTotalProductsPrice)
-        System.out.print("!!!!!!!!!!!!!!!!!!!!!! 업데이트 상품 가격=" + updatedTotalPaymentPrice)
-
         order.totalPrice.updatePrices(updatedTotalProductsPrice, updatedTotalPaymentPrice)
-
-        System.out.print("!!!!!!!!!!!!!!!!!!!!!! 업데이트 상품 가격=" + order.totalPrice.products)
     }
 }
