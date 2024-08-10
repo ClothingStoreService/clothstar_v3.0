@@ -11,7 +11,7 @@ import org.store.clothstar.order.repository.OrderRepository
 import org.store.clothstar.order.service.OrderSave.OrderSaveFacade
 
 @Service
-class OrderService(
+class OrderUserService(
     private val orderSaveFacade: OrderSaveFacade,
     private val orderRepository: OrderRepository,
 ) {

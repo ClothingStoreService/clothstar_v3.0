@@ -14,13 +14,13 @@ import org.store.clothstar.common.dto.ErrorResponseDTO
 import org.store.clothstar.common.dto.MessageDTO
 import org.store.clothstar.order.dto.request.OrderRequestWrapper
 import org.store.clothstar.order.dto.response.SaveOrderResponse
-import org.store.clothstar.order.service.OrderService
+import org.store.clothstar.order.service.OrderUserService
 
 @Tag(name = "Order", description = "주문(Order) 정보 관리에 대한 API 입니다.")
 @RestController
 @RequestMapping("/v1/orders")
 class OrderUserController(
-    private val orderService: OrderService
+    private val orderService: OrderUserService
 ) {
     @Operation(summary = "주문 생성", description = "단일 주문을 생성한다.")
     @ApiResponses(
