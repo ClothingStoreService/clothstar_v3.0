@@ -1,9 +1,9 @@
 package org.store.clothstar.order.utils
 
-import java.util.UUID
+import java.util.*
 
 class GenerateOrderId() {
-    companion object{
+    companion object {
         fun generateOrderId(): String {
             return UUID.randomUUID().toString()
         }

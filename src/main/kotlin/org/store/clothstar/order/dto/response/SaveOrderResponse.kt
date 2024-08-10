@@ -1,6 +1,6 @@
 package org.store.clothstar.order.dto.response
 
-class SaveOrderResponse (
+class SaveOrderResponse(
     val id: String,
     val statusCode: Int,
     val message: String,
