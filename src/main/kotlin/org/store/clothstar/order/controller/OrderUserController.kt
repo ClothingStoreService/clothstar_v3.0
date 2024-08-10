@@ -9,10 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import org.store.clothstar.common.dto.ErrorResponseDTO
 import org.store.clothstar.common.dto.MessageDTO
 import org.store.clothstar.order.dto.request.OrderRequestWrapper
@@ -47,5 +44,21 @@ class OrderUserController(
         val orderId: String = orderService.saveOrder(orderRequestWrapper)
         val saveOrderResponse = SaveOrderResponse(orderId, HttpStatus.OK.value(), "주문이 정상적으로 생성되었습니다.")
         return ResponseEntity.ok(saveOrderResponse)
+    }
+
+    @Operation(summary = "구매자 구매 확정", description = "구매자가 주문을 구매확정하면, 주문상태가 '구매확정'으로 변경된다(단, 주문상태가 '배송완료'일 때만 가능).")
+    @PatchMapping("{orderId}/complete")
+    fun confirmOrder(@PathVariable orderId: String): ResponseEntity<MessageDTO>  {
+        orderService.completeOrder(orderId)
+        val messageDTO = MessageDTO(HttpStatus.OK.value(), "주문이 정상적으로 구매 확정 되었습니다.")
+        return ResponseEntity.ok(messageDTO)
+    }
+
+    @Operation(summary = "구매자 주문 취소", description = "구매자가 주문 취소 시, 주문상태가 '주문취소'로 변경된다(단, 주문상태가 '승인대기' 또는 '주문승인'일 때만 가능).")
+    @PatchMapping("{orderId}/cancel")
+    fun cancelOrder(@PathVariable orderId: String): ResponseEntity<MessageDTO> {
+        orderService.cancelOrder(orderId)
+        val messageDTO = MessageDTO(HttpStatus.OK.value(), "주문이 정상적으로 취소되었습니다.")
+        return ResponseEntity.ok(messageDTO)
     }
 }

@@ -16,8 +16,7 @@ CREATE TABLE `order_detail`
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 9
   DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_general_ci
-
+  COLLATE = utf8mb4_general_ci;
 
 CREATE TABLE `orders`
 (
@@ -35,46 +34,39 @@ CREATE TABLE `orders`
     PRIMARY KEY (`order_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_general_ci
+  COLLATE = utf8mb4_general_ci;
 
 INSERT INTO orders (order_id, member_id, address_id, created_at, status, total_shipping_price, total_products_price,
                     payment_method, total_payment_price)
 VALUES ('14241232', '242', '334', CURRENT_TIMESTAMP, 'WAITING', '3000', '50000', 'CARD', '53000');
 
 INSERT INTO member (point, total_payment_price, created_at, deleted_at, member_id, updated_at, name, tel_no, grade)
-VALUES (100, 5000, CURRENT_TIMESTAMP, NULL, 1, NULL, '수빈', 010 - 1234 - 5678, 'GOLD')
+VALUES (100, 5000, CURRENT_TIMESTAMP, NULL, 1, NULL, '수빈', 010 - 1234 - 5678, 'GOLD');
 
 INSERT INTO address (address_id, created_at, deleted_at, member_id, updated_at, address_basic, address_detail,
                      delivery_request, receiver_name, tel_no, zip_no)
 VALUES (1, CURRENT_TIMESTAMP, NULL, 1, NULL, '123', '123', '문앞', '수빈', 010 - 1234 - 5678, 010101);
 
-ALTER TABLE orders
-    MODIFY order_id varchar(64);
+INSERT INTO item (display_status, final_price, name, sale_status, stock, item_id)
+VALUES (0,19900,'오구',0,10,1);
 
-ALTER TABLE orders
-    MODIFY order_id VARCHAR(64);
-ALTER TABLE order_detail
-    MODIFY order_id VARCHAR(64);
+INSERT INTO product (product_id, created_at, deleted_at, updated_at, category_id, content, display_status, member_id, name, price, sale_count, sale_status)
+VALUES (1,CURRENT_TIMESTAMP,NULL,CURRENT_TIMESTAMP,1,'반팔','HIDDEN',1,'오구반팔',19900,1000,'ON_SALE');
 
 show create table order_detail;
 
 drop table if exists orders;
+
+REPAIR TABLE orders;
 
 
 select *
 from orders;
 select *
 from order_detail;
-
-DELETE
-FROM orders;
-DELETE
-FROM order_detail;
-
-
-select *
-from address;
 select *
 from item;
 select *
 from product;
+select *
+from address;

@@ -48,6 +48,15 @@ class Order(
         }
     }
 
+    fun validateForStatusDELIVEREDAndDeletedAt() {
+        if (this.deletedAt != null) {
+            throw OrderNotFoundException(ErrorCode.NOT_FOUND_ORDER)
+        }
+        if (this.status != Status.DELIVERED) {
+            throw InvalidOrderStatusException(ErrorCode.INVALID_ORDER_STATUS_DELIVERED)
+        }
+    }
+
     fun addOrderDetail(orderDetail: OrderDetail) {
         orderDetails.add(orderDetail)
         orderDetail.updateOrder(this)
