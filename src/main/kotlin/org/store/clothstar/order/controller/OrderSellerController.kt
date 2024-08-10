@@ -20,13 +20,13 @@ import org.store.clothstar.order.service.OrderSellerService
 class OrderSellerController(
     private val orderSellerService: OrderSellerService
 ) {
-
-    @Operation(summary = "(판매자) WAITING 주문 리스트 조회", description = "(판매자) 주문상태가 '승인대기'인 주문 리스트를 조회한다.")
-    @GetMapping
-    fun getWaitingOrder(): ResponseEntity<List<OrderResponse>> {
-        val orderResponseList: List<OrderResponse> = orderSellerService.getConfirmedOrder()
-        return ResponseEntity.ok(orderResponseList)
-    }
+//
+//    @Operation(summary = "(판매자) WAITING 주문 리스트 조회", description = "(판매자) 주문상태가 '승인대기'인 주문 리스트를 조회한다.")
+//    @GetMapping
+//    fun getWaitingOrder(): ResponseEntity<List<OrderResponse>> {
+//        val orderResponseList: List<OrderResponse> = orderSellerService.getConfirmedOrder()
+//        return ResponseEntity.ok(orderResponseList)
+//    }
 
     @Operation(summary = "판매자 주문 승인", description = "판매자가 주문을 출고처리한다.")
     @ApiResponses(
@@ -36,11 +36,11 @@ class OrderSellerController(
                 content = [Content(schema = Schema(implementation = MessageDTO::class))]
             ),
             ApiResponse(
-                responseCode = "400", description = "존재하지 않는 주문번호입니다.",
+                responseCode = "404", description = "존재하지 않는 주문번호입니다.",
                 content = [Content(schema = Schema(implementation = ErrorResponseDTO::class))]
             ),
             ApiResponse(
-                responseCode = "404", description = "주문이 입금확인 상태가 아니므로 요청을 처리할 수 없습니다.",
+                responseCode = "400", description = "주문이 입금확인 상태가 아니므로 요청을 처리할 수 없습니다.",
                 content = [Content(schema = Schema(implementation = ErrorResponseDTO::class))]
             ),
         ]
@@ -60,11 +60,11 @@ class OrderSellerController(
                 content = [Content(schema = Schema(implementation = MessageDTO::class))]
             ),
             ApiResponse(
-                responseCode = "400", description = "존재하지 않는 주문번호입니다.",
+                responseCode = "404", description = "존재하지 않는 주문번호입니다.",
                 content = [Content(schema = Schema(implementation = ErrorResponseDTO::class))]
             ),
             ApiResponse(
-                responseCode = "404", description = "주문이 승인대기 상태가 아니므로 요청을 처리할 수 없습니다.",
+                responseCode = "400", description = "주문이 '승인대기' 상태가 아니므로 요청을 처리할 수 없습니다.",
                 content = [Content(schema = Schema(implementation = ErrorResponseDTO::class))]
             ),
         ]
