@@ -146,4 +146,29 @@ class MemberServiceImpl(
             throw DuplicatedTelNoException(ErrorCode.DUPLICATED_TEL_NO)
         }
     }
+
+    override fun getMemberByMemberId(memberId: Long): Member {
+        return memberRepository.findByIdOrNull(memberId)
+            ?: throw NotFoundMemberException(ErrorCode.NOT_FOUND_MEMBER)
+    }
+
+    private fun sendEmailAuthentication(toEmail: String): String {
+        val certifyNum = redisUtil.createdCertifyNum()
+        val message = mailContentBuilder.build(certifyNum)
+        val mailSendDTO = MailSendDTO(toEmail, "clothstar 회원가입 인증 메일 입니다.", message)
+
+        mailService.sendMail(mailSendDTO)
+
+        //메일 전송에 성공하면 redis에 key = email, value = 인증번호를 생성한다.
+        //지속시간은 10분
+        redisUtil.createRedisData(toEmail, certifyNum)
+
+        return certifyNum
+    }
+
+    fun verifyEmailCertifyNum(email: String, certifyNum: String): Boolean {
+        val certifyNumFoundByRedis = redisUtil.getData(email) ?: return false
+
+        return certifyNumFoundByRedis == certifyNum
+    }
 }

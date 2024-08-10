@@ -2,7 +2,13 @@ package org.store.clothstar.order.dto.request
 
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.NotNull
+import org.store.clothstar.member.domain.Address
+import org.store.clothstar.member.domain.Member
+import org.store.clothstar.order.domain.Order
 import org.store.clothstar.order.domain.vo.PaymentMethod
+import org.store.clothstar.order.domain.vo.Status
+import org.store.clothstar.order.domain.vo.TotalPrice
+import org.store.clothstar.order.utils.GenerateOrderId
 
 @Schema(description = "주문 저장용 Request")
 class CreateOrderRequest(
@@ -19,21 +25,20 @@ class CreateOrderRequest(
     val addressId: Long,
 ) {
 
+    fun toOrder(member: Member, address: Address): Order {
+        val totalPrice = TotalPrice(
+            shipping = 3000,
+            products = 0,
+            payment = 0,
+        )
 
-//    fun toOrder(member: Member, address: Address): Order {
-//        val totalPrice: TotalPrice = TotalPrice.builder()
-//            .shipping(3000)
-//            .products(0)
-//            .payment(0)
-//            .build()
-//
-//        return Order.builder()
-//            .orderId(GenerateOrderId.generateOrderId())
-//            .memberId(member.memberId)
-//            .addressId(address.addressId)
-//            .status(Status.WAITING)
-//            .paymentMethod(paymentMethod)
-//            .totalPrice(totalPrice)
-//            .build()
-//    }
+        return Order(
+            orderId = GenerateOrderId.generateOrderId(),
+            memberId = member.memberId!!,
+            addressId = address.addressId!!,
+            status = Status.CONFIRMED,
+            paymentMethod = paymentMethod,
+            totalPrice = totalPrice,
+        )
+    }
 }

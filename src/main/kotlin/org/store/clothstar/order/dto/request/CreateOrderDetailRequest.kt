@@ -22,12 +22,12 @@ class CreateOrderDetailRequest(
     @Schema(description = "상품 수량")
     @field: NotNull(message = "상품 수량은 비어있을 수 없습니다.")
     @field: Positive(message = "상품 수량은 0보다 커야 합니다.")
-    val quantity: Int = 0,
+    val quantity: Int,
 ) {
     fun toOrderDetail(order: Order, product: Product, item: Item): OrderDetail {
         val price = Price(
             fixedPrice = product.price,
-            oneKindTotalPrice = quantity * product.price,
+            oneKindTotalPrice = quantity * product.price + quantity * item.finalPrice,
         )
 
         return OrderDetail(

@@ -47,4 +47,9 @@ class Order(
             throw InvalidOrderStatusException(ErrorCode.INVALID_ORDER_STATUS_CONFIRMED)
         }
     }
+
+    fun addOrderDetail(orderDetail: OrderDetail) {
+        orderDetails.add(orderDetail)
+        orderDetail.updateOrder(this)
+    }
 }

@@ -13,7 +13,7 @@ open class BaseEntity(
     @CreatedDate
     var createdAt: LocalDateTime = LocalDateTime.now(),
     @LastModifiedDate
-    var updatedAt: LocalDateTime = LocalDateTime.now(),
+    var updatedAt: LocalDateTime? = null,
     var deletedAt: LocalDateTime? = null,
 ) {
     fun updateDeletedAt() {

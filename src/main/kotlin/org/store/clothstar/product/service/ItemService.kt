@@ -68,6 +68,7 @@ class ItemService(
         return itemRepository.save(item)
     }
 
+    @Transactional
     fun restoreProductStockByOrderDetail(orderDetail: OrderDetail) {
         val productEntity = itemRepository.findByIdOrNull(orderDetail.itemId)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "상품 정보를 찾을 수 없습니다.")
@@ -79,5 +80,16 @@ class ItemService(
         return itemRepository.findByItemIdIn(productIds).map {
             it ?: throw IllegalArgumentException("상품을 찾을수 없습니다.")
         }
+    }
+
+    fun getItemById(itemId: Long): Item{
+        return itemRepository.findByIdOrNull(itemId)
+            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "상품 옵션 정보를 찾을 수 없습니다.")
+    }
+
+    @Transactional
+    fun deductItemStock(item: Item, quantity: Int) {
+        val updatedStock: Int = item.stock - quantity
+        item.updateStock(updatedStock)
     }
 }
