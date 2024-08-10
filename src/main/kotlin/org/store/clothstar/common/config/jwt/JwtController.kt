@@ -3,9 +3,8 @@ package org.store.clothstar.common.config.jwt
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
-import jakarta.servlet.http.HttpServletRequest
-import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.CookieValue
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
 import org.store.clothstar.common.dto.AccessTokenResponse
@@ -23,17 +22,17 @@ class JwtController(
 
     @Operation(summary = "access 토큰 재발급", description = "refresh 토큰으로 access 토큰을 재발급 한다.")
     @PostMapping("/v1/access")
-    fun reissue(request: HttpServletRequest, response: HttpServletResponse): ResponseEntity<AccessTokenResponse> {
-        log.info { "access 토큰 refresh 요청" }
+    fun reissue(@CookieValue(name = "refreshToken") refreshToken: String?): ResponseEntity<AccessTokenResponse> {
+        log.info { "access 토큰 refresh 요청: ${refreshToken}" }
 
-        val refreshToken = jwtService.getRefreshToken(request!!)
-        refreshTokenValidCheck(refreshToken)
+        refreshToken?.let {
+            refreshTokenValidCheck(refreshToken)
+        }
 
         val accessToken = jwtService.getAccessTokenByRefreshToken(refreshToken!!)
-        response.addHeader("Authorization", "Bearer $accessToken")
         log.info { "access 토큰이 갱신 되었습니다. ${accessToken}" }
 
-        val accessTokenResponse: AccessTokenResponse = AccessTokenResponse(
+        val accessTokenResponse = AccessTokenResponse(
             accessToken = accessToken,
             message = "access 토큰이 생성 되었습니다.",
             success = true,
