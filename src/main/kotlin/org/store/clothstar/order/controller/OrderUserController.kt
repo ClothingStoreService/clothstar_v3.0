@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*
 import org.store.clothstar.common.dto.ErrorResponseDTO
 import org.store.clothstar.common.dto.MessageDTO
 import org.store.clothstar.order.dto.request.OrderRequestWrapper
+import org.store.clothstar.order.dto.response.OrderResponse
 import org.store.clothstar.order.dto.response.SaveOrderResponse
 import org.store.clothstar.order.service.OrderUserService
 
@@ -22,6 +23,13 @@ import org.store.clothstar.order.service.OrderUserService
 class OrderUserController(
     private val orderService: OrderUserService
 ) {
+//    @Operation(summary = "단일 주문 조회", description = "단일 주문의 정보를 조회한다.")
+//    @GetMapping("/{orderId}")
+//    fun getOrder(@PathVariable orderId: String): ResponseEntity<OrderResponse>  {
+//        val orderResponse: OrderResponse = orderService.getOrder(orderId)
+//        return ResponseEntity.ok(orderResponse)
+//    }
+
     @Operation(summary = "주문 생성", description = "단일 주문을 생성한다.")
     @ApiResponses(
         value = [
@@ -91,6 +99,26 @@ class OrderUserController(
     fun cancelOrder(@PathVariable orderId: String): ResponseEntity<MessageDTO> {
         orderService.cancelOrder(orderId)
         val messageDTO = MessageDTO(HttpStatus.OK.value(), "주문이 정상적으로 취소되었습니다.")
+        return ResponseEntity.ok(messageDTO)
+    }
+
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200", description = "주문이 정상적으로 삭제되었습니다.",
+                content = [Content(schema = Schema(implementation = MessageDTO::class))]
+            ),
+            ApiResponse(
+                responseCode = "404", description = "존재하지 않는 주문번호입니다.",
+                content = [Content(schema = Schema(implementation = ErrorResponseDTO::class))]
+            ),
+        ]
+    )
+    @Operation(summary = "주문 삭제", description = "주문 삭제시간을 현재시간으로 업데이트 한다.")
+    @DeleteMapping("{orderId}")
+    fun deleteOrder(@PathVariable orderId: String): ResponseEntity<MessageDTO> {
+        orderService.updateDeleteAt(orderId)
+        val messageDTO = MessageDTO(HttpStatus.OK.value(), "주문이 정상적으로 삭제되었습니다.")
         return ResponseEntity.ok(messageDTO)
     }
 }
