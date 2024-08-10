@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.transaction.annotation.Transactional
 import org.store.clothstar.common.config.redis.RedisUtil
 import org.store.clothstar.member.dto.request.CreateMemberRequest
 import org.store.clothstar.member.dto.request.ModifyPasswordRequest
@@ -22,6 +23,7 @@ import org.store.clothstar.member.dto.request.ModifyPasswordRequest
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+@Transactional
 class MemberSignupValidTest(
     @Autowired private val mockMvc: MockMvc,
     @Autowired private val objectMapper: ObjectMapper,
@@ -118,7 +120,7 @@ class MemberSignupValidTest(
     @Throws(java.lang.Exception::class)
     fun modifyPassword_validCheckTest() {
         //given
-        val modifyPasswordURL = "/v1/members/1"
+        val modifyPasswordURL = "/v1/members/pass/1"
         val modifyPasswordRequest = ModifyPasswordRequest("1")
         val requestBody = objectMapper.writeValueAsString(modifyPasswordRequest)
 

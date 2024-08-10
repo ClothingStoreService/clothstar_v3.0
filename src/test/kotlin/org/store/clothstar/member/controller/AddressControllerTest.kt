@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional
 import org.store.clothstar.member.domain.Member
 import org.store.clothstar.member.repository.AccountRepository
 import org.store.clothstar.member.repository.MemberRepository
-import org.store.clothstar.member.service.AddressServiceImpl
+import org.store.clothstar.member.service.AddressService
 import org.store.clothstar.member.util.CreateObject
 
 @SpringBootTest
@@ -36,7 +36,7 @@ class AddressControllerTest(
     private val memberRepository: MemberRepository,
 
     @Autowired
-    private val addressServiceImpl: AddressServiceImpl,
+    private val addressService: AddressService,
 
     @Autowired
     private val accountRepository: AccountRepository,
@@ -83,7 +83,7 @@ class AddressControllerTest(
         //given
         val getMemberAddressURL: String = ADDRESS_URL + memberId
         for (i in 0..4) {
-            addressServiceImpl.addrSave(memberId, CreateObject.getCreateAddressRequest())
+            addressService.addrSave(memberId, CreateObject.getCreateAddressRequest())
         }
 
         //when

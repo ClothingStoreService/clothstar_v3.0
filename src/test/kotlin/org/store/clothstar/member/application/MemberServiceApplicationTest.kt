@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.transaction.annotation.Transactional
 import org.store.clothstar.member.authentication.service.AuthenticationService
 import org.store.clothstar.member.service.AccountService
 import org.store.clothstar.member.service.MemberService
@@ -18,6 +19,7 @@ import org.store.clothstar.member.util.CreateObject
 @SpringBootTest
 @ActiveProfiles("test")
 @ExtendWith(MockKExtension::class)
+@Transactional
 class MemberServiceApplicationTest {
     @MockBean
     lateinit var authenticationService: AuthenticationService

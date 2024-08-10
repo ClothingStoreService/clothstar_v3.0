@@ -20,7 +20,7 @@ class CreateObject {
                 email = email,
                 password = password,
                 name = "현수",
-                telNo = "010-1234-1234",
+                telNo = "010-1234-5555",
                 certifyNum = "adsf",
             )
         }
@@ -44,7 +44,7 @@ class CreateObject {
 
         fun getMember(): Member {
             return Member(
-                telNo = "010-1234-1234",
+                telNo = "010-1234-4444",
                 name = "현수",
                 memberShoppingActivity = MemberShoppingActivity.init()
             )
