@@ -14,12 +14,16 @@ class Account(
     var password: String,
 
     @Enumerated(EnumType.STRING)
-    val role: MemberRole,
+    var role: MemberRole,
 
     val userId: Long,
 ) : BaseEntity() {
     fun updatePassword(password: String) {
         this.password = password
+    }
+
+    fun updateRole(role: MemberRole) {
+        this.role = role
     }
 
     override fun toString(): String {

@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Slice
 import org.springframework.stereotype.Service
 import org.store.clothstar.member.authentication.service.AuthenticationService
+import org.store.clothstar.member.domain.MemberRole
 import org.store.clothstar.member.dto.request.CreateMemberRequest
 import org.store.clothstar.member.dto.request.ModifyNameRequest
 import org.store.clothstar.member.dto.response.MemberResponse
@@ -37,12 +38,13 @@ class MemberServiceApplication(
         memberService.modifyName(memberId, modifyNameRequest)
     }
 
-    fun modifyPassword(memberId: Long, password: String) {
-        memberService.updatePassword(memberId, password)
+    fun modifyPassword(accountId: Long, password: String) {
+        memberService.updatePassword(accountId, password)
     }
 
     fun updateDeleteAt(memberId: Long) {
         memberService.updateDeleteAt(memberId)
+        accountService.updateDeletedAt(memberId, MemberRole.USER)
     }
 
     fun signUp(createMemberRequest: CreateMemberRequest): Long {

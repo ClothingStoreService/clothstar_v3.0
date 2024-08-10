@@ -1,13 +1,13 @@
 package org.store.clothstar.member.service
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import jakarta.transaction.Transactional
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Slice
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.store.clothstar.common.error.ErrorCode
 import org.store.clothstar.common.error.exception.DuplicatedEmailException
 import org.store.clothstar.common.error.exception.DuplicatedTelNoException
@@ -28,30 +28,37 @@ class MemberServiceImpl(
 ) : MemberService {
     private val log = KotlinLogging.logger {}
 
+    @Transactional(readOnly = true)
     override fun getAllMemberOffsetPaging(pageable: Pageable): Page<MemberResponse> {
-        return memberRepository.findAllOffsetPaging(pageable)?.map { member ->
-            MemberResponse(
-                memberId = member.memberId!!,
-                name = member.name,
-                telNo = member.telNo,
-                totalPaymentPrice = member.memberShoppingActivity.totalPaymentPrice,
-                grade = member.memberShoppingActivity.grade
-            )
-        } ?: throw IllegalArgumentException("요청한 페이지 번호의 리스트가 없습니다.")
+        return memberRepository.findAllOffsetPaging(pageable).map { member ->
+            member?.let {
+                MemberResponse(
+                    memberId = it.memberId!!,
+                    name = it.name,
+                    telNo = it.telNo,
+                    totalPaymentPrice = it.memberShoppingActivity.totalPaymentPrice,
+                    grade = it.memberShoppingActivity.grade
+                )
+            } ?: throw IllegalArgumentException("요청한 페이지 번호의 리스트가 없습니다.")
+        }
     }
 
+    @Transactional(readOnly = true)
     override fun getAllMemberSlicePaging(pageable: Pageable): Slice<MemberResponse> {
-        return memberRepository.findAllSlicePaging(pageable)?.map { member ->
-            MemberResponse(
-                memberId = member.memberId!!,
-                name = member.name,
-                telNo = member.telNo,
-                totalPaymentPrice = member.memberShoppingActivity.totalPaymentPrice,
-                grade = member.memberShoppingActivity.grade
-            )
-        } ?: throw IllegalArgumentException("요청한 페이지 번호의 리스트가 없습니다.")
+        return memberRepository.findAllSlicePaging(pageable).map { member ->
+            member?.let {
+                MemberResponse(
+                    memberId = it.memberId!!,
+                    name = it.name,
+                    telNo = it.telNo,
+                    totalPaymentPrice = it.memberShoppingActivity.totalPaymentPrice,
+                    grade = it.memberShoppingActivity.grade
+                )
+            } ?: throw IllegalArgumentException("요청한 페이지 번호의 리스트가 없습니다.")
+        }
     }
 
+    @Transactional(readOnly = true)
     override fun getMemberById(memberId: Long): MemberResponse {
         log.info { "회원 상세 조회 memberId = ${memberId}" }
 
@@ -66,12 +73,20 @@ class MemberServiceImpl(
         } ?: throw NotFoundMemberException(ErrorCode.NOT_FOUND_MEMBER)
     }
 
+    @Transactional(readOnly = true)
     override fun getMemberByEmail(email: String) {
         accountRepository.findByEmail(email)?.let {
             throw DuplicatedEmailException(ErrorCode.DUPLICATED_EMAIL)
         }
     }
 
+    @Transactional(readOnly = true)
+    override fun getMemberByMemberId(memberId: Long): Member {
+        return memberRepository.findByIdOrNull(memberId)
+            ?: throw NotFoundMemberException(ErrorCode.NOT_FOUND_MEMBER)
+    }
+
+    @Transactional
     override fun modifyName(memberId: Long, modifyNameRequest: ModifyNameRequest) {
         log.info { "회원 이름 수정 memberId = ${memberId}, name = ${modifyNameRequest.name}" }
 
@@ -81,6 +96,7 @@ class MemberServiceImpl(
         member.updateName(modifyNameRequest)
     }
 
+    @Transactional
     override fun updateDeleteAt(memberId: Long) {
         log.info { "회원 삭제 memberId = ${memberId}" }
 
@@ -90,10 +106,11 @@ class MemberServiceImpl(
         member.updateDeletedAt()
     }
 
+    @Transactional
     override fun updatePassword(accountId: Long, password: String) {
         log.info { "회원 비밀번호 변경 memberId = ${accountId}" }
 
-        val account = accountRepository.findByAccountId(accountId)
+        val account = accountRepository.findByIdOrNull(accountId)
             ?: throw NotFoundMemberException(ErrorCode.NOT_FOUND_ACCOUNT)
 
         val encodedPassword = passwordEncoder.encode(password)
@@ -123,11 +140,7 @@ class MemberServiceImpl(
         return member.memberId!!
     }
 
-    override fun getMemberByMemberId(memberId: Long): Member {
-        return memberRepository.findByIdOrNull(memberId)
-            ?: throw NotFoundMemberException(ErrorCode.NOT_FOUND_MEMBER)
-    }
-
+    @Transactional(readOnly = true)
     fun signUpValidCheck(createMemberDTO: CreateMemberRequest) {
         memberRepository.findByTelNo(createMemberDTO.telNo)?.let {
             throw DuplicatedTelNoException(ErrorCode.DUPLICATED_TEL_NO)

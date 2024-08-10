@@ -12,13 +12,13 @@ interface MemberRepository : JpaRepository<Member, Long> {
         value = "select m from member m where m.deletedAt is null order by m.createdAt desc",
         countQuery = "select count(m) from member m"
     )
-    fun findAllOffsetPaging(pageable: Pageable): Page<Member>?
+    fun findAllOffsetPaging(pageable: Pageable): Page<Member?>
 
     @Query(
         value = "select m from member m where m.deletedAt is null order by m.createdAt desc",
         countQuery = "select count(m) from member m"
     )
-    fun findAllSlicePaging(pageable: Pageable): Slice<Member>?
+    fun findAllSlicePaging(pageable: Pageable): Slice<Member?>
 
     fun findByTelNo(telNo: String): Member?
 

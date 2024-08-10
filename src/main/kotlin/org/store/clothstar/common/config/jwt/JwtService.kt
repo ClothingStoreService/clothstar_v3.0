@@ -2,6 +2,7 @@ package org.store.clothstar.common.config.jwt
 
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
+import org.springframework.data.repository.findByIdOrNull
 import org.store.clothstar.common.error.ErrorCode
 import org.store.clothstar.common.error.exception.NotFoundMemberException
 import org.store.clothstar.member.repository.AccountRepository
@@ -28,7 +29,7 @@ class JwtService(
     fun getAccessTokenByRefreshToken(refreshToken: String): String {
         val accountId = jwtUtil.getAccountId(refreshToken)
 
-        val account = accountRepository.findByAccountId(accountId)
+        val account = accountRepository.findByIdOrNull(accountId)
             ?: throw NotFoundMemberException(ErrorCode.NOT_FOUND_ACCOUNT)
 
         return jwtUtil.createAccessToken(account)

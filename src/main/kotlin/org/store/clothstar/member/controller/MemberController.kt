@@ -13,13 +13,11 @@ import org.springframework.data.domain.Slice
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import org.store.clothstar.common.dto.ErrorResponseDTO
 import org.store.clothstar.common.dto.MessageDTO
 import org.store.clothstar.member.application.MemberServiceApplication
 import org.store.clothstar.member.dto.request.ModifyNameRequest
-import org.store.clothstar.member.dto.request.ModifyPasswordRequest
 import org.store.clothstar.member.dto.response.MemberResponse
 
 @Tag(name = "Member", description = "회원 정보 관리에 대한 API 입니다.")
@@ -133,37 +131,6 @@ class MemberController(
         return ResponseEntity.ok(messageDTO)
     }
 
-    @Operation(summary = "회원 비밀번호 수정", description = "회원 비밀번호를 수정한다.")
-    @ApiResponses(
-        value = [ApiResponse(
-            responseCode = "200",
-            description = "회원 비밀번호가 수정 되었습니다.",
-            content = [Content(schema = Schema(implementation = MemberResponse::class))]
-        ), ApiResponse(
-            responseCode = "404",
-            description = "회원 정보를 찾을 수 없습니다.",
-            content = [Content(schema = Schema(implementation = ErrorResponseDTO::class))]
-        )]
-    )
-    @PatchMapping("/v1/members/{id}")
-    fun modifyPassword(
-        @PathVariable("id") memberId: Long,
-        @Validated @RequestBody modifyPasswordRequest: ModifyPasswordRequest
-    ): ResponseEntity<MessageDTO> {
-        log.info("회원 비밀번호 요청 데이터 : memberId={}, password={}", memberId, modifyPasswordRequest)
-
-        memberServiceApplication.modifyPassword(
-            memberId = memberId,
-            password = modifyPasswordRequest.password
-        )
-
-        val messageDTO = MessageDTO(
-            HttpStatus.OK.value(),
-            "회원 비밀번호가 수정 되었습니다."
-        )
-
-        return ResponseEntity.ok(messageDTO)
-    }
 
     @Operation(summary = "회원 삭제", description = "회원 삭제시간을 현재시간으로 업데이트 합니다.")
     @ApiResponses(

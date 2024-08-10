@@ -86,7 +86,7 @@ class JwtUtil(
 
     fun getAccountId(token: String): Long {
         val claims = getClaims(token)
-        return claims.get("id", Long::class.java)
+        return claims.get("id", Integer::class.java).toLong()
     }
 
     fun validateToken(token: String): Boolean {

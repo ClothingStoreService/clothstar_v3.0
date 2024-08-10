@@ -13,15 +13,15 @@ import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import org.store.clothstar.common.dto.ErrorResponseDTO
 import org.store.clothstar.common.dto.MessageDTO
+import org.store.clothstar.member.application.SellerServiceApplication
 import org.store.clothstar.member.dto.request.CreateSellerRequest
 import org.store.clothstar.member.dto.response.MemberResponse
 import org.store.clothstar.member.dto.response.SellerResponse
-import org.store.clothstar.member.service.SellerService
 
 @Tag(name = "Seller", description = "판매자 정보 관리에 대한 API 입니다.")
 @RestController
 class SellerController(
-    private val sellerService: SellerService,
+    private val sellerServiceApplication: SellerServiceApplication,
 ) {
     private val log = KotlinLogging.logger {}
 
@@ -39,7 +39,7 @@ class SellerController(
     )
     @GetMapping("/v1/sellers/{id}")
     fun getSeller(@PathVariable("id") memberId: Long): ResponseEntity<SellerResponse> {
-        val seller = sellerService.getSellerById(memberId)
+        val seller = sellerServiceApplication.getSellerById(memberId)
 
         val sellerResponse = SellerResponse(
             memberId = seller.memberId,
@@ -73,7 +73,7 @@ class SellerController(
         @PathVariable("id") memberId: Long
     ): ResponseEntity<MessageDTO> {
         log.info { "판매자 가입 요청 데이터 : ${createSellerRequest.toString()}" }
-        sellerService.sellerSave(memberId, createSellerRequest)
+        sellerServiceApplication.sellerSave(memberId, createSellerRequest)
 
         val messageDTO = MessageDTO(
             HttpStatus.CREATED.value(),
