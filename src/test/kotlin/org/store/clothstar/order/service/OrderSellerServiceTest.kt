@@ -49,13 +49,13 @@ class OrderSellerServiceTest {
     @MockK
     lateinit var order: Order
 
+    val orderId = "4b1a17b5-45f0-455a-a5e3-2c863de18b05"
+
     // 판매자 주문 승인 - approveOrder
     @Test
     @DisplayName("판매자 주문 승인 - 성공 테스트")
     fun approveOrder_success_test() {
         //given
-        val orderId = 1L
-
         every { order.status } returns Status.CONFIRMED
         every { orderRepository.findByIdOrNull(orderId) } returns order
         justRun { order.validateForStatusCONFIRMEDAndDeletedAt() }
@@ -77,7 +77,6 @@ class OrderSellerServiceTest {
     @DisplayName("판매자 주문 승인 - 주문번호가 존재하지 않을 때 예외처리 테스트")
     fun approveOrder_orderNotFound_exception_test() {
         //given
-        val orderId = 1L
         every { order.status } returns Status.CONFIRMED
         every { orderRepository.findByIdOrNull(orderId) } returns null
 
@@ -93,7 +92,6 @@ class OrderSellerServiceTest {
     @DisplayName("판매자 주문 취소 - 성공 테스트")
     fun cancelOrder_success_test() {
         //given
-        val orderId = 1L
         every { order.status } returns Status.CONFIRMED
         every { orderRepository.findByIdOrNull(orderId) } returns order
         justRun { order.validateForStatusCONFIRMEDAndDeletedAt() }
@@ -115,7 +113,6 @@ class OrderSellerServiceTest {
     @DisplayName("판매자 주문 취소 - 주문번호가 존재하지 않을 때 예외처리 테스트")
     fun cancelOrder_orderNotFound_exception_test() {
         //given
-        val orderId = 1L
         every { order.status } returns Status.CONFIRMED
         every { orderRepository.findByIdOrNull(orderId) } returns null
 
