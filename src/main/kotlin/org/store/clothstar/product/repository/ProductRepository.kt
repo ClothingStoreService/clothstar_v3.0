@@ -10,6 +10,5 @@ import java.util.*
 interface ProductRepository : JpaRepository<Product, Long> {
     fun findByProductIdIn(productLineIds: List<Long>): List<Product?>
 
-    @EntityGraph(attributePaths = ["productOptions", "items", "imageList"])
     fun findWithDetailsByProductId(productId: Long): Optional<Product>
 }

@@ -5,7 +5,7 @@ jasypt:
 spring:
   profiles:
     active:
-      - local, mybatis
+      - local
     group:
       local:
         - db-local

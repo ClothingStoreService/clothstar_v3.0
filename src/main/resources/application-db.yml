@@ -30,7 +30,7 @@ spring:
   jpa:
     properties:
       hibernate:
-        default_batch_fetch_size: 1000
+        default_batch_fetch_size: 200
 
 --- # local 공통 설정
 spring:
@@ -51,7 +51,6 @@ spring:
       ddl-auto: create
     properties:
       hibernate:
-        default_batch_fetch_size: 1000
         dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
 
@@ -71,6 +70,5 @@ spring:
     database-platform: org.hibernate.dialect.MySQLDialect
     properties:
       hibernate:
-        default_batch_fetch_size: 1000
         format_sql: true
         show_sql: true

@@ -10,7 +10,6 @@ import org.store.clothstar.product.domain.type.ProductColor
 import org.store.clothstar.product.domain.type.SaleStatus
 import org.store.clothstar.product.dto.request.UpdateProductRequest
 
-@BatchSize(size = 20)
 @Entity
 class Product(
     @Id
@@ -28,9 +27,8 @@ class Product(
     var name: String,
     var content: String,
     var price: Int,
-    // 색상 목록
 
-    @BatchSize(size = 20)
+    // 색상 목록
     @ElementCollection(targetClass = ProductColor::class)
     @CollectionTable(name = "product_colors", joinColumns = [JoinColumn(name = "product_id")])
     @Enumerated(EnumType.STRING)
@@ -38,8 +36,6 @@ class Product(
     var productColors: MutableSet<ProductColor> = mutableSetOf(),
 
     // 이미지 목록
-    @Fetch(FetchMode.SUBSELECT)
-    @BatchSize(size = 20)
     @ElementCollection
     @CollectionTable(name = "product_image", joinColumns = [JoinColumn(name = "product_line_id")])
     var imageList: MutableSet<ProductImage> = mutableSetOf(),
@@ -53,14 +49,12 @@ class Product(
 
     // 연관 관계 (1:N)
     @Fetch(FetchMode.SUBSELECT)
-    @BatchSize(size = 20)
     @OneToMany(mappedBy = "product", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    var productOptions: MutableSet<ProductOption> = mutableSetOf(),
+    var productOptions: MutableList<ProductOption> = mutableListOf(),
 
     @Fetch(FetchMode.SUBSELECT)
-    @BatchSize(size = 20)
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    var items: MutableSet<Item> = mutableSetOf(),
+    var items: MutableList<Item> = mutableListOf(),
 ) : BaseEntity() {
 
 

@@ -21,7 +21,6 @@ import org.hibernate.annotations.BatchSize
  *   ]
  * }
  */
-@BatchSize(size = 20)
 @Entity
 class ProductOption(
     @Id
@@ -35,7 +34,6 @@ class ProductOption(
     @JoinColumn(name = "product_id")
     val product: Product,
 
-    @BatchSize(size = 20)
     @OneToMany(mappedBy = "productOption", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var optionValues: MutableSet<OptionValue> = mutableSetOf(),
+    var optionValues: MutableList<OptionValue> = mutableListOf(),
 )

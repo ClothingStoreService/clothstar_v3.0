@@ -23,7 +23,6 @@ import org.store.clothstar.product.domain.type.SaleStatus
  *   ]
  * }
  */
-@BatchSize(size = 20)
 @Entity
 class Item(
     @Id
@@ -35,7 +34,6 @@ class Item(
     val saleStatus: SaleStatus,
     val displayStatus: DisplayStatus,
 
-    @BatchSize(size = 20)
     @ElementCollection
     @CollectionTable(
         name = "item_attributes",
