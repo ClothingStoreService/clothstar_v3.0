@@ -80,12 +80,6 @@ class MemberServiceImpl(
         }
     }
 
-    @Transactional(readOnly = true)
-    override fun getMemberByMemberId(memberId: Long): Member {
-        return memberRepository.findByIdOrNull(memberId)
-            ?: throw NotFoundMemberException(ErrorCode.NOT_FOUND_MEMBER)
-    }
-
     @Transactional
     override fun modifyName(memberId: Long, modifyNameRequest: ModifyNameRequest) {
         log.info { "회원 이름 수정 memberId = ${memberId}, name = ${modifyNameRequest.name}" }
@@ -145,5 +139,10 @@ class MemberServiceImpl(
         memberRepository.findByTelNo(createMemberDTO.telNo)?.let {
             throw DuplicatedTelNoException(ErrorCode.DUPLICATED_TEL_NO)
         }
+    }
+
+    override fun getMemberByMemberId(memberId: Long): Member {
+        return memberRepository.findByIdOrNull(memberId)
+            ?: throw NotFoundMemberException(ErrorCode.NOT_FOUND_MEMBER)
     }
 }

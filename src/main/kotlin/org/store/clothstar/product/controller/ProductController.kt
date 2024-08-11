@@ -15,17 +15,19 @@ import org.store.clothstar.product.service.ProductApplicationService
 @Tag(name = "Products", description = "Products(상품 옵션) 관련 API 입니다.")
 @RequestMapping("/v3/products")
 @RestController
-private class ProductController (
+private class ProductController(
     private val productApplicationService: ProductApplicationService,
     ) {
     @PostMapping
-    @Operation(summary = "상품 등록",
-        description = "카테고리 아이디, 상품 이름, 내용, 가격, 상태를 입력하여 상품을 신규 등록한다.")
+    @Operation(
+        summary = "상품 등록",
+        description = "카테고리 아이디, 상품 이름, 내용, 가격, 상태를 입력하여 상품을 신규 등록한다."
+    )
     fun createProduct(
         @RequestPart(value = "mainImage", required = false) mainImage: MultipartFile,
         @RequestPart(value = "subImages", required = false) subImages: List<MultipartFile>?,
         @RequestPart(value = "dto") @Validated productCreateRequest: ProductCreateRequest
-    ) : ResponseEntity<MessageDTO> {
+    ): ResponseEntity<MessageDTO> {
         // 상품 등록
         productApplicationService.createProduct(mainImage, subImages, productCreateRequest);
 

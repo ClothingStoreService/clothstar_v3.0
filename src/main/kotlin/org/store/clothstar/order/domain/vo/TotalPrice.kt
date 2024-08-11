@@ -14,8 +14,8 @@ data class TotalPrice(
     @Column(name = "total_payment_price", nullable = false)
     var payment: Int = 0
 ) {
-    fun updatePrices(totalProductsPrice: Int, totalPaymentPrice: Int) {
-        this.products = totalProductsPrice
-        this.payment = totalPaymentPrice
+    fun updatePrices(updatedtotalProductsPrice: Int, updatedtotalPaymentPrice: Int) {
+        this.products = updatedtotalProductsPrice
+        this.payment = updatedtotalPaymentPrice
     }
 }

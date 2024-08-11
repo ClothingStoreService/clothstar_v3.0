@@ -8,6 +8,7 @@ enum class ErrorCode(
 ) {
     NOT_FOUND_ACCOUNT(HttpStatus.NOT_FOUND, "회원 정보를 찾을 수 없습니다."),
     NOT_FOUND_MEMBER(HttpStatus.NOT_FOUND, "멤버 정보를 찾을 수 없습니다."),
+    NOT_FOUND_ADDRESS(HttpStatus.NOT_FOUND, "배송지 정보를 찾을 수 없습니다."),
 
     DUPLICATED_EMAIL(HttpStatus.BAD_REQUEST, "이미 사용중인 이메일 입니다."),
     DUPLICATED_SELLER(HttpStatus.BAD_REQUEST, "이미 판매자 가입이 되어 있습니다."),
@@ -21,7 +22,10 @@ enum class ErrorCode(
 
     // Order 관련 에러코드
     NOT_FOUND_ORDER(HttpStatus.NOT_FOUND, "존재하지 않는 주문번호입니다."),
-    INVALID_ORDER_STATUS_CONFIRMED(HttpStatus.BAD_REQUEST, "주문이 입금확인 상태가 아니므로 요청을 처리할 수 없습니다.");
+    INVALID_ORDER_STATUS_CONFIRMED(HttpStatus.BAD_REQUEST, "주문이 입금확인 상태가 아니므로 요청을 처리할 수 없습니다."),
+    OUT_OF_STOCK(HttpStatus.BAD_REQUEST, "품절된 상품입니다."),
+    INSUFFICIENT_STOCK(HttpStatus.BAD_REQUEST, "주문 개수가 상품 재고보다 더 많아 요청을 처리할 수 없습니다.");
+
 
     fun ErrorCode(status: HttpStatus, message: String) {
         this.status = status

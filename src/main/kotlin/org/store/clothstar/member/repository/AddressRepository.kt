@@ -10,6 +10,4 @@ import org.store.clothstar.member.domain.Address
 interface AddressRepository : JpaRepository<Address, Long> {
     @Query("SELECT addr FROM address addr WHERE addr.memberId = :memberId")
     fun findAddressListByMemberId(@Param("memberId") memberId: Long): List<Address?>
-
-    fun findByAddressId(addressId: Long): Address?
 }

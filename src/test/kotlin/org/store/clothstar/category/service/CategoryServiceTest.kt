@@ -1,13 +1,11 @@
 package org.store.clothstar.category.service
 
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
-import org.springframework.http.HttpStatus
-import org.springframework.web.server.ResponseStatusException
 import org.store.clothstar.category.domain.Category
 import org.store.clothstar.category.dto.request.CreateCategoryRequest
 import org.store.clothstar.category.dto.request.UpdateCategoryRequest

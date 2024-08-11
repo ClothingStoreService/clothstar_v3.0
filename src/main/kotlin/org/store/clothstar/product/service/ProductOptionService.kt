@@ -10,12 +10,15 @@ import org.store.clothstar.product.repository.OptionValueRepository
 import org.store.clothstar.product.repository.ProductOptionRepository
 
 @Service
-class ProductOptionService (
+class ProductOptionService(
     private val productOptionRepository: ProductOptionRepository,
     private val optionValueRepository: OptionValueRepository
 ) {
     @Transactional
-    fun createProductOption(product: Product, optionRequest: ProductCreateRequest.ProductOptionCreateRequest): ProductOption {
+    fun createProductOption(
+        product: Product,
+        optionRequest: ProductCreateRequest.ProductOptionCreateRequest
+    ): ProductOption {
         val productOption = ProductOption(
             optionName = optionRequest.optionName,
             optionOrderNo = optionRequest.optionOrderNo,

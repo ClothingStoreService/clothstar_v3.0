@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.store.clothstar.common.dto.ErrorResponseDTO
 import org.store.clothstar.common.dto.ValidErrorResponseDTO
 import org.store.clothstar.common.error.exception.*
+import org.store.clothstar.common.error.exception.order.InsufficientStockException
 import org.store.clothstar.common.error.exception.order.InvalidOrderStatusException
 import org.store.clothstar.common.error.exception.order.OrderNotFoundException
+import org.store.clothstar.common.error.exception.order.OutOfStockException
 import java.util.function.Consumer
 
 @RestControllerAdvice
@@ -182,6 +184,12 @@ class GlobalExceptionHandler {
         return ResponseEntity(errorResponseDTO, HttpStatus.INTERNAL_SERVER_ERROR)
     }
 
+    @ExceptionHandler(NotFoundAddressException::class)
+    fun handleAddressNotFoundException(ex: NotFoundAddressException): ResponseEntity<ErrorResponseDTO> {
+        val errorResponseDTO = ErrorResponseDTO(ex.errorCode.status.value(), ex.errorCode.message)
+        return ResponseEntity(errorResponseDTO, ex.errorCode.status)
+    }
+
     // Order 관련 에러처리
     @ExceptionHandler(OrderNotFoundException::class)
     fun handleOrderNotFoundException(ex: OrderNotFoundException): ResponseEntity<ErrorResponseDTO> {
@@ -191,6 +199,18 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidOrderStatusException::class)
     fun handleInvalidOrderStatusException(ex: InvalidOrderStatusException): ResponseEntity<ErrorResponseDTO> {
+        val errorResponseDTO = ErrorResponseDTO(ex.errorCode.status.value(), ex.errorCode.message)
+        return ResponseEntity(errorResponseDTO, ex.errorCode.status)
+    }
+
+    @ExceptionHandler(InsufficientStockException::class)
+    fun handleInsufficientStockException(ex: InsufficientStockException): ResponseEntity<ErrorResponseDTO> {
+        val errorResponseDTO = ErrorResponseDTO(ex.errorCode.status.value(), ex.errorCode.message)
+        return ResponseEntity(errorResponseDTO, ex.errorCode.status)
+    }
+
+    @ExceptionHandler(OutOfStockException::class)
+    fun handleOutOfStockExceptionException(ex: OutOfStockException): ResponseEntity<ErrorResponseDTO> {
         val errorResponseDTO = ErrorResponseDTO(ex.errorCode.status.value(), ex.errorCode.message)
         return ResponseEntity(errorResponseDTO, ex.errorCode.status)
     }

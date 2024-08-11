@@ -7,7 +7,7 @@ import org.store.clothstar.product.domain.ProductOption
 import org.store.clothstar.product.repository.OptionValueRepository
 
 @Service
-class OptionValueService (
+class OptionValueService(
     private val optionValueRepository: OptionValueRepository
 ) {
     @Transactional

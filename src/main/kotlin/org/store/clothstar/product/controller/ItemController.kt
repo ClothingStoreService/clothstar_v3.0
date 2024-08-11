@@ -3,13 +3,11 @@ package org.store.clothstar.product.controller
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
-import org.springframework.validation.annotation.Validated
-import org.springframework.web.bind.annotation.*
-import org.store.clothstar.common.util.URIBuilder.buildURI
-import org.store.clothstar.product.dto.request.ProductCreateRequest
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RestController
 import org.store.clothstar.product.dto.response.ItemResponse
 import org.store.clothstar.product.service.ItemService
-import java.net.URI
 
 @Tag(name = "Products", description = "Products(상품 옵션) 관련 API 입니다.")
 @RestController

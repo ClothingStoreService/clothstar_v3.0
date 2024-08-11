@@ -10,26 +10,26 @@ import java.time.LocalDate
 @Schema(description = "주문 조회용 Response")
 class OrderResponse(
     @Schema(description = "주문 id", example = "1")
-    private val orderId: Long,
+    val orderId: String,
 
     @Schema(description = "주문자 이름", example = "수빈")
-    private val ordererName: String,
+    val ordererName: String,
 
     @Schema(description = "주문 생성 날짜", example = "2024-05-15")
-    private val createdAt: LocalDate,
+    val createdAt: LocalDate,
 
     @Schema(description = "주문 상태", example = "WAITING")
-    private val status: Status,
+    val status: Status,
 
     @Schema(description = "주소 정보")
-    private val address: AddressDTO,
+    val address: AddressDTO,
 
     @Schema(description = "결제 수단", example = "CARD")
-    private val paymentMethod: PaymentMethod,
+    val paymentMethod: PaymentMethod,
 
-    private val totalPrice: TotalPrice,
+    val totalPrice: TotalPrice,
 
-    private var orderDetailList: List<OrderDetailDTO> = ArrayList<OrderDetailDTO>(),
+    var orderDetailList: List<OrderDetailDTO> = ArrayList<OrderDetailDTO>(),
 ) {
 
     fun updateOrderDetailList(orderDetailDTOList: List<OrderDetailDTO>) {

@@ -46,7 +46,7 @@ class OrderSellerController(
         ]
     )
     @PatchMapping("/{orderId}/process")
-    fun approveOrder(@PathVariable orderId: Long): ResponseEntity<MessageDTO> {
+    fun approveOrder(@PathVariable orderId: String): ResponseEntity<MessageDTO> {
         orderSellerService.approveOrder(orderId)
         val messageDTO = MessageDTO(HttpStatus.OK.value(), "주문이 정상적으로 출고처리 되었습니다.")
         return ResponseEntity.ok(messageDTO)
@@ -70,7 +70,7 @@ class OrderSellerController(
         ]
     )
     @PatchMapping("/{orderId}/cancel")
-    fun cancelOrder(@PathVariable orderId: Long): ResponseEntity<MessageDTO> {
+    fun cancelOrder(@PathVariable orderId: String): ResponseEntity<MessageDTO> {
         orderSellerService.cancelOrder(orderId)
         val messageDTO = MessageDTO(HttpStatus.OK.value(), "주문이 정상적으로 취소 되었습니다.")
         return ResponseEntity.ok(messageDTO)

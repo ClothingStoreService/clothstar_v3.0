@@ -1,15 +1,11 @@
 package org.store.clothstar.product.dto.request
 
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Positive
 import jakarta.validation.constraints.PositiveOrZero
-import org.springframework.web.multipart.MultipartFile
 import org.store.clothstar.product.domain.Product
 import org.store.clothstar.product.domain.type.DisplayStatus
-import org.store.clothstar.product.domain.type.ImageType
 import org.store.clothstar.product.domain.type.SaleStatus
 
 class ProductCreateRequest(

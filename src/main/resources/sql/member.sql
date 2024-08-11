@@ -72,7 +72,8 @@ from seller;
 select *
 from productLine;
 select *
-from member where email = 'rkdgustn@test.com';
+from member
+where email = 'rkdgustn@test.com';
 
 select *
 from information_schema.table_constraints
@@ -112,4 +113,5 @@ from seller;
 alter table member
     change modified_at updated_at timestamp;
 
-ALTER TABLE member ADD COLUMN enabled boolean not null default false;
+ALTER TABLE member
+    ADD COLUMN enabled boolean not null default false;

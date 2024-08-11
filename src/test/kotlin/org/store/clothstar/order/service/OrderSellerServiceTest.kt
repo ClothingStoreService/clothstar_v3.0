@@ -12,13 +12,12 @@ import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.data.repository.findByIdOrNull
 import org.store.clothstar.common.error.ErrorCode
-import org.store.clothstar.order.domain.Order
-import org.store.clothstar.order.domain.vo.Status
 import org.store.clothstar.common.error.exception.order.OrderNotFoundException
-import org.store.clothstar.member.repository.MemberRepository
 import org.store.clothstar.member.service.AddressService
 import org.store.clothstar.member.service.MemberService
 import org.store.clothstar.member.service.SellerService
+import org.store.clothstar.order.domain.Order
+import org.store.clothstar.order.domain.vo.Status
 import org.store.clothstar.order.repository.OrderRepository
 import org.store.clothstar.product.service.ItemService
 import org.store.clothstar.product.service.ProductService
@@ -50,13 +49,13 @@ class OrderSellerServiceTest {
     @MockK
     lateinit var order: Order
 
+    val orderId = "4b1a17b5-45f0-455a-a5e3-2c863de18b05"
+
     // 판매자 주문 승인 - approveOrder
     @Test
     @DisplayName("판매자 주문 승인 - 성공 테스트")
     fun approveOrder_success_test() {
         //given
-        val orderId = 1L
-
         every { order.status } returns Status.CONFIRMED
         every { orderRepository.findByIdOrNull(orderId) } returns order
         justRun { order.validateForStatusCONFIRMEDAndDeletedAt() }
@@ -71,14 +70,13 @@ class OrderSellerServiceTest {
         verify(exactly = 1) { orderRepository.findByIdOrNull(orderId) }
         verify(exactly = 1) { order.validateForStatusCONFIRMEDAndDeletedAt() }
         verify(exactly = 1) { order.updateStatus(Status.PROCESSING) }
-        assertEquals( Status.PROCESSING, order.status )
+        assertEquals(Status.PROCESSING, order.status)
     }
 
     @Test
     @DisplayName("판매자 주문 승인 - 주문번호가 존재하지 않을 때 예외처리 테스트")
     fun approveOrder_orderNotFound_exception_test() {
         //given
-        val orderId = 1L
         every { order.status } returns Status.CONFIRMED
         every { orderRepository.findByIdOrNull(orderId) } returns null
 
@@ -94,7 +92,6 @@ class OrderSellerServiceTest {
     @DisplayName("판매자 주문 취소 - 성공 테스트")
     fun cancelOrder_success_test() {
         //given
-        val orderId = 1L
         every { order.status } returns Status.CONFIRMED
         every { orderRepository.findByIdOrNull(orderId) } returns order
         justRun { order.validateForStatusCONFIRMEDAndDeletedAt() }
@@ -109,14 +106,13 @@ class OrderSellerServiceTest {
         verify(exactly = 1) { orderRepository.findByIdOrNull(orderId) }
         verify(exactly = 1) { order.validateForStatusCONFIRMEDAndDeletedAt() }
         verify(exactly = 1) { order.updateStatus(Status.CANCELED) }
-        assertEquals( Status.CANCELED, order.status )
+        assertEquals(Status.CANCELED, order.status)
     }
 
     @Test
     @DisplayName("판매자 주문 취소 - 주문번호가 존재하지 않을 때 예외처리 테스트")
     fun cancelOrder_orderNotFound_exception_test() {
         //given
-        val orderId = 1L
         every { order.status } returns Status.CONFIRMED
         every { orderRepository.findByIdOrNull(orderId) } returns null
 

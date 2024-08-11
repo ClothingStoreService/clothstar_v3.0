@@ -3,16 +3,16 @@ package org.store.clothstar.order.domain
 import jakarta.persistence.*
 import org.store.clothstar.common.entity.BaseEntity
 import org.store.clothstar.common.error.ErrorCode
+import org.store.clothstar.common.error.exception.order.InvalidOrderStatusException
+import org.store.clothstar.common.error.exception.order.OrderNotFoundException
 import org.store.clothstar.order.domain.vo.PaymentMethod
 import org.store.clothstar.order.domain.vo.Status
 import org.store.clothstar.order.domain.vo.TotalPrice
-import org.store.clothstar.common.error.exception.order.InvalidOrderStatusException
-import org.store.clothstar.common.error.exception.order.OrderNotFoundException
 
 @Entity(name = "orders")
 class Order(
     @Id
-    val orderId: Long,
+    val orderId: String,
 
     @Column(nullable = false)
     val memberId: Long,
@@ -46,5 +46,10 @@ class Order(
         if (this.status != Status.CONFIRMED) {
             throw InvalidOrderStatusException(ErrorCode.INVALID_ORDER_STATUS_CONFIRMED)
         }
+    }
+
+    fun addOrderDetail(orderDetail: OrderDetail) {
+        orderDetails.add(orderDetail)
+        orderDetail.updateOrder(this)
     }
 }
