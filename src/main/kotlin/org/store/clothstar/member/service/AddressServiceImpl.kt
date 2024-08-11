@@ -39,12 +39,6 @@ class AddressServiceImpl(
         }
     }
 
-    @Transactional(readOnly = true)
-    override fun getAddressById(addressId: Long): Address {
-        return addressRepository.findByAddressId(addressId)
-            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "배송지 정보를 찾을 수 없습니다.")
-    }
-
     @Transactional
     override fun addrSave(memberId: Long, createAddressRequest: CreateAddressRequest): Long {
         memberRepository.findByMemberId(memberId)
