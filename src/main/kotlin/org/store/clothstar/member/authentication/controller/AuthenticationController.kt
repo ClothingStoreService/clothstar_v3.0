@@ -82,7 +82,14 @@ class AuthenticationController(
 
     @Operation(summary = "이메일로 인증번호 전송", description = "기입한 이메일로 인증번호를 전송합니다.")
     @PostMapping("/v1/members/auth")
-    fun signupEmailAuthentication(@Validated @RequestBody certifyNumRequest: CertifyNumRequest) {
+    fun signupEmailAuthentication(@Validated @RequestBody certifyNumRequest: CertifyNumRequest): ResponseEntity<MessageDTO> {
         memberServiceApplication.signupCertifyNumEmailSend(certifyNumRequest.email)
+
+        val messageDTO = MessageDTO(
+            HttpStatus.OK.value(),
+            "'${certifyNumRequest.email}' 메일로 인증메일이 전송 되었습니다."
+        )
+
+        return ResponseEntity.ok(messageDTO)
     }
 }
