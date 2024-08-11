@@ -1,7 +1,7 @@
 package org.store.clothstar.member.dto.response
 
 class MemberSimpleResponse(
-    private var memberId: Long,
-    private val name: String,
-    private val telNo: String,
+    val memberId: Long,
+    val name: String,
+    val telNo: String,
 )

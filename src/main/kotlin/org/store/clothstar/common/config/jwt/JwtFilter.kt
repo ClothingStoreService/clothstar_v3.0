@@ -15,7 +15,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.store.clothstar.common.dto.MessageDTO
-import org.store.clothstar.member.domain.CustomUserDetails
+import org.store.clothstar.member.authentication.domain.CustomUserDetails
 import org.store.clothstar.member.dto.request.MemberLoginRequest
 
 class JwtFilter(

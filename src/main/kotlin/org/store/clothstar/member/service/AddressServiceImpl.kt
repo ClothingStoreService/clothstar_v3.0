@@ -2,6 +2,7 @@ package org.store.clothstar.member.service
 
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.server.ResponseStatusException
 import org.store.clothstar.common.error.ErrorCode
 import org.store.clothstar.common.error.exception.NotFoundMemberException
@@ -17,6 +18,7 @@ class AddressServiceImpl(
     private val addressRepository: AddressRepository,
     private val memberRepository: MemberRepository,
 ) : AddressService {
+    @Transactional(readOnly = true)
     override fun getMemberAllAddress(memberId: Long): List<AddressResponse> {
         memberRepository.findByMemberId(memberId)
             ?: throw NotFoundMemberException(ErrorCode.NOT_FOUND_MEMBER)
@@ -36,6 +38,13 @@ class AddressServiceImpl(
         }
     }
 
+    @Transactional(readOnly = true)
+    override fun getAddressById(addressId: Long): Address {
+        return addressRepository.findByAddressId(addressId)
+            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "배송지 정보를 찾을 수 없습니다.")
+    }
+
+    @Transactional
     override fun addrSave(memberId: Long, createAddressRequest: CreateAddressRequest): Long {
         memberRepository.findByMemberId(memberId)
             ?: throw NotFoundMemberException(ErrorCode.NOT_FOUND_MEMBER)
@@ -55,10 +64,5 @@ class AddressServiceImpl(
         addressRepository.save(address)
 
         return address.addressId!!
-    }
-
-    override fun getAddressById(addressId: Long): Address {
-        return addressRepository.findByAddressId(addressId)
-            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "배송지 정보를 찾을 수 없습니다.")
     }
 }

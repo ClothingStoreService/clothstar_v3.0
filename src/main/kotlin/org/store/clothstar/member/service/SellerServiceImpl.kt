@@ -1,6 +1,7 @@
 package org.store.clothstar.member.service
 
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.store.clothstar.common.error.ErrorCode
 import org.store.clothstar.common.error.exception.DuplicatedBizNoException
 import org.store.clothstar.common.error.exception.DuplicatedBrandNameException
@@ -16,11 +17,13 @@ class SellerServiceImpl(
     private val sellerRepository: SellerRepository,
     private val memberRepository: MemberRepository,
 ) : SellerService {
+    @Transactional(readOnly = true)
     override fun getSellerById(memberId: Long): Seller {
         return sellerRepository.findById(memberId)
             .orElseThrow { NotFoundMemberException(ErrorCode.NOT_FOUND_MEMBER) }
     }
 
+    @Transactional
     override fun sellerSave(memberId: Long, createSellerRequest: CreateSellerRequest): Long {
         validCheck(memberId, createSellerRequest)
 

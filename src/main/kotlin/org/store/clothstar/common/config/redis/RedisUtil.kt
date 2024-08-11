@@ -1,35 +1,37 @@
 package org.store.clothstar.common.config.redis
 
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.data.redis.core.StringRedisTemplate
+import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Service
 import java.time.Duration
 import java.util.*
 
+
 @Service
 class RedisUtil(
-    private val template: StringRedisTemplate,
+    private val redisTemplate: RedisTemplate<String, String>
 ) {
     @Value("\${spring.data.redis.duration}")
     private var duration: Int = 0
 
     fun getData(key: String): String {
-        val valueOperations = template.opsForValue()
-        return valueOperations[key]
+        val valueOperations = redisTemplate.opsForValue()
+        return valueOperations[key]?.let { it }
+            ?: throw IllegalArgumentException("조회된 redis 데이터가 없습니다.")
     }
 
     fun existData(key: String): Boolean {
-        return java.lang.Boolean.TRUE == template.hasKey(key)
+        return java.lang.Boolean.TRUE == redisTemplate.hasKey(key)
     }
 
     fun setDataExpire(key: String, value: String) {
-        val valueOperations = template.opsForValue()
+        val valueOperations = redisTemplate.opsForValue()
         val expireDuration = Duration.ofSeconds(duration.toLong())
         valueOperations[key, value] = expireDuration
     }
 
     fun deleteData(key: String) {
-        template.delete(key)
+        redisTemplate.delete(key)
     }
 
     fun createRedisData(toEmail: String, code: String) {
