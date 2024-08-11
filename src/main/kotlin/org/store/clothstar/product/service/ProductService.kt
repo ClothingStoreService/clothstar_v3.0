@@ -5,6 +5,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.server.ResponseStatusException
 import org.store.clothstar.product.domain.Product
 import org.store.clothstar.product.dto.response.ProductResponse
 import org.store.clothstar.product.repository.ProductRepository
@@ -35,10 +36,5 @@ class ProductService(
     fun getProductById(productId: Long): Product {
         return productRepository.findByIdOrNull(productId)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "상품 정보를 찾을 수 없습니다.")
-    }
-
-    @Transactional
-    fun createProduct(product: Product): Product {
-        return productRepository.save(product)
     }
 }
