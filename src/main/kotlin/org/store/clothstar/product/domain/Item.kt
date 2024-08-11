@@ -32,7 +32,7 @@ class Item(
     var finalPrice: Int,
     var stock: Int,
     val saleStatus: SaleStatus,
-    val displayStatus: DisplayStatus,
+    var displayStatus: DisplayStatus,
 
     @ElementCollection
     @CollectionTable(
@@ -51,5 +51,9 @@ class Item(
 
     fun updateStock(stock: Int) {
         this.stock = stock
+    }
+
+    fun updateDisplayStatus(displayStatus: DisplayStatus) {
+        this.displayStatus = displayStatus
     }
 }
