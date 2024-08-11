@@ -7,21 +7,17 @@ import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
-import org.store.clothstar.category.service.CategoryService
 import org.store.clothstar.common.dto.MessageDTO
 import org.store.clothstar.product.dto.request.ProductCreateRequest
+import org.store.clothstar.product.dto.response.ProductResponse
 import org.store.clothstar.product.service.ProductApplicationService
-import org.store.clothstar.product.service.ProductService
-import java.net.URI
 
 @Tag(name = "Products", description = "Products(상품 옵션) 관련 API 입니다.")
 @RequestMapping("/v3/products")
 @RestController
 private class ProductController (
     private val productApplicationService: ProductApplicationService,
-    private val productService: ProductService,
-    private val categoryService: CategoryService,
-) {
+    ) {
     @PostMapping
     @Operation(summary = "상품 등록",
         description = "카테고리 아이디, 상품 이름, 내용, 가격, 상태를 입력하여 상품을 신규 등록한다.")
@@ -40,5 +36,12 @@ private class ProductController (
 
         return ResponseEntity(messageDTO, HttpStatus.CREATED)
 
+    }
+
+    @GetMapping("/{productId}")
+    @Operation(summary = "상품 상세 조회", description = "상품 ID를 사용하여 특정 상품의 상세 정보를 조회한다.")
+    fun getProductDetails(@PathVariable productId: Long): ResponseEntity<ProductResponse> {
+        val productResponse = productApplicationService.getProductDetails(productId)
+        return ResponseEntity(productResponse, HttpStatus.OK)
     }
 }

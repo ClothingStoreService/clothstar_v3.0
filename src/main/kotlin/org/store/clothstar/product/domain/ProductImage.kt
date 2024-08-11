@@ -3,6 +3,7 @@ package org.store.clothstar.product.domain
 import jakarta.persistence.Embeddable
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
+import org.hibernate.annotations.BatchSize
 import org.store.clothstar.product.domain.type.ImageType
 
 @Embeddable
