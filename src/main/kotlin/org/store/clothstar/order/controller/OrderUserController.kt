@@ -31,15 +31,16 @@ class OrderUserController(
 ) {
     @Operation(summary = "단일 주문 조회", description = "단일 주문의 정보를 조회한다.")
     @GetMapping("/{orderId}")
-    fun getOrder(@PathVariable orderId: String):ResponseEntity<OrderResponse>  {
-        val orderResponse: OrderResponse = orderUserService.getOrder(orderId);
-        return ResponseEntity.ok(orderResponse);
+    fun getOrder(@PathVariable orderId: String): ResponseEntity<OrderResponse> {
+        val orderResponse: OrderResponse = orderUserService.getOrder(orderId)
+        return ResponseEntity.ok(orderResponse)
     }
 
     @Operation(summary = "전체 주문 조회 offset 페이징", description = "전체 주문 리스트를 offset 페이징 형식으로 가져온다.")
     @GetMapping("/offset")
     fun getAllOrderOffsetPaging(
-        @PageableDefault(size = 15) pageable: Pageable): ResponseEntity<Page<OrderResponse>> {
+        @PageableDefault(size = 15) pageable: Pageable
+    ): ResponseEntity<Page<OrderResponse>> {
         val orderPages: Page<OrderResponse> = orderUserService.getAllOrderOffsetPaging(pageable)
         return ResponseEntity.ok(orderPages)
     }
@@ -47,7 +48,8 @@ class OrderUserController(
     @Operation(summary = "전체 주문 조회 slice 페이징", description = "전체 주문 리스트를 slice 페이징 형식으로 가져온다.")
     @GetMapping("/slice")
     fun getAllOrderSlicePaging(
-        @PageableDefault(size = 15) pageable: Pageable): ResponseEntity<Slice<OrderResponse>> {
+        @PageableDefault(size = 15) pageable: Pageable
+    ): ResponseEntity<Slice<OrderResponse>> {
         val orderPages: Slice<OrderResponse> = orderUserService.getAllOrderSlicePaging(pageable)
         return ResponseEntity.ok(orderPages)
     }

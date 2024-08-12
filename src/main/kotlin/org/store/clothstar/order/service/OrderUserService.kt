@@ -26,11 +26,9 @@ import org.store.clothstar.order.dto.request.OrderRequestWrapper
 import org.store.clothstar.order.dto.response.OrderResponse
 import org.store.clothstar.order.repository.OrderDetailRepository
 import org.store.clothstar.order.repository.OrderRepository
-import org.store.clothstar.order.service.OrderSave.OrderDetailValidater
 import org.store.clothstar.order.service.OrderSave.OrderSaveFacade
 import org.store.clothstar.product.domain.Item
 import org.store.clothstar.product.domain.Product
-import org.store.clothstar.product.repository.ProductRepository
 import org.store.clothstar.product.service.ItemService
 import org.store.clothstar.product.service.ProductService
 
@@ -46,7 +44,7 @@ class OrderUserService(
     private val itemService: ItemService,
 ) {
     @Transactional(readOnly = true)
-    fun getOrder (orderId: String): OrderResponse {
+    fun getOrder(orderId: String): OrderResponse {
         // orderId 관련 order, member, address, seller 불러오기
         val order: Order = orderRepository.findByOrderIdAndDeletedAtIsNull(orderId)
             ?: throw OrderNotFoundException(ErrorCode.NOT_FOUND_ORDER)
@@ -55,29 +53,29 @@ class OrderUserService(
         val seller: Seller = sellerService.getSellerById(order.memberId)
 
         // 응답 DTO 생성(주문상세 리스트는 빈 상태)
-        val orderResponse = OrderResponse.from(order,member,address)
+        val orderResponse = OrderResponse.from(order, member, address)
 
         // 주문으로부터 주문상세 리스트 가져오기
         val orderDetails: List<OrderDetail> = order.orderDetails
-            .filter{ it.deletedAt == null }
+            .filter { it.deletedAt == null }
 
         // 주문상세 리스트로부터 productId/itemId 리스트 가져오기
-        val productIds: List<Long> = orderDetails.map{ it.productId }
-        val itemIds: List<Long> = orderDetails.map{ it.itemId }
+        val productIds: List<Long> = orderDetails.map { it.productId }
+        val itemIds: List<Long> = orderDetails.map { it.itemId }
 
         // productIds, itemIds로부터 Product/Item 리스트 가져오기
         val products: List<Product> = productService.findByProductIdIn(productIds)
         val items: List<Item> = itemService.findByIdIn(itemIds)
 
         // Id, Entity를 Map으로 만들기
-        val productMap: Map<Long, Product> = products.associateBy{ it.productId!! }
-        val itemMap: Map<Long, Item>  = items.associateBy{ it.itemId!! }
+        val productMap: Map<Long, Product> = products.associateBy { it.productId!! }
+        val itemMap: Map<Long, Item> = items.associateBy { it.itemId!! }
 
         // Map으로부터 Id, Entity를 가져오면서 주문상세 DTO 리스트 만들기
-        val orderDetailDTOList: List<OrderDetailDTO> = orderDetails.map{
-            val product: Product = productMap[ it.productId ]
+        val orderDetailDTOList: List<OrderDetailDTO> = orderDetails.map {
+            val product: Product = productMap[it.productId]
                 ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found")
-            val item: Item = itemMap[ it.itemId ]
+            val item: Item = itemMap[it.itemId]
                 ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found")
             val brandName: String = seller.brandName
             OrderDetailDTO.from(it, item, product, brandName)
@@ -93,40 +91,40 @@ class OrderUserService(
     fun getAllOrderOffsetPaging(pageable: Pageable): Page<OrderResponse> {
         val orders: Page<Order> = orderRepository.findAll(pageable)
 
-        return orders.map{
+        return orders.map {
             // order 관련 member, address, seller 불러오기
             val member: Member = memberService.getMemberByMemberId(it.memberId)
             val address: Address = addressService.getAddressById(it.addressId)
             val seller: Seller = sellerService.getSellerById(it.memberId)
 
             // 응답 DTO 생성(주문상세 리스트는 빈 상태)
-            val orderResponse = OrderResponse.from(it,member,address)
+            val orderResponse = OrderResponse.from(it, member, address)
 
             // 주문으로부터 주문상세 리스트 가져오기
             val orderDetails: List<OrderDetail> = it.orderDetails
-                .filter{ it.deletedAt == null }
+                .filter { it.deletedAt == null }
 
             // 주문상세 리스트로부터 productId/itemId 리스트 가져오기
-            val productIds: List<Long> = orderDetails.map{ it.productId }
-            val itemIds: List<Long> = orderDetails.map{ it.itemId }
+            val productIds: List<Long> = orderDetails.map { it.productId }
+            val itemIds: List<Long> = orderDetails.map { it.itemId }
 
             // productIds, itemIds로부터 Product/Item 리스트 가져오기
             val products: List<Product> = productService.findByProductIdIn(productIds)
             val items: List<Item> = itemService.findByIdIn(itemIds)
 
             // Id, Entity를 Map으로 만들기
-            val productMap: Map<Long, Product> = products.associateBy{ it.productId!! }
-            val itemMap: Map<Long, Item>  = items.associateBy{ it.itemId!! }
+            val productMap: Map<Long, Product> = products.associateBy { it.productId!! }
+            val itemMap: Map<Long, Item> = items.associateBy { it.itemId!! }
 
             // Map으로부터 Id, Entity를 가져오면서 주문상세 DTO 리스트 만들기
-            val orderDetailDTOList: List<OrderDetailDTO> = orderDetails.map{
-                val product: Product = productMap[ it.productId ]
+            val orderDetailDTOList: List<OrderDetailDTO> = orderDetails.map {
+                val product: Product = productMap[it.productId]
                     ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found")
-                val item: Item = itemMap[ it.itemId ]
+                val item: Item = itemMap[it.itemId]
                     ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found")
                 val brandName: String = seller.brandName
                 OrderDetailDTO.from(it, item, product, brandName)
-        }
+            }
 
             // 응답 DTO에 주문상세 DTO 리스트 추가
             orderResponse.updateOrderDetailList(orderDetailDTOList)
@@ -139,36 +137,36 @@ class OrderUserService(
     fun getAllOrderSlicePaging(pageable: Pageable): Slice<OrderResponse> {
         val orders: Slice<Order> = orderRepository.findAll(pageable)
 
-        return orders.map{
+        return orders.map {
             // order 관련 member, address, seller 불러오기
             val member: Member = memberService.getMemberByMemberId(it.memberId)
             val address: Address = addressService.getAddressById(it.addressId)
             val seller: Seller = sellerService.getSellerById(it.memberId)
 
             // 응답 DTO 생성(주문상세 리스트는 빈 상태)
-            val orderResponse = OrderResponse.from(it,member,address)
+            val orderResponse = OrderResponse.from(it, member, address)
 
             // 주문으로부터 주문상세 리스트 가져오기
             val orderDetails: List<OrderDetail> = it.orderDetails
-                .filter{ it.deletedAt == null }
+                .filter { it.deletedAt == null }
 
             // 주문상세 리스트로부터 productId/itemId 리스트 가져오기
-            val productIds: List<Long> = orderDetails.map{ it.productId }
-            val itemIds: List<Long> = orderDetails.map{ it.itemId }
+            val productIds: List<Long> = orderDetails.map { it.productId }
+            val itemIds: List<Long> = orderDetails.map { it.itemId }
 
             // productIds, itemIds로부터 Product/Item 리스트 가져오기
             val products: List<Product> = productService.findByProductIdIn(productIds)
             val items: List<Item> = itemService.findByIdIn(itemIds)
 
             // Id, Entity를 Map으로 만들기
-            val productMap: Map<Long, Product> = products.associateBy{ it.productId!! }
-            val itemMap: Map<Long, Item>  = items.associateBy{ it.itemId!! }
+            val productMap: Map<Long, Product> = products.associateBy { it.productId!! }
+            val itemMap: Map<Long, Item> = items.associateBy { it.itemId!! }
 
             // Map으로부터 Id, Entity를 가져오면서 주문상세 DTO 리스트 만들기
-            val orderDetailDTOList: List<OrderDetailDTO> = orderDetails.map{
-                val product: Product = productMap[ it.productId ]
+            val orderDetailDTOList: List<OrderDetailDTO> = orderDetails.map {
+                val product: Product = productMap[it.productId]
                     ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found")
-                val item: Item = itemMap[ it.itemId ]
+                val item: Item = itemMap[it.itemId]
                     ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found")
                 val brandName: String = seller.brandName
                 OrderDetailDTO.from(it, item, product, brandName)

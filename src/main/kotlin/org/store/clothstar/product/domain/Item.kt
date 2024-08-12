@@ -1,7 +1,6 @@
 package org.store.clothstar.product.domain
 
 import jakarta.persistence.*
-import org.hibernate.annotations.BatchSize
 import org.store.clothstar.product.domain.type.DisplayStatus
 import org.store.clothstar.product.domain.type.SaleStatus
 
