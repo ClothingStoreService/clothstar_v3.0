@@ -15,6 +15,7 @@ import org.store.clothstar.common.dto.MessageDTO
 import org.store.clothstar.common.dto.SaveResponseDTO
 import org.store.clothstar.order.dto.request.AddOrderDetailRequest
 import org.store.clothstar.order.dto.request.OrderRequestWrapper
+import org.store.clothstar.order.dto.response.OrderResponse
 import org.store.clothstar.order.dto.response.SaveOrderResponse
 import org.store.clothstar.order.service.OrderUserService
 
@@ -24,11 +25,43 @@ import org.store.clothstar.order.service.OrderUserService
 class OrderUserController(
     private val orderUserService: OrderUserService,
 ) {
-//    @Operation(summary = "단일 주문 조회", description = "단일 주문의 정보를 조회한다.")
-//    @GetMapping("/{orderId}")
-//    fun getOrder(@PathVariable orderId: String): ResponseEntity<OrderResponse>  {
-//        val orderResponse: OrderResponse = orderService.getOrder(orderId)
-//        return ResponseEntity.ok(orderResponse)
+    @Operation(summary = "단일 주문 조회", description = "단일 주문의 정보를 조회한다.")
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200", description = "",
+                content = [Content(schema = Schema(implementation = SaveOrderResponse::class))]
+            ),
+            ApiResponse(
+                responseCode = "404", description = "",
+                content = [Content(schema = Schema(implementation = ErrorResponseDTO::class))]
+            ),
+            ApiResponse(
+                responseCode = "400", description = "",
+                content = [Content(schema = Schema(implementation = ErrorResponseDTO::class))]
+            ),
+        ]
+    )
+    @GetMapping("/{orderId}")
+    fun getOrder(@PathVariable orderId: String):ResponseEntity<OrderResponse>  {
+        val orderResponse: OrderResponse = orderUserService.getOrder(orderId);
+        return ResponseEntity.ok(orderResponse);
+    }
+
+//    @Operation(summary = "전체 주문 조회 offset 페이징", description = "전체 주문 리스트를 offset 페이징 형식으로 가져온다.")
+//    @GetMapping("/offset")
+//    public ResponseEntity<Page<OrderResponse>> getAllOrderOffsetPaging(
+//    @PageableDefault(size = 15) Pageable pageable) {
+//        Page<OrderResponse> orderPages = orderService.getAllOrderOffsetPaging(pageable);
+//        return ResponseEntity.ok(orderPages);
+//    }
+//
+//    @Operation(summary = "전체 주문 조회 slice 페이징", description = "전체 주문 리스트를 slice 페이징 형식으로 가져온다.")
+//    @GetMapping("/slice")
+//    public ResponseEntity<Slice<OrderResponse>> getAllOrderSlicePaging(
+//    @PageableDefault(size = 15) Pageable pageable) {
+//        Slice<OrderResponse> orderPages = orderService.getAllOrderSlicePaging(pageable);
+//        return ResponseEntity.ok(orderPages);
 //    }
 
     @Operation(summary = "주문 생성", description = "단일 주문을 생성한다.")
