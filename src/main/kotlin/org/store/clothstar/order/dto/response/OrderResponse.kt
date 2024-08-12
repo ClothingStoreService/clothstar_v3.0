@@ -29,7 +29,7 @@ class OrderResponse(
 
     val totalPrice: TotalPrice,
 
-    var orderDetailList: List<OrderDetailDTO> = ArrayList<OrderDetailDTO>(),
+    var orderDetailList: List<OrderDetailDTO> = arrayListOf(),
 ) {
 
     fun updateOrderDetailList(orderDetailDTOList: List<OrderDetailDTO>) {
