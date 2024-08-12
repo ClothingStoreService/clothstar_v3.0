@@ -24,9 +24,6 @@ interface MemberService {
     fun modifyName(memberId: Long, modifyNameRequest: ModifyNameRequest)
 
     fun saveMember(createMemberDTO: CreateMemberRequest): Long
-    fun signUp(createMemberDTO: CreateMemberRequest): Long
-
-    fun signupCertifyNumEmailSend(email: String)
 
     fun getMemberByMemberId(memberId: Long): Member
 }
