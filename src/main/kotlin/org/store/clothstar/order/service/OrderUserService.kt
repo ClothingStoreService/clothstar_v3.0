@@ -47,7 +47,7 @@ class OrderUserService(
 ) {
     @Transactional(readOnly = true)
     fun getOrder (orderId: String): OrderResponse {
-        // orderId 관련 order, member, address 불러오기
+        // orderId 관련 order, member, address, seller 불러오기
         val order: Order = orderRepository.findByOrderIdAndDeletedAtIsNull(orderId)
             ?: throw OrderNotFoundException(ErrorCode.NOT_FOUND_ORDER)
         val member: Member = memberService.getMemberByMemberId(order.memberId)
@@ -94,7 +94,7 @@ class OrderUserService(
         val orders: Page<Order> = orderRepository.findAll(pageable)
 
         return orders.map{
-            // order 관련 member, address 불러오기
+            // order 관련 member, address, seller 불러오기
             val member: Member = memberService.getMemberByMemberId(it.memberId)
             val address: Address = addressService.getAddressById(it.addressId)
             val seller: Seller = sellerService.getSellerById(it.memberId)
@@ -140,7 +140,7 @@ class OrderUserService(
         val orders: Slice<Order> = orderRepository.findAll(pageable)
 
         return orders.map{
-            // order 관련 member, address 불러오기
+            // order 관련 member, address, seller 불러오기
             val member: Member = memberService.getMemberByMemberId(it.memberId)
             val address: Address = addressService.getAddressById(it.addressId)
             val seller: Seller = sellerService.getSellerById(it.memberId)
