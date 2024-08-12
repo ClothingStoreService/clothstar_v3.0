@@ -9,6 +9,6 @@ class MemberLoginRequest(
     val password: String,
 ) {
     constructor() : this("", "") {
-        
+
     }
 }

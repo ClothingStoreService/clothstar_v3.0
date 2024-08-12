@@ -1,7 +1,6 @@
 package org.store.clothstar.product.domain
 
 import jakarta.persistence.*
-import org.hibernate.annotations.BatchSize
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import org.store.clothstar.common.entity.BaseEntity
