@@ -60,4 +60,8 @@ class Product(
     fun updateSaleStatus(saleStatus: SaleStatus) {
         this.saleStatus = saleStatus
     }
+
+    fun updateDisplayStatus(displayStatus: DisplayStatus) {
+        this.displayStatus = displayStatus
+    }
 }
