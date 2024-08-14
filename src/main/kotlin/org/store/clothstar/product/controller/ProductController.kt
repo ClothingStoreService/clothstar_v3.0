@@ -10,8 +10,8 @@ import org.springframework.web.multipart.MultipartFile
 import org.store.clothstar.common.dto.MessageDTO
 import org.store.clothstar.product.dto.request.ProductCreateRequest
 import org.store.clothstar.product.dto.request.UpdateDisplayStatusRequest
+import org.store.clothstar.product.dto.response.ProductResponse
 import org.store.clothstar.product.service.ProductApplicationService
-import org.store.clothstar.product.service.ProductService
 
 @Tag(name = "Products", description = "Products(상품 옵션) 관련 API 입니다.")
 @RequestMapping("/v3/products")
@@ -38,7 +38,13 @@ private class ProductController(
         )
 
         return ResponseEntity(messageDTO, HttpStatus.CREATED)
+    }
 
+    @GetMapping("/{productId}")
+    @Operation(summary = "상품 상세 조회", description = "상품 ID를 사용하여 특정 상품의 상세 정보를 조회한다.")
+    fun getProductDetails(@PathVariable productId: Long): ResponseEntity<ProductResponse> {
+        val productResponse = productApplicationService.getProductDetails(productId)
+        return ResponseEntity(productResponse, HttpStatus.OK)
     }
 
     @PatchMapping("/{productId}/displayStatus")
