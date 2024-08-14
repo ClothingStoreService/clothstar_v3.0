@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
+import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
@@ -26,39 +27,69 @@ import org.store.clothstar.order.utils.CreateOrderObject
 import org.store.clothstar.product.repository.ItemRepository
 import org.store.clothstar.product.repository.ProductRepository
 
-@Transactional
 @SpringBootTest
-@ActiveProfiles("test")
 @AutoConfigureMockMvc
-class OrderIntegrationTest {
+@ActiveProfiles("test")
+@Transactional
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+class OrderIntegrationTest(
     @Autowired
-    private lateinit var mockMvc: MockMvc
+    private val mockMvc: MockMvc,
 
     @Autowired
-    private lateinit var orderRepository: OrderRepository
+    private val orderRepository: OrderRepository,
 
     @Autowired
-    private lateinit var memberRepository: MemberRepository
+    private val memberRepository: MemberRepository,
 
     @Autowired
-    private lateinit var addressRepository: AddressRepository
+    private val addressRepository: AddressRepository,
 
     @Autowired
-    private lateinit var categoryRepository: CategoryJpaRepository
+    private val categoryRepository: CategoryJpaRepository,
 
     @Autowired
-    private lateinit var productRepository: ProductRepository
+    private val productRepository: ProductRepository,
 
     @Autowired
-    private lateinit var itemRepository: ItemRepository
+    private val itemRepository: ItemRepository,
 
     @Autowired
-    private lateinit var sellerRepository: SellerRepository
+    private val sellerRepository: SellerRepository,
 
+    @Autowired
+    private val orderDetailRepository: OrderDetailRepository,
+) {
     private val ORDER_URL: String = "/v1/orders"
 
-    @Autowired
-    private lateinit var orderDetailRepository: OrderDetailRepository
+//    @Autowired
+//    private lateinit var mockMvc: MockMvc
+//
+//    @Autowired
+//    private lateinit var orderRepository: OrderRepository
+//
+//    @Autowired
+//    private lateinit var memberRepository: MemberRepository
+//
+//    @Autowired
+//    private lateinit var addressRepository: AddressRepository
+//
+//    @Autowired
+//    private lateinit var categoryRepository: CategoryJpaRepository
+//
+//    @Autowired
+//    private lateinit var productRepository: ProductRepository
+//
+//    @Autowired
+//    private lateinit var itemRepository: ItemRepository
+//
+//    @Autowired
+//    private lateinit var sellerRepository: SellerRepository
+//
+//    private val ORDER_URL: String = "/v1/orders"
+//
+//    @Autowired
+//    private lateinit var orderDetailRepository: OrderDetailRepository
 
     @DisplayName("단일 주문 조회 통합테스트")
     @Test
