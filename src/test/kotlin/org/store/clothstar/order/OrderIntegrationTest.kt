@@ -64,7 +64,6 @@ class OrderIntegrationTest {
     @Test
     fun testGetOrder() {
         //given
-        //
         memberRepository.save(CreateObject.getMember())
         addressRepository.save(CreateObject.getAddress())
         categoryRepository.save(CreateOrderObject.getCategory())
