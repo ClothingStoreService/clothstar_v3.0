@@ -27,6 +27,10 @@ enum class ErrorCode(
     OUT_OF_STOCK(HttpStatus.BAD_REQUEST, "품절된 상품입니다."),
     INSUFFICIENT_STOCK(HttpStatus.BAD_REQUEST, "주문 개수가 상품 재고보다 더 많아 요청을 처리할 수 없습니다.");
 
+
+    // Product 관련 에러코드
+
+
     fun ErrorCode(status: HttpStatus, message: String) {
         this.status = status
         this.message = message
