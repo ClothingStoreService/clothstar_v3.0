@@ -1,6 +1,7 @@
 package org.store.clothstar.member.dto.request
 
 import jakarta.validation.constraints.*
+import org.store.clothstar.member.domain.Member
 
 class CreateMemberRequest(
     @field: Email(message = "유효하지 않은 이메일 형식입니다.")
