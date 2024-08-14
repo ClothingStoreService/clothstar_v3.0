@@ -64,8 +64,10 @@ class CreateOrderObject {
                 productId = this.getProduct().productId!!,
                 itemId = this.getItem().itemId!!,
                 quantity = 1,
-                price = Price(fixedPrice = this.getProduct().price,
-                    oneKindTotalPrice = 10000),
+                price = Price(
+                    fixedPrice = this.getProduct().price,
+                    oneKindTotalPrice = 10000
+                ),
                 order = this.getOrder()
             )
         }

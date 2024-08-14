@@ -65,7 +65,8 @@ class CreateObject {
                 memberId = this.getMember().memberId!!,
                 brandName = "나이키",
                 bizNo = "123-123",
-                totalSellPrice = 1000)
+                totalSellPrice = 1000
+            )
         }
 
         fun getAccount(userId: Long): Account {

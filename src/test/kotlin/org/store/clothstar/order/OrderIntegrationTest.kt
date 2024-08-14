@@ -13,11 +13,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.transaction.annotation.Transactional
-import org.store.clothstar.category.domain.Category
 import org.store.clothstar.category.repository.CategoryJpaRepository
-import org.store.clothstar.member.domain.Address
-import org.store.clothstar.member.domain.Member
-import org.store.clothstar.member.domain.Seller
 import org.store.clothstar.member.repository.AddressRepository
 import org.store.clothstar.member.repository.MemberRepository
 import org.store.clothstar.member.repository.SellerRepository
@@ -27,8 +23,6 @@ import org.store.clothstar.order.domain.OrderDetail
 import org.store.clothstar.order.repository.OrderDetailRepository
 import org.store.clothstar.order.repository.OrderRepository
 import org.store.clothstar.order.utils.CreateOrderObject
-import org.store.clothstar.product.domain.Item
-import org.store.clothstar.product.domain.Product
 import org.store.clothstar.product.repository.ItemRepository
 import org.store.clothstar.product.repository.ProductRepository
 
@@ -36,7 +30,7 @@ import org.store.clothstar.product.repository.ProductRepository
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-class OrderIntegrationTest{
+class OrderIntegrationTest {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
@@ -68,14 +62,16 @@ class OrderIntegrationTest{
 
     @DisplayName("단일 주문 조회 통합테스트")
     @Test
-    fun testGetOrder(){
+    fun testGetOrder() {
         //given
-        val member: Member = memberRepository.save(CreateObject.getMember())
-        val address: Address = addressRepository.save(CreateObject.getAddress())
-        val category: Category = categoryRepository.save(CreateOrderObject.getCategory())
-        val seller: Seller = sellerRepository.save(CreateObject.getSeller())
-        val product: Product = productRepository.save(CreateOrderObject.getProduct())
-        val item: Item = itemRepository.save(CreateOrderObject.getItem())
+        //
+        memberRepository.save(CreateObject.getMember())
+        addressRepository.save(CreateObject.getAddress())
+        categoryRepository.save(CreateOrderObject.getCategory())
+        sellerRepository.save(CreateObject.getSeller())
+        productRepository.save(CreateOrderObject.getProduct())
+        itemRepository.save(CreateOrderObject.getItem())
+
         val order: Order = CreateOrderObject.getOrder()
         orderRepository.save(order)
         val orderDetail: OrderDetail = orderDetailRepository.save(CreateOrderObject.getOrderDetail())
@@ -88,7 +84,8 @@ class OrderIntegrationTest{
         //when
         val actions: ResultActions = mockMvc.perform(
             MockMvcRequestBuilders.get(getOrderURL)
-            .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+        )
 
         //then
         actions.andExpect(status().isOk)
