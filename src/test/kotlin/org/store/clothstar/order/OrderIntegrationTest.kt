@@ -23,7 +23,7 @@ import org.store.clothstar.order.domain.Order
 import org.store.clothstar.order.domain.OrderDetail
 import org.store.clothstar.order.repository.OrderDetailRepository
 import org.store.clothstar.order.repository.OrderRepository
-import org.store.clothstar.order.utils.CreateOrderObject
+import org.store.clothstar.order.util.CreateOrderObject
 import org.store.clothstar.product.repository.ItemRepository
 import org.store.clothstar.product.repository.ProductRepository
 
@@ -62,43 +62,14 @@ class OrderIntegrationTest(
 ) {
     private val ORDER_URL: String = "/v1/orders"
 
-//    @Autowired
-//    private lateinit var mockMvc: MockMvc
-//
-//    @Autowired
-//    private lateinit var orderRepository: OrderRepository
-//
-//    @Autowired
-//    private lateinit var memberRepository: MemberRepository
-//
-//    @Autowired
-//    private lateinit var addressRepository: AddressRepository
-//
-//    @Autowired
-//    private lateinit var categoryRepository: CategoryJpaRepository
-//
-//    @Autowired
-//    private lateinit var productRepository: ProductRepository
-//
-//    @Autowired
-//    private lateinit var itemRepository: ItemRepository
-//
-//    @Autowired
-//    private lateinit var sellerRepository: SellerRepository
-//
-//    private val ORDER_URL: String = "/v1/orders"
-//
-//    @Autowired
-//    private lateinit var orderDetailRepository: OrderDetailRepository
-
     @DisplayName("단일 주문 조회 통합테스트")
     @Test
     fun testGetOrder() {
         //given
-        memberRepository.save(CreateObject.getMember())
-        addressRepository.save(CreateObject.getAddress())
+        memberRepository.save(CreateOrderObject.getMember())
+        addressRepository.save(CreateOrderObject.getAddress())
         categoryRepository.save(CreateOrderObject.getCategory())
-        sellerRepository.save(CreateObject.getSeller())
+        sellerRepository.save(CreateOrderObject.getSeller())
         productRepository.save(CreateOrderObject.getProduct())
         itemRepository.save(CreateOrderObject.getItem())
 
