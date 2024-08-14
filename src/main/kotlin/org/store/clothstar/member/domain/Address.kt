@@ -16,5 +16,4 @@ class Address(
 
     @Embedded
     val addressInfo: AddressInfo,
-) : BaseEntity() {
-}
+) : BaseEntity()
