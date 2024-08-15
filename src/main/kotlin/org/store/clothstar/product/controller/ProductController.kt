@@ -4,12 +4,10 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.validation.annotation.Validated
-import org.springframework.web.bind.annotation.*
-import org.springframework.web.multipart.MultipartFile
-import org.store.clothstar.common.dto.MessageDTO
-import org.store.clothstar.product.dto.request.ProductCreateRequest
-import org.store.clothstar.product.dto.request.UpdateDisplayStatusRequest
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 import org.store.clothstar.product.dto.response.ProductResponse
 import org.store.clothstar.product.service.ProductApplicationService
 
@@ -39,42 +37,13 @@ private class ProductController(
 
         return ResponseEntity(messageDTO, HttpStatus.CREATED)
     }
+    
+     */
 
     @GetMapping("/{productId}")
     @Operation(summary = "상품 상세 조회", description = "상품 ID를 사용하여 특정 상품의 상세 정보를 조회한다.")
     fun getProductDetails(@PathVariable productId: Long): ResponseEntity<ProductResponse> {
         val productResponse = productApplicationService.getProductDetails(productId)
         return ResponseEntity(productResponse, HttpStatus.OK)
-    }
-
-    @PatchMapping("/{productId}/displayStatus")
-    @Operation(summary = "상품 진열 상태 변경", description = "상품 ID를 사용하여 해당 상품의 진열 상태를 변경합니다.")
-    fun updateProductDisplayStatus(
-        @PathVariable productId: Long,
-        @RequestBody request: UpdateDisplayStatusRequest
-    ): ResponseEntity<MessageDTO> {
-        productApplicationService.updateProductDisplayStatus(productId, request.displayStatus)
-
-        val messageDTO = MessageDTO(
-            HttpStatus.OK.value(),
-            "상품 진열 상태가 성공적으로 변경되었습니다."
-        )
-        return ResponseEntity(messageDTO, HttpStatus.OK)
-    }
-
-    @PatchMapping("/{productId}/items/{itemId}/displayStatus")
-    @Operation(summary = "아이템 진열 상태 변경", description = "상품 ID와 아이템 ID를 사용하여 해당 아이템의 진열 상태를 변경합니다.")
-    fun updateItemDisplayStatus(
-        @PathVariable productId: Long,
-        @PathVariable itemId: Long,
-        @RequestBody request: UpdateDisplayStatusRequest
-    ): ResponseEntity<MessageDTO> {
-        productApplicationService.updateItemDisplayStatus(productId, itemId, request.displayStatus)
-
-        val messageDTO = MessageDTO(
-            HttpStatus.OK.value(),
-            "아이템 진열 상태가 성공적으로 변경되었습니다."
-        )
-        return ResponseEntity(messageDTO, HttpStatus.OK)
     }
 }
