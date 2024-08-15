@@ -4,8 +4,10 @@ import org.springframework.http.HttpStatus
 import org.store.clothstar.common.error.ErrorCode
 
 class BadRequestException(
-    val code: ErrorCode
+    val code: ErrorCode,
+    vararg args: Any
 ) : RuntimeException(code.message) {
+
     val httpStatus: HttpStatus
         get() = code.status
 

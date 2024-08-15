@@ -46,4 +46,8 @@ private class ProductController(
         val productResponse = productApplicationService.getProductDetails(productId)
         return ResponseEntity(productResponse, HttpStatus.OK)
     }
+
+    // 카테고리별 Offset 상품 조회
+
+    // 카테고리별 Pagination 상품 조회
 }

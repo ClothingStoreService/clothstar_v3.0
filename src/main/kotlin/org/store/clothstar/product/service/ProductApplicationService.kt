@@ -1,16 +1,17 @@
 package org.store.clothstar.product.service
 
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
-import org.store.clothstar.member.domain.Member
-import org.store.clothstar.member.domain.vo.MemberShoppingActivity
+import org.store.clothstar.member.authentication.domain.CustomUserDetails
 import org.store.clothstar.member.service.MemberService
 import org.store.clothstar.product.domain.ProductImage
 import org.store.clothstar.product.domain.type.DisplayStatus
 import org.store.clothstar.product.domain.type.ImageType
 import org.store.clothstar.product.dto.request.ProductCreateRequest
 import org.store.clothstar.product.dto.response.ProductResponse
+
 
 @Service
 class ProductApplicationService(
@@ -25,10 +26,11 @@ class ProductApplicationService(
         subImages: List<MultipartFile>?,
         productCreateRequest: ProductCreateRequest
     ) {
-        // get current member (principal)
-        val memberId: Long = 1  // currentMember.getId()
-//        val member: Member = memberService.getMemberByMemberId(memberId)
-        val member = Member(memberId, "010-1234-5678", "Ogu", MemberShoppingActivity.init())
+        val member = SecurityContextHolder.getContext().authentication.principal as CustomUserDetails
+
+//        if(memberService.isSeller(member.id)) {
+//            throw IllegalArgumentException("판매자만 상품을 등록할 수 있습니다.")
+//        }
 
         // 1. 상품 생성
         val product = productCreateRequest.toProductEntity()
@@ -82,5 +84,13 @@ class ProductApplicationService(
     fun updateItemDisplayStatus(productId: Long, itemId: Long, displayStatus: DisplayStatus) {
         val item = itemService.getItemByIdAndProductId(itemId, productId)
         item.updateDisplayStatus(displayStatus)
+    }
+
+    @Transactional
+    fun updateItemStock(productId: Long, itemId: Long, stock: Int) {
+//        val Member = getPrin
+
+        val item = itemService.getItemByIdAndProductId(itemId, productId)
+        item.updateStock(stock)
     }
 }
