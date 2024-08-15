@@ -59,14 +59,12 @@ dependencies {
     kapt("org.springframework.boot:spring-boot-configuration-processor")
 
     //test
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-
-    //mockk, kotest
-    val mockkVersion = "1.13.8"
+    val mockkVersion = "1.13.12"
     val kotestVersion = "5.8"
     testImplementation("io.mockk:mockk:${mockkVersion}")
     testImplementation("io.kotest:kotest-runner-junit5:${kotestVersion}")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 
     //etc
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0") //swagger

@@ -22,9 +22,13 @@ enum class ErrorCode(
 
     // Order 관련 에러코드
     NOT_FOUND_ORDER(HttpStatus.NOT_FOUND, "존재하지 않는 주문번호입니다."),
-    INVALID_ORDER_STATUS_CONFIRMED(HttpStatus.BAD_REQUEST, "주문이 입금확인 상태가 아니므로 요청을 처리할 수 없습니다."),
+    INVALID_ORDER_STATUS_CONFIRMED(HttpStatus.BAD_REQUEST, "주문이 '입금확인' 상태가 아니므로 요청을 처리할 수 없습니다."),
+    INVALID_ORDER_STATUS_DELIVERED(HttpStatus.BAD_REQUEST, "주문이 '배송완료' 상태가 아니므로 요청을 처리할 수 없습니다."),
     OUT_OF_STOCK(HttpStatus.BAD_REQUEST, "품절된 상품입니다."),
     INSUFFICIENT_STOCK(HttpStatus.BAD_REQUEST, "주문 개수가 상품 재고보다 더 많아 요청을 처리할 수 없습니다.");
+
+
+    // Product 관련 에러코드
 
 
     fun ErrorCode(status: HttpStatus, message: String) {

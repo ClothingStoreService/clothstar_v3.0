@@ -1,5 +1,6 @@
 package org.store.clothstar.product.service
 
+import jakarta.persistence.EntityNotFoundException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
@@ -91,5 +92,10 @@ class ItemService(
     fun deductItemStock(item: Item, quantity: Int) {
         val updatedStock: Int = item.stock - quantity
         item.updateStock(updatedStock)
+    }
+
+    fun getItemByIdAndProductId(itemId: Long, productId: Long): Item {
+        return itemRepository.findByItemIdAndProduct_ProductId(itemId, productId)
+            ?: throw EntityNotFoundException("Item not found with id: $itemId and productId: $productId")
     }
 }

@@ -8,6 +8,7 @@ import org.store.clothstar.member.domain.vo.MemberShoppingActivity
 import org.store.clothstar.member.service.MemberService
 import org.store.clothstar.product.domain.Product
 import org.store.clothstar.product.domain.ProductImage
+import org.store.clothstar.product.domain.type.DisplayStatus
 import org.store.clothstar.product.domain.type.ImageType
 import org.store.clothstar.product.dto.request.ProductCreateRequest
 import org.store.clothstar.product.dto.response.ProductResponse
@@ -70,5 +71,17 @@ class ProductApplicationService(
     fun getProductDetails(productId: Long): ProductResponse {
 
         return productService.getProductDetails(productId)
+    }
+
+    @Transactional
+    fun updateProductDisplayStatus(productId: Long, displayStatus: DisplayStatus) {
+        val product = productService.getProductById(productId)
+        product.updateDisplayStatus(displayStatus)
+    }
+
+    @Transactional
+    fun updateItemDisplayStatus(productId: Long, itemId: Long, displayStatus: DisplayStatus) {
+        val item = itemService.getItemByIdAndProductId(itemId, productId)
+        item.updateDisplayStatus(displayStatus)
     }
 }
