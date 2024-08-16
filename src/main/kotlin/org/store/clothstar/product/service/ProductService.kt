@@ -38,7 +38,7 @@ class ProductService(
     fun getProductLinesByCategoryWithOffsetPaging(
         categoryId: Long,
         pageable: Pageable,
-        keyword: String,
+        keyword: String?,
     ): Page<ProductDetailResponse> {
         val allOffsetPagingByCategory =
             productRepository.findEntitiesByCategoryWithOffsetPaging(categoryId, pageable, keyword)
@@ -54,7 +54,7 @@ class ProductService(
     fun getProductLinesByCategoryWithSlicePaging(
         categoryId: Long,
         pageable: Pageable,
-        keyword: String,
+        keyword: String?,
     ): Slice<ProductDetailResponse> {
         val allSlicePagingByCategory =
             productRepository.findEntitiesByCategoryWithSlicePaging(categoryId, pageable, keyword)

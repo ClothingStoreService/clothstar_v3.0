@@ -18,12 +18,12 @@ interface ProductRepositoryCustom {
     fun findEntitiesByCategoryWithOffsetPaging(
         categoryId: Long,
         pageable: Pageable,
-        keyword: String,
+        keyword: String?,
     ): Page<Product>
 
     fun findEntitiesByCategoryWithSlicePaging(
         categoryId: Long,
         pageable: Pageable,
-        keyword: String,
+        keyword: String?,
     ): Slice<Product>
 }

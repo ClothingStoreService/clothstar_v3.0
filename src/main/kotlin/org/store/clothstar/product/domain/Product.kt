@@ -1,5 +1,6 @@
 package org.store.clothstar.product.domain
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
@@ -46,16 +47,16 @@ class Product(
     var saleStatus: SaleStatus,  // 판매 상태
 
     // 연관 관계 (1:N)
+    @JsonIgnore
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "product", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var productOptions: MutableList<ProductOption> = mutableListOf(),
 
+    @JsonIgnore
     @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     var items: MutableList<Item> = mutableListOf(),
 ) : BaseEntity() {
-
-
     fun updateSaleStatus(saleStatus: SaleStatus) {
         this.saleStatus = saleStatus
     }

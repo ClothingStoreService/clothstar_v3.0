@@ -71,7 +71,7 @@ class CategoryController(
     fun getProductLinesByCategory(
         @PathVariable categoryId: Long,
         @PageableDefault(size = 18) pageable: Pageable,
-        @RequestParam(required = false) keyword: String
+        @RequestParam(required = false) keyword: String?
     ): ResponseEntity<Page<ProductDetailResponse>> {
         val productResponses: Page<ProductDetailResponse> =
             productService.getProductLinesByCategoryWithOffsetPaging(categoryId, pageable, keyword)
@@ -86,7 +86,7 @@ class CategoryController(
     fun getProductLinesByCategorySlice(
         @PathVariable categoryId: Long,
         @PageableDefault(size = 18) pageable: Pageable,
-        @RequestParam(required = false) keyword: String
+        @RequestParam(required = false) keyword: String?
     ): ResponseEntity<Slice<ProductDetailResponse>> {
         val productResponses: Slice<ProductDetailResponse> =
             productService.getProductLinesByCategoryWithSlicePaging(categoryId, pageable, keyword)
