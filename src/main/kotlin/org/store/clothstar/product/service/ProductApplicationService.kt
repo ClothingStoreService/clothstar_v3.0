@@ -6,7 +6,6 @@ import org.springframework.web.multipart.MultipartFile
 import org.store.clothstar.member.domain.Member
 import org.store.clothstar.member.domain.vo.MemberShoppingActivity
 import org.store.clothstar.member.service.MemberService
-import org.store.clothstar.product.domain.Product
 import org.store.clothstar.product.domain.ProductImage
 import org.store.clothstar.product.domain.type.DisplayStatus
 import org.store.clothstar.product.domain.type.ImageType

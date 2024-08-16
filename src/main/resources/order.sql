@@ -54,6 +54,9 @@ INSERT INTO product (product_id, created_at, deleted_at, updated_at, category_id
                      name, price, sale_count, sale_status)
 VALUES (1, CURRENT_TIMESTAMP, NULL, CURRENT_TIMESTAMP, 1, '반팔', 'HIDDEN', 1, '오구반팔', 19900, 1000, 'ON_SALE');
 
+INSERT INTO seller (member_id, created_at, deleted_at, updated_at, biz_no, brand_name, total_sell_price)
+VALUES (12, CURRENT_TIMESTAMP, NULL, CURRENT_TIMESTAMP, 1232 - 1234, '아디다스', 1000);
+
 show create table order_detail;
 
 drop table if exists orders;
@@ -71,3 +74,7 @@ select *
 from product;
 select *
 from address;
+select *
+from member;
+select *
+from seller;

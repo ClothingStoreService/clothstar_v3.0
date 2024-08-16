@@ -18,7 +18,7 @@ import org.store.clothstar.product.service.ProductApplicationService
 @RestController
 private class ProductController(
     private val productApplicationService: ProductApplicationService,
-    ) {
+) {
     @PostMapping
     @Operation(
         summary = "상품 등록",

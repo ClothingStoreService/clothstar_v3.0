@@ -7,15 +7,13 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.*
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
-import org.springframework.web.multipart.MultipartFile
 import org.store.clothstar.member.service.MemberService
 import org.store.clothstar.product.domain.Item
 import org.store.clothstar.product.domain.Product
 import org.store.clothstar.product.domain.type.DisplayStatus
-import org.store.clothstar.product.domain.type.SaleStatus
-import org.store.clothstar.product.dto.request.ProductCreateRequest
 
 @ExtendWith(MockitoExtension::class)
 class ProductApplicationServiceTest {

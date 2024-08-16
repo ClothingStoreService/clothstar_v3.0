@@ -22,7 +22,7 @@ class CustomAuthenticationEntryPoint : AuthenticationEntryPoint {
         authException: AuthenticationException,
     ) {
         log.error { "인증 실패 로직 실행" }
-        
+
         response.status = HttpServletResponse.SC_UNAUTHORIZED
         response.characterEncoding = "UTF-8"
         response.contentType = "application/json"
