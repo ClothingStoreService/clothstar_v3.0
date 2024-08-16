@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
-import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
@@ -26,12 +25,12 @@ import org.store.clothstar.order.repository.OrderRepository
 import org.store.clothstar.order.util.CreateOrderObject
 import org.store.clothstar.product.repository.ItemRepository
 import org.store.clothstar.product.repository.ProductRepository
+import org.store.clothstar.member.domain.Member
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Transactional
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class OrderIntegrationTest(
     @Autowired
     private val mockMvc: MockMvc,
@@ -65,31 +64,30 @@ class OrderIntegrationTest(
     @DisplayName("단일 주문 조회 통합테스트")
     @Test
     fun testGetOrder() {
-        //given
-        memberRepository.save(CreateOrderObject.getMember())
-        addressRepository.save(CreateOrderObject.getAddress())
-        categoryRepository.save(CreateOrderObject.getCategory())
-        sellerRepository.save(CreateOrderObject.getSeller())
-        productRepository.save(CreateOrderObject.getProduct())
-        itemRepository.save(CreateOrderObject.getItem())
+            //given
+            val member: Member = memberRepository.save(CreateOrderObject.getMember())
+            val address = addressRepository.save(CreateOrderObject.getAddress(member))
+            val category = categoryRepository.save(CreateOrderObject.getCategory())
+            sellerRepository.save(CreateOrderObject.getSeller(member))
+            val product = productRepository.save(CreateOrderObject.getProduct(member, category))
+            val item = itemRepository.save(CreateOrderObject.getItem(product))
 
-        val order: Order = CreateOrderObject.getOrder()
-        orderRepository.save(order)
-        val orderDetail: OrderDetail = orderDetailRepository.save(CreateOrderObject.getOrderDetail())
-        order.addOrderDetail(orderDetail)
-        orderRepository.save(order)
+            val order: Order = orderRepository.save(CreateOrderObject.getOrder(member, address))
+            val orderDetail: OrderDetail = orderDetailRepository.save(CreateOrderObject.getOrderDetail(product, item, order))
+            order.addOrderDetail(orderDetail)
 
-        val orderId: String = order.orderId
-        val getOrderURL: String = ORDER_URL + "/" + orderId
+            val orderId: String = order.orderId
+            val getOrderURL: String = ORDER_URL + "/" + orderId
 
-        //when
-        val actions: ResultActions = mockMvc.perform(
-            MockMvcRequestBuilders.get(getOrderURL)
-                .contentType(MediaType.APPLICATION_JSON)
-        )
+            //when
+            val actions: ResultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(getOrderURL)
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
 
-        //then
-        actions.andExpect(status().isOk)
-            .andExpect(jsonPath("$.orderId").value(orderId))
+            //then
+            actions
+                .andExpect(status().isOk)
+                .andExpect(jsonPath("$.orderId").value(orderId))
     }
 }
