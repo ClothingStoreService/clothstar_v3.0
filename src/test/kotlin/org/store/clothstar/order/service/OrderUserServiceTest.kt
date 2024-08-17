@@ -6,6 +6,7 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.justRun
 import io.mockk.verify
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.DisplayName
@@ -23,10 +24,7 @@ import org.store.clothstar.member.service.MemberService
 import org.store.clothstar.member.service.SellerService
 import org.store.clothstar.order.domain.Order
 import org.store.clothstar.order.domain.OrderDetail
-import org.store.clothstar.order.domain.vo.OrderDetailDTO
-import org.store.clothstar.order.domain.vo.Price
-import org.store.clothstar.order.domain.vo.Status
-import org.store.clothstar.order.domain.vo.TotalPrice
+import org.store.clothstar.order.domain.vo.*
 import org.store.clothstar.order.dto.response.OrderResponse
 import org.store.clothstar.order.repository.OrderDetailRepository
 import org.store.clothstar.order.repository.OrderRepository
@@ -113,34 +111,75 @@ class OrderUserServiceTest {
         val itemId = 4L
 
         every { orderRepository.findByOrderIdAndDeletedAtIsNull(orderId) } returns order
+        every { order.orderId } returns orderId
         every { order.memberId } returns memberId
         every { order.addressId } returns addressId
         every { order.createdAt } returns LocalDateTime.now()
         every { order.orderDetails } returns mutableListOf(orderDetail)
+        every { order.status } returns Status.CONFIRMED
+        every { order.paymentMethod } returns PaymentMethod.CARD
 
         every { memberService.getMemberByMemberId(memberId) } returns member
+        every { member.name } returns "수빈"
         every { addressService.getAddressById(addressId) } returns address
+        every { sellerService.getSellerById(memberId) } returns seller
+        every { address.telNo } returns "010-1111-1111"
+        every { address.deliveryRequest } returns "문앞"
         every { address.addressInfo } returns addressInfo
         every { order.totalPrice } returns totalPrice
+        every { orderDetail.orderDetailId } returns 1L
+        every { orderDetail.quantity } returns 1
         every { orderDetail.price } returns price
         every { orderDetail.deletedAt } returns null
         every { orderDetail.itemId } returns itemId
         every { orderDetail.productId } returns productId
 
+        every { address.receiverName } returns "수빈"
+        every { addressInfo.addressBasic } returns "address1"
+        every { addressInfo.addressDetail } returns "address2"
+        every { addressInfo.zipNo } returns "123-123"
+
         every { itemService.findByIdIn(listOf(itemId))} returns listOf(item)
         every { productService.findByProductIdIn(listOf(productId))} returns listOf(product)
         every { item.itemId } returns itemId
+        every { item.finalPrice } returns 10000
+        every { item.name } returns "상품옵션이름"
         every { product.productId } returns productId
+        every { product.price } returns 1000
+        every { product.name } returns "상품이름"
         every { seller.brandName} returns "brandName"
 
-        val orderResponse = OrderResponse.from(order,member,address)
+        every { totalPrice.shipping } returns 3000
+        every { totalPrice.products } returns 5000
+        every { totalPrice.payment } returns 8000
+        every { price.fixedPrice } returns 10000
+        every { price.oneKindTotalPrice } returns 10000
 
+        val expectedorderResponse = OrderResponse.from(order,member,address)
+        expectedorderResponse.updateOrderDetailList(listOf(OrderDetailDTO.from(orderDetail,item,product,seller.brandName)))
 
         //when
-        val result = orderUserService.getOrder(orderId)
+        val orderReponse = orderUserService.getOrder(orderId)
 
         // then
+        assertThat(orderReponse).usingRecursiveComparison().isEqualTo(expectedorderResponse)
         verify(exactly = 1) { orderRepository.findByOrderIdAndDeletedAtIsNull(orderId) }
+        verify(exactly = 1) { memberService.getMemberByMemberId(memberId) }
+        verify(exactly = 1) { itemService.findByIdIn(listOf(itemId)) }
+        verify(exactly = 1) { productService.findByProductIdIn(listOf(productId)) }
+    }
+
+    @Test
+    @DisplayName("단일 주문 조회 - 주문번호가 존재하지 않을 때 예외처리 테스트")
+    fun getOrder_orderNotFound_exception_test() {
+        //given
+        every { orderRepository.findByOrderIdAndDeletedAtIsNull(orderId) } returns null
+
+        //when & then
+        val exception = assertThrows<OrderNotFoundException> {
+            orderUserService.getOrder(orderId)
+        }
+        assertEquals(ErrorCode.NOT_FOUND_ORDER, exception.errorCode)
     }
 
     // 구매자 구매 확정 - completeOrder
