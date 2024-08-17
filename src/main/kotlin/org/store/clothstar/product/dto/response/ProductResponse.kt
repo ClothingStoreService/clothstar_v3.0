@@ -39,7 +39,18 @@ class ProductResponse(
     val seller: SellerSimpleResponse
 ) {
     companion object {
-        fun from(product: Product, seller: SellerSimpleResponse): ProductResponse {
+        fun from(product: Product,
+                 seller: SellerSimpleResponse,
+                 isSeller: Boolean
+        ): ProductResponse {
+
+            val items = if (isSeller) {
+                product.items.map { ItemResponse.from(it) }
+            } else {
+                product.items.filter { it.displayStatus == DisplayStatus.VISIBLE }
+                    .map { ItemResponse.from(it) }
+            }
+
             return ProductResponse(
                 id = product.productId!!,
                 name = product.name,
@@ -50,7 +61,7 @@ class ProductResponse(
                 displayStatus = product.displayStatus,
                 saleStatus = product.saleStatus,
                 productOptions = product.productOptions.map { ProductOptionResponse.from(it) },
-                items = product.items.map { ItemResponse.from(it) },
+                items = items,
                 seller = seller
             )
         }

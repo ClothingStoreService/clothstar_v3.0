@@ -33,7 +33,7 @@ class ProductService(
 
         val seller = sellerService.getSellerById(product.memberId)
         val sellerSimpleResponse = SellerSimpleResponse.getSellerSimpleResponseBySeller(seller)
-        return ProductResponse.from(product, sellerSimpleResponse)
+        return ProductResponse.from(product, sellerSimpleResponse, false)
     }
 
     @Transactional

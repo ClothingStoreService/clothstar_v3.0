@@ -25,9 +25,6 @@ class ProductListResponse(
     @Schema(description = "상품 판매량", example = "10")
     val saleCount: Long, // ~개 판매중
 
-    @Schema(description = "상품 옵션")
-    val itemList: List<ItemResponse>,
-
     @Schema(description = "판매자 정보")
     val seller: SellerSimpleResponse,
 ) {
@@ -39,7 +36,6 @@ class ProductListResponse(
                 price = product.price,
                 saleCount = product.saleCount,
                 content = product.content,
-                itemList = product.items.map { ItemResponse.from(it) },
                 saleStatus = product.saleStatus,
                 seller = seller
             )
