@@ -9,6 +9,7 @@ import org.springframework.data.support.PageableExecutionUtils
 import org.springframework.stereotype.Component
 import org.store.clothstar.product.domain.Product
 import org.store.clothstar.product.domain.QProduct.product
+import org.store.clothstar.product.domain.type.DisplayStatus
 import java.util.function.LongSupplier
 
 @Component
@@ -57,6 +58,7 @@ class ProductRepositoryCustomImpl(
             .from(product)
             .where(
                 product.deletedAt.isNull()
+                    .and(product.displayStatus.eq(DisplayStatus.VISIBLE))
                     .and(getSearchCondition(keyword))
             )
             .orderBy(*orderSpecifiers.toTypedArray())  // * -> 스프레드 연산자 : 배열의 각 요소를 개별 인자로 전달
@@ -84,6 +86,7 @@ class ProductRepositoryCustomImpl(
             .where(
                 product.categoryId.eq(categoryId)
                     .and(product.deletedAt.isNull())
+                    .and(product.displayStatus.eq(DisplayStatus.VISIBLE))
                     .and(getSearchCondition(keyword))
             )
 
@@ -120,6 +123,7 @@ class ProductRepositoryCustomImpl(
             .where(
                 product.categoryId.eq(categoryId)
                     .and(product.deletedAt.isNull())
+                    .and(product.displayStatus.eq(DisplayStatus.VISIBLE))
                     .and(getSearchCondition(keyword))
             )
             .orderBy(*orderSpecifiers.toTypedArray())
