@@ -13,12 +13,13 @@ import org.store.clothstar.product.dto.request.UpdateDisplayStatusRequest
 import org.store.clothstar.product.dto.request.UpdateStockRequest
 import org.store.clothstar.product.dto.response.ProductResponse
 import org.store.clothstar.product.service.ProductApplicationService
+import org.store.clothstar.product.service.ProductSellerApplicationService
 
 @Tag(name = "ProductSellers", description = "ProductSellers(판매자) 관련 API 입니다.")
 @RestController
 @RequestMapping("/v3/sellers/products")
 class ProductSellerController(
-    private val productApplicationService: ProductApplicationService
+    private val productSellerApplicationService: ProductSellerApplicationService
 ) {
     // 판매자 상품 등록
     @PostMapping
@@ -32,7 +33,7 @@ class ProductSellerController(
         @RequestPart(value = "dto") @Validated productCreateRequest: ProductCreateRequest
     ): ResponseEntity<MessageDTO> {
         // 상품 등록
-        productApplicationService.createProduct(mainImage, subImages, productCreateRequest);
+        productSellerApplicationService.createProduct(mainImage, subImages, productCreateRequest);
 
         val messageDTO = MessageDTO(
             HttpStatus.CREATED.value(),
@@ -46,7 +47,7 @@ class ProductSellerController(
     @GetMapping("/{productId}")
     @Operation(summary = "상품 상세 조회", description = "상품 ID를 사용하여 해당 상품의 상세 정보를 조회합니다.")
     fun getProductDetails(@PathVariable productId: Long): ResponseEntity<ProductResponse> {
-        val productResponse = productApplicationService.getProductDetails(productId, true)
+        val productResponse = productSellerApplicationService.getProductDetails(productId, true)
         return ResponseEntity.ok(productResponse)
     }
 
@@ -56,7 +57,7 @@ class ProductSellerController(
         @PathVariable productId: Long,
         @RequestBody request: UpdateDisplayStatusRequest
     ): ResponseEntity<MessageDTO> {
-        productApplicationService.updateProductDisplayStatus(productId, request.displayStatus)
+        productSellerApplicationService.updateProductDisplayStatus(productId, request.displayStatus)
 
         val messageDTO = MessageDTO(
             HttpStatus.OK.value(),
@@ -72,7 +73,7 @@ class ProductSellerController(
         @PathVariable itemId: Long,
         @RequestBody request: UpdateDisplayStatusRequest
     ): ResponseEntity<MessageDTO> {
-        productApplicationService.updateItemDisplayStatus(productId, itemId, request.displayStatus)
+        productSellerApplicationService.updateItemDisplayStatus(productId, itemId, request.displayStatus)
 
         val messageDTO = MessageDTO(
             HttpStatus.OK.value(),
@@ -89,7 +90,7 @@ class ProductSellerController(
         @PathVariable itemId: Long,
         @RequestBody request: UpdateStockRequest
     ): ResponseEntity<MessageDTO> {
-        productApplicationService.updateItemStock(productId, itemId, request.stock)
+        productSellerApplicationService.updateItemStock(productId, itemId, request.stock)
 
         val messageDTO = MessageDTO(
             HttpStatus.OK.value(),
