@@ -15,7 +15,7 @@ import org.store.clothstar.category.dto.response.CategoryResponse
 import org.store.clothstar.category.service.CategoryService
 import org.store.clothstar.common.dto.MessageDTO
 import org.store.clothstar.common.util.URIBuilder
-import org.store.clothstar.product.dto.response.ProductDetailResponse
+import org.store.clothstar.product.dto.response.ProductListResponse
 import org.store.clothstar.product.service.ProductService
 
 @RestController
@@ -72,10 +72,10 @@ class CategoryController(
         @PathVariable categoryId: Long,
         @PageableDefault(size = 18) pageable: Pageable,
         @RequestParam(required = false) keyword: String?
-    ): ResponseEntity<Page<ProductDetailResponse>> {
-        val productResponses: Page<ProductDetailResponse> =
+    ): ResponseEntity<Page<ProductListResponse>> {
+        val productResponses: Page<ProductListResponse> =
             productService.getProductLinesByCategoryWithOffsetPaging(categoryId, pageable, keyword)
-        return ResponseEntity.ok().body<Page<ProductDetailResponse>>(productResponses)
+        return ResponseEntity.ok().body<Page<ProductListResponse>>(productResponses)
     }
 
     @Operation(
@@ -87,9 +87,9 @@ class CategoryController(
         @PathVariable categoryId: Long,
         @PageableDefault(size = 18) pageable: Pageable,
         @RequestParam(required = false) keyword: String?
-    ): ResponseEntity<Slice<ProductDetailResponse>> {
-        val productResponses: Slice<ProductDetailResponse> =
+    ): ResponseEntity<Slice<ProductListResponse>> {
+        val productResponses: Slice<ProductListResponse> =
             productService.getProductLinesByCategoryWithSlicePaging(categoryId, pageable, keyword)
-        return ResponseEntity.ok().body<Slice<ProductDetailResponse>>(productResponses)
+        return ResponseEntity.ok().body<Slice<ProductListResponse>>(productResponses)
     }
 }

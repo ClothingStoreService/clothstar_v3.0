@@ -1,5 +1,8 @@
 package org.store.clothstar.product.service
 
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Slice
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -10,6 +13,7 @@ import org.store.clothstar.product.domain.ProductImage
 import org.store.clothstar.product.domain.type.DisplayStatus
 import org.store.clothstar.product.domain.type.ImageType
 import org.store.clothstar.product.dto.request.ProductCreateRequest
+import org.store.clothstar.product.dto.response.ProductListResponse
 import org.store.clothstar.product.dto.response.ProductResponse
 
 
@@ -70,8 +74,17 @@ class ProductApplicationService(
 
     @Transactional(readOnly = true)
     fun getProductDetails(productId: Long): ProductResponse {
-
         return productService.getProductDetails(productId)
+    }
+
+    @Transactional(readOnly = true)
+    fun getAllProductsOffsetPaging(pageable: Pageable, keyword: String?): Page<ProductListResponse> {
+        return productService.getAllProductsOffsetPaging(pageable, keyword)
+    }
+
+    @Transactional(readOnly = true)
+    fun getAllProductsSlicePaging(pageable: Pageable, keyword: String?): Slice<ProductListResponse> {
+        return productService.getAllProductsSlicePaging(pageable, keyword)
     }
 
     @Transactional

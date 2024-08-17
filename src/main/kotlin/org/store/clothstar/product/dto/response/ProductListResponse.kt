@@ -6,7 +6,7 @@ import org.store.clothstar.product.domain.Item
 import org.store.clothstar.product.domain.Product
 import org.store.clothstar.product.domain.type.SaleStatus
 
-class ProductDetailResponse(
+class ProductListResponse(
     @Schema(description = "상품 id", example = "1")
     val productId: Long,
 
@@ -26,20 +26,20 @@ class ProductDetailResponse(
     val saleCount: Long, // ~개 판매중
 
     @Schema(description = "상품 옵션")
-    val itemList: MutableList<Item>,
+    val itemList: List<ItemResponse>,
 
     @Schema(description = "판매자 정보")
     val seller: SellerSimpleResponse,
 ) {
     companion object {
-        fun getProductDetailResponseByProduct(product: Product, seller: SellerSimpleResponse): ProductDetailResponse {
-            return ProductDetailResponse(
+        fun from(product: Product, seller: SellerSimpleResponse): ProductListResponse {
+            return ProductListResponse(
                 productId = product.productId!!,
                 name = product.name,
                 price = product.price,
                 saleCount = product.saleCount,
                 content = product.content,
-                itemList = product.items,
+                itemList = product.items.map { ItemResponse.from(it) },
                 saleStatus = product.saleStatus,
                 seller = seller
             )

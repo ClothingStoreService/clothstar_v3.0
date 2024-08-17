@@ -9,11 +9,9 @@ import org.store.clothstar.product.domain.Product
 @Repository
 interface ProductRepositoryCustom {
 
-    fun getProductLists(pageable: Pageable?): Page<Product?>?
+    fun findAllOffsetPaging(pageable: Pageable, keyword: String?): Page<Product>
 
-    fun findAllOffsetPaging(pageable: Pageable): Page<Product>
-
-    fun findAllSlicePaging(pageable: Pageable): List<Product>
+    fun findAllSlicePaging(pageable: Pageable, keyword: String?): Slice<Product>
 
     fun findEntitiesByCategoryWithOffsetPaging(
         categoryId: Long,

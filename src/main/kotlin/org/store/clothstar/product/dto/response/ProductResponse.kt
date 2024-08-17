@@ -1,5 +1,7 @@
 package org.store.clothstar.product.dto.response
 
+import org.store.clothstar.member.domain.Seller
+import org.store.clothstar.member.dto.response.SellerSimpleResponse
 import org.store.clothstar.product.domain.*
 import org.store.clothstar.product.domain.type.DisplayStatus
 import org.store.clothstar.product.domain.type.ImageType
@@ -33,10 +35,11 @@ class ProductResponse(
     val productColors: Set<ProductColor>,
     val imageList: List<ImageResponse>,
     val productOptions: List<ProductOptionResponse>,
-    val items: List<ItemResponse>
+    val items: List<ItemResponse>,
+    val seller: SellerSimpleResponse
 ) {
     companion object {
-        fun from(product: Product): ProductResponse {
+        fun from(product: Product, seller: SellerSimpleResponse): ProductResponse {
             return ProductResponse(
                 id = product.productId!!,
                 name = product.name,
@@ -47,7 +50,8 @@ class ProductResponse(
                 displayStatus = product.displayStatus,
                 saleStatus = product.saleStatus,
                 productOptions = product.productOptions.map { ProductOptionResponse.from(it) },
-                items = product.items.map { ItemResponse.from(it) }
+                items = product.items.map { ItemResponse.from(it) },
+                seller = seller
             )
         }
     }
