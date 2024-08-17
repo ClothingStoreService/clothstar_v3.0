@@ -16,7 +16,7 @@ import org.store.clothstar.product.service.ProductApplicationService
 
 @Tag(name = "ProductSellers", description = "ProductSellers(판매자) 관련 API 입니다.")
 @RestController
-@RequestMapping("/v3/products/sellers")
+@RequestMapping("/v3/sellers/products")
 class ProductSellerController(
     private val productApplicationService: ProductApplicationService
 ) {
