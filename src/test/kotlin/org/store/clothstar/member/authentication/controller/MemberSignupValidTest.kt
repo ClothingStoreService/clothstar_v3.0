@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.transaction.annotation.Transactional
-import org.store.clothstar.common.config.redis.RedisUtil
 import org.store.clothstar.member.dto.request.CreateMemberRequest
 import org.store.clothstar.member.dto.request.ModifyPasswordRequest
 
@@ -27,7 +26,6 @@ import org.store.clothstar.member.dto.request.ModifyPasswordRequest
 class MemberSignupValidTest(
     @Autowired private val mockMvc: MockMvc,
     @Autowired private val objectMapper: ObjectMapper,
-    @Autowired private val redisUtil: RedisUtil,
 ) {
     private val MEMBER_URL = "/v1/members"
 
