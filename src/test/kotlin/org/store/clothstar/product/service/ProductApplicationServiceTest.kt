@@ -33,6 +33,9 @@ class ProductApplicationServiceTest {
     @InjectMocks
     private lateinit var productApplicationService: ProductApplicationService
 
+    @InjectMocks
+    private lateinit var productSellerApplicationService: ProductSellerApplicationService
+
     @Disabled
     @DisplayName("유효한 ProductCreateRequest가 들어오면 상품 생성에 성공한다.")
     @Test
@@ -73,7 +76,7 @@ class ProductApplicationServiceTest {
         given(productService.getProductById(productId)).willReturn(mockProduct)
 
         // when
-        productApplicationService.updateProductDisplayStatus(productId, displayStatus)
+        productSellerApplicationService.updateProductDisplayStatus(productId, displayStatus)
 
         // then
         verify(productService).getProductById(productId)
@@ -92,7 +95,7 @@ class ProductApplicationServiceTest {
         given(itemService.getItemByIdAndProductId(itemId, productId)).willReturn(mockItem)
 
         // when
-        productApplicationService.updateItemDisplayStatus(productId, itemId, displayStatus)
+        productSellerApplicationService.updateItemDisplayStatus(productId, itemId, displayStatus)
 
         // then
         verify(itemService).getItemByIdAndProductId(itemId, productId)

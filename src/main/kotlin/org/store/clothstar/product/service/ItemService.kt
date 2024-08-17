@@ -96,6 +96,6 @@ class ItemService(
 
     fun getItemByIdAndProductId(itemId: Long, productId: Long): Item {
         return itemRepository.findByItemIdAndProduct_ProductId(itemId, productId)
-            ?: throw EntityNotFoundException("Item not found with id: $itemId and productId: $productId")
+            ?: throw EntityNotFoundException("productId:  $productId, itemId: $itemId 인 아이템을 찾을 수 없습니다.")
     }
 }

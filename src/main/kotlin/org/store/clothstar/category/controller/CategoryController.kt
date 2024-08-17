@@ -1,6 +1,10 @@
 package org.store.clothstar.category.controller
 
 import io.swagger.v3.oas.annotations.Operation
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Slice
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
@@ -11,19 +15,51 @@ import org.store.clothstar.category.dto.response.CategoryResponse
 import org.store.clothstar.category.service.CategoryService
 import org.store.clothstar.common.dto.MessageDTO
 import org.store.clothstar.common.util.URIBuilder
+import org.store.clothstar.product.dto.response.ProductListResponse
+import org.store.clothstar.product.service.ProductService
 
 @RestController
 @RequestMapping("/v1/categories")
 class CategoryController(
     private val categoryService: CategoryService,
-//    private val productLineService: ProductLineService
+    private val productService: ProductService
 ) {
-
     @Operation(summary = "전체 카테고리 조회", description = "모든 카테고리를 조회한다.")
     @GetMapping
     fun getAllCategories(): ResponseEntity<List<CategoryResponse>> {
         val categoryResponses = categoryService.getAllCategories()
         return ResponseEntity.ok(categoryResponses)
+    }
+
+
+    @Operation(
+        summary = "카테고리별 상품 조회 (Offset Paging)",
+        description = "카테고리 ID로 해당 카테고리에 속하는 모든 상품을 Offset Paging을 통해 조회한다."
+    )
+    @GetMapping("/{categoryId}/products/offset")
+    fun getProductLinesByCategory(
+        @PathVariable categoryId: Long,
+        @PageableDefault(size = 18) pageable: Pageable,
+        @RequestParam(required = false) keyword: String?
+    ): ResponseEntity<Page<ProductListResponse>> {
+        val productResponses: Page<ProductListResponse> =
+            productService.getProductLinesByCategoryWithOffsetPaging(categoryId, pageable, keyword)
+        return ResponseEntity.ok().body<Page<ProductListResponse>>(productResponses)
+    }
+
+    @Operation(
+        summary = "카테고리별 상품 조회 (Slice Paging)",
+        description = "카테고리 ID로 해당 카테고리에 속하는 모든 상품을 Slice Paging을 통해 조회한다."
+    )
+    @GetMapping("/{categoryId}/products/slice")
+    fun getProductLinesByCategorySlice(
+        @PathVariable categoryId: Long,
+        @PageableDefault(size = 18) pageable: Pageable,
+        @RequestParam(required = false) keyword: String?
+    ): ResponseEntity<Slice<ProductListResponse>> {
+        val productResponses: Slice<ProductListResponse> =
+            productService.getProductLinesByCategoryWithSlicePaging(categoryId, pageable, keyword)
+        return ResponseEntity.ok().body<Slice<ProductListResponse>>(productResponses)
     }
 
     @Operation(summary = "카테고리 상세 조회", description = "id로 카테고리 한개를 상세 조회한다.")
