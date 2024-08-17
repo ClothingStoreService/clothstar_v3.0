@@ -42,6 +42,14 @@ class ProductSellerController(
         return ResponseEntity(messageDTO, HttpStatus.CREATED)
     }
 
+    // 상품 상세 조회
+    @GetMapping("/{productId}")
+    @Operation(summary = "상품 상세 조회", description = "상품 ID를 사용하여 해당 상품의 상세 정보를 조회합니다.")
+    fun getProductDetails(@PathVariable productId: Long): ResponseEntity<ProductResponse> {
+        val productResponse = productApplicationService.getProductDetails(productId, true)
+        return ResponseEntity.ok(productResponse)
+    }
+
     @PatchMapping("/{productId}/displayStatus")
     @Operation(summary = "상품 진열 상태 변경", description = "상품 ID를 사용하여 해당 상품의 진열 상태를 변경합니다.")
     fun updateProductDisplayStatus(
@@ -89,4 +97,41 @@ class ProductSellerController(
         )
         return ResponseEntity(messageDTO, HttpStatus.OK)
     }
+
+    /*
+    // 상품 기본 정보 수정
+    @PutMapping("/{productId}")
+    @Operation(summary = "상품 기본 정보 수정", description = "상품 ID를 사용하여 해당 상품의 기본 정보를 수정합니다.")
+    fun updateProduct(
+        @PathVariable productId: Long,
+        @RequestPart(value = "mainImage", required = false) mainImage: MultipartFile?,
+        @RequestPart(value = "subImages", required = false) subImages: List<MultipartFile>?,
+        @RequestPart(value = "dto") @Validated productCreateRequest: ProductCreateRequest
+    ): ResponseEntity<MessageDTO> {
+        productApplicationService.updateProduct(productId, mainImage, subImages, productCreateRequest)
+
+        val messageDTO = MessageDTO(
+            HttpStatus.OK.value(),
+            "상품 기본 정보가 성공적으로 변경되었습니다."
+        )
+        return ResponseEntity(messageDTO, HttpStatus.OK)
+    }
+
+    // 상품 옵션&아이템 변경
+    @PutMapping("/{productId}/options")
+    @Operation(summary = "상품 옵션&아이템 변경", description = "상품 ID를 사용하여 해당 상품의 옵션과 아이템을 변경합니다.")
+    fun updateProductOptions(
+        @PathVariable productId: Long,
+        @RequestBody productCreateRequest: ProductCreateRequest
+    ): ResponseEntity<MessageDTO> {
+        productApplicationService.updateProductOptions(productId, productCreateRequest)
+
+        val messageDTO = MessageDTO(
+            HttpStatus.OK.value(),
+            "상품 옵션&아이템이 성공적으로 변경되었습니다."
+        )
+        return ResponseEntity(messageDTO, HttpStatus.OK)
+    }
+
+     */
 }

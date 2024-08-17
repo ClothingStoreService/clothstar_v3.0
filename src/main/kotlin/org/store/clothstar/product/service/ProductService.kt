@@ -27,13 +27,13 @@ class ProductService(
     }
 
     @Transactional(readOnly = true)
-    fun getProductDetails(productId: Long): ProductResponse {
+    fun getProductDetails(productId: Long, isSeller: Boolean): ProductResponse {
         val product = productRepository.findByIdOrNull(productId)
             ?: throw EntityNotFoundException("상품을 찾을 수 없습니다.")
 
         val seller = sellerService.getSellerById(product.memberId)
         val sellerSimpleResponse = SellerSimpleResponse.getSellerSimpleResponseBySeller(seller)
-        return ProductResponse.from(product, sellerSimpleResponse, false)
+        return ProductResponse.from(product, sellerSimpleResponse, isSeller)
     }
 
     @Transactional

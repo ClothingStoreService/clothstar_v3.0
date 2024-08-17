@@ -73,8 +73,8 @@ class ProductApplicationService(
     }
 
     @Transactional(readOnly = true)
-    fun getProductDetails(productId: Long): ProductResponse {
-        return productService.getProductDetails(productId)
+    fun getProductDetails(productId: Long, isSeller: Boolean): ProductResponse {
+        return productService.getProductDetails(productId, isSeller)
     }
 
     @Transactional(readOnly = true)
