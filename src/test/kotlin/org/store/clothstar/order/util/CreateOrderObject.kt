@@ -27,10 +27,28 @@ class CreateOrderObject {
             )
         }
 
+        fun getMember(i:Int): Member {
+            return Member(
+                telNo = "010-1234-444"+i,
+                name = "현수"+i,
+                memberShoppingActivity = MemberShoppingActivity.init()
+            )
+        }
+
         fun getAddress(member: Member): Address {
             return Address(
                 receiverName = "현수",
                 telNo = "010-1234-4444",
+                memberId = member.memberId!!,
+                deliveryRequest = "문 앞에 놔주세요",
+                addressInfo = AddressInfo.init()
+            )
+        }
+
+        fun getAddress(member: Member, i:Int): Address {
+            return Address(
+                receiverName = "현수"+i,
+                telNo = "010-1234-4444"+i,
                 memberId = member.memberId!!,
                 deliveryRequest = "문 앞에 놔주세요",
                 addressInfo = AddressInfo.init()
@@ -46,9 +64,24 @@ class CreateOrderObject {
             )
         }
 
+        fun getSeller(member: Member, i:Int): Seller {
+            return Seller(
+                memberId = member.memberId!!,
+                brandName = "나이키"+i,
+                bizNo = "123-123"+i,
+                totalSellPrice = 1000
+            )
+        }
+
         fun getCategory(): Category {
             return Category(
                 categoryType = "상의",
+            )
+        }
+
+        fun getCategory(i:Int): Category {
+            return Category(
+                categoryType = "상의"+i,
             )
         }
 
@@ -79,6 +112,17 @@ class CreateOrderObject {
         fun getOrder(member: Member,address: Address): Order {
             return Order(
                 orderId = "0eb44b79-6b9a-4ca9-8984-761e18101511",
+                memberId = member.memberId!!,
+                addressId = address.addressId!!,
+                status = Status.CONFIRMED,
+                paymentMethod = PaymentMethod.CARD,
+                totalPrice = TotalPrice(shipping = 0, products = 0, payment = 0)
+            )
+        }
+
+        fun getOrder(member: Member,address: Address,i:Int): Order {
+            return Order(
+                orderId = "0eb44b79-6b9a-4ca9-8984-761e18101511"+i,
                 memberId = member.memberId!!,
                 addressId = address.addressId!!,
                 status = Status.CONFIRMED,

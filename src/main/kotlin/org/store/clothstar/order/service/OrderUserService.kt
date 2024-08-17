@@ -204,6 +204,7 @@ class OrderUserService(
 
         val orderDetail = addOrderDetailRequest.toOrderDetail(order, product, item)
         orderDetailRepository.save(orderDetail)
+        order.addOrderDetail(orderDetail)
 
         val newTotalProductsPrice = order.totalPrice.products + orderDetail.price.oneKindTotalPrice
         val newTotalPaymentPrice =
