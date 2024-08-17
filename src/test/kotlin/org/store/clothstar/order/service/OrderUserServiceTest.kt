@@ -110,53 +110,60 @@ class OrderUserServiceTest {
         val productId = 3L
         val itemId = 4L
 
+        // orderId 관련 order, member, address, seller 불러오기
         every { orderRepository.findByOrderIdAndDeletedAtIsNull(orderId) } returns order
-        every { order.orderId } returns orderId
         every { order.memberId } returns memberId
         every { order.addressId } returns addressId
-        every { order.createdAt } returns LocalDateTime.now()
-        every { order.orderDetails } returns mutableListOf(orderDetail)
-        every { order.status } returns Status.CONFIRMED
-        every { order.paymentMethod } returns PaymentMethod.CARD
-
         every { memberService.getMemberByMemberId(memberId) } returns member
-        every { member.name } returns "수빈"
         every { addressService.getAddressById(addressId) } returns address
         every { sellerService.getSellerById(memberId) } returns seller
-        every { address.telNo } returns "010-1111-1111"
-        every { address.deliveryRequest } returns "문앞"
-        every { address.addressInfo } returns addressInfo
-        every { order.totalPrice } returns totalPrice
-        every { orderDetail.orderDetailId } returns 1L
-        every { orderDetail.quantity } returns 1
-        every { orderDetail.price } returns price
-        every { orderDetail.deletedAt } returns null
-        every { orderDetail.itemId } returns itemId
-        every { orderDetail.productId } returns productId
-
-        every { address.receiverName } returns "수빈"
-        every { addressInfo.addressBasic } returns "address1"
-        every { addressInfo.addressDetail } returns "address2"
-        every { addressInfo.zipNo } returns "123-123"
-
-        every { itemService.findByIdIn(listOf(itemId))} returns listOf(item)
-        every { productService.findByProductIdIn(listOf(productId))} returns listOf(product)
-        every { item.itemId } returns itemId
-        every { item.finalPrice } returns 10000
-        every { item.name } returns "상품옵션이름"
-        every { product.productId } returns productId
-        every { product.price } returns 1000
-        every { product.name } returns "상품이름"
-        every { seller.brandName} returns "brandName"
 
         every { totalPrice.shipping } returns 3000
         every { totalPrice.products } returns 5000
         every { totalPrice.payment } returns 8000
+        every { order.orderId } returns orderId
+        every { member.name } returns "수빈"
+        every { order.createdAt } returns LocalDateTime.now()
+        every { order.status } returns Status.CONFIRMED
+        every { order.paymentMethod } returns PaymentMethod.CARD
+        every { order.totalPrice } returns totalPrice
+        every { address.addressInfo } returns addressInfo
+        every { address.receiverName } returns "수빈"
+        every { addressInfo.addressBasic } returns "address1"
+        every { addressInfo.addressDetail } returns "address2"
+        every { address.telNo } returns "010-1111-1111"
+        every { address.deliveryRequest } returns "문앞"
+
+        // 응답 DTO 생성(주문상세 리스트는 빈 상태)
+        val expectedorderResponse = OrderResponse.from(order,member,address)
+
+        // productIds, itemIds로부터 Product/Item 리스트 가져오기
+        every { orderDetail.itemId } returns itemId
+        every { orderDetail.productId } returns productId
+        every { productService.findByProductIdIn(listOf(productId))} returns listOf(product)
+        every { itemService.findByIdIn(listOf(itemId))} returns listOf(item)
+
+        every { orderDetail.orderDetailId } returns 1L
+        every { product.name } returns "상품이름"
+        every { item.name } returns "상품옵션이름"
+        every { seller.brandName} returns "brandName"
+        every { product.price } returns 1000
+        every { orderDetail.quantity } returns 1
+        every { orderDetail.price } returns price
+        every { item.finalPrice } returns 10000
         every { price.fixedPrice } returns 10000
         every { price.oneKindTotalPrice } returns 10000
 
-        val expectedorderResponse = OrderResponse.from(order,member,address)
-        expectedorderResponse.updateOrderDetailList(listOf(OrderDetailDTO.from(orderDetail,item,product,seller.brandName)))
+        every { order.orderDetails } returns mutableListOf(orderDetail)
+        every { orderDetail.deletedAt } returns null
+        every { item.itemId } returns itemId
+        every { product.productId } returns productId
+
+        // 주문상세 DTO 리스트 만들기
+        val orderDetailDTOs = listOf(OrderDetailDTO.from(orderDetail,item,product,seller.brandName))
+
+        // 응답 DTO에 주문상세 DTO 리스트 추가
+        expectedorderResponse.updateOrderDetailList(orderDetailDTOs)
 
         //when
         val orderReponse = orderUserService.getOrder(orderId)
