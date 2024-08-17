@@ -13,7 +13,7 @@ import org.store.clothstar.product.dto.request.ProductCreateRequest
 import org.store.clothstar.product.dto.response.ProductResponse
 
 @Service
-class ProductSellerApplicationService (
+class ProductSellerApplicationService(
     private val productService: ProductService,
     private val productOptionService: ProductOptionService,
     private val itemService: ItemService,

@@ -12,7 +12,6 @@ import org.store.clothstar.product.dto.request.ProductCreateRequest
 import org.store.clothstar.product.dto.request.UpdateDisplayStatusRequest
 import org.store.clothstar.product.dto.request.UpdateStockRequest
 import org.store.clothstar.product.dto.response.ProductResponse
-import org.store.clothstar.product.service.ProductApplicationService
 import org.store.clothstar.product.service.ProductSellerApplicationService
 
 @Tag(name = "ProductSellers", description = "ProductSellers(판매자) 관련 API 입니다.")

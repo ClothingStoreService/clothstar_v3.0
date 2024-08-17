@@ -27,10 +27,10 @@ class CreateOrderObject {
             )
         }
 
-        fun getMember(i:Int): Member {
+        fun getMember(i: Int): Member {
             return Member(
-                telNo = "010-1234-444"+i,
-                name = "현수"+i,
+                telNo = "010-1234-444" + i,
+                name = "현수" + i,
                 memberShoppingActivity = MemberShoppingActivity.init()
             )
         }
@@ -39,16 +39,6 @@ class CreateOrderObject {
             return Address(
                 receiverName = "현수",
                 telNo = "010-1234-4444",
-                memberId = member.memberId!!,
-                deliveryRequest = "문 앞에 놔주세요",
-                addressInfo = AddressInfo.init()
-            )
-        }
-
-        fun getAddress(member: Member, i:Int): Address {
-            return Address(
-                receiverName = "현수"+i,
-                telNo = "010-1234-4444"+i,
                 memberId = member.memberId!!,
                 deliveryRequest = "문 앞에 놔주세요",
                 addressInfo = AddressInfo.init()
@@ -64,11 +54,11 @@ class CreateOrderObject {
             )
         }
 
-        fun getSeller(member: Member, i:Int): Seller {
+        fun getSeller(member: Member, i: Int): Seller {
             return Seller(
                 memberId = member.memberId!!,
-                brandName = "나이키"+i,
-                bizNo = "123-123"+i,
+                brandName = "나이키" + i,
+                bizNo = "123-123" + i,
                 totalSellPrice = 1000
             )
         }
@@ -79,13 +69,13 @@ class CreateOrderObject {
             )
         }
 
-        fun getCategory(i:Int): Category {
+        fun getCategory(i: Int): Category {
             return Category(
-                categoryType = "상의"+i,
+                categoryType = "상의" + i,
             )
         }
 
-        fun getProduct(member: Member,category: Category): Product {
+        fun getProduct(member: Member, category: Category): Product {
             return Product(
                 memberId = member.memberId!!,
                 categoryId = category.categoryId!!,
@@ -109,7 +99,7 @@ class CreateOrderObject {
             )
         }
 
-        fun getOrder(member: Member,address: Address): Order {
+        fun getOrder(member: Member, address: Address): Order {
             return Order(
                 orderId = "0eb44b79-6b9a-4ca9-8984-761e18101511",
                 memberId = member.memberId!!,
@@ -120,9 +110,9 @@ class CreateOrderObject {
             )
         }
 
-        fun getOrder(member: Member,address: Address,i:Int): Order {
+        fun getOrder(member: Member, address: Address, i: Int): Order {
             return Order(
-                orderId = "0eb44b79-6b9a-4ca9-8984-761e18101511"+i,
+                orderId = "0eb44b79-6b9a-4ca9-8984-761e18101511" + i,
                 memberId = member.memberId!!,
                 addressId = address.addressId!!,
                 status = Status.CONFIRMED,
@@ -131,7 +121,7 @@ class CreateOrderObject {
             )
         }
 
-        fun getOrderDetail(product: Product,item: Item,order: Order): OrderDetail {
+        fun getOrderDetail(product: Product, item: Item, order: Order): OrderDetail {
             return OrderDetail(
                 productId = product.productId!!,
                 itemId = item.itemId!!,

@@ -27,40 +27,40 @@ import org.store.clothstar.order.util.CreateOrderObject
 import org.store.clothstar.product.repository.ItemRepository
 import org.store.clothstar.product.repository.ProductRepository
 import kotlin.test.Test
-import kotlin.test.assertNotNull
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Transactional
 class OrderSellerIntegrationTest(
-@Autowired
-private val mockMvc: MockMvc,
+    @Autowired
+    private val mockMvc: MockMvc,
 
-@Autowired
-private val orderRepository: OrderRepository,
+    @Autowired
+    private val orderRepository: OrderRepository,
 
-@Autowired
-private val memberRepository: MemberRepository,
+    @Autowired
+    private val memberRepository: MemberRepository,
 
-@Autowired
-private val addressRepository: AddressRepository,
+    @Autowired
+    private val addressRepository: AddressRepository,
 
-@Autowired
-private val categoryRepository: CategoryJpaRepository,
+    @Autowired
+    private val categoryRepository: CategoryJpaRepository,
 
-@Autowired
-private val productRepository: ProductRepository,
+    @Autowired
+    private val productRepository: ProductRepository,
 
-@Autowired
-private val itemRepository: ItemRepository,
+    @Autowired
+    private val itemRepository: ItemRepository,
 
-@Autowired
-private val sellerRepository: SellerRepository,
+    @Autowired
+    private val sellerRepository: SellerRepository,
 
-@Autowired
-private val orderDetailRepository: OrderDetailRepository,
+    @Autowired
+    private val orderDetailRepository: OrderDetailRepository,
 ) {
     val ORDER_SELLER_URL = "/v1/orders/seller"
 
@@ -68,7 +68,7 @@ private val orderDetailRepository: OrderDetailRepository,
     @Test
     fun testGetConfirmedOrder() {
         //given
-        createOrdersWithStatus(110,Status.CONFIRMED)
+        createOrdersWithStatus(110, Status.CONFIRMED)
 
         //when
         val actions: ResultActions = mockMvc.perform(
@@ -127,23 +127,24 @@ private val orderDetailRepository: OrderDetailRepository,
         assertEquals(Status.CANCELED, savedOrder.status)
     }
 
-    fun createOrdersWithStatus(count:Int, status: Status) {
-        for(i in 100 until count) {
+    fun createOrdersWithStatus(count: Int, status: Status) {
+        for (i in 100 until count) {
             val member: Member = memberRepository.save(CreateOrderObject.getMember(i))
             val address = addressRepository.save(CreateOrderObject.getAddress(member))
             val category = categoryRepository.save(CreateOrderObject.getCategory(i))
-            sellerRepository.save(CreateOrderObject.getSeller(member,i))
+            sellerRepository.save(CreateOrderObject.getSeller(member, i))
             val product = productRepository.save(CreateOrderObject.getProduct(member, category))
             val item = itemRepository.save(CreateOrderObject.getItem(product))
-            val order: Order = CreateOrderObject.getOrder(member, address,i)
+            val order: Order = CreateOrderObject.getOrder(member, address, i)
             order.updateStatus(status)
             orderRepository.save(order)
-            val orderDetail: OrderDetail = orderDetailRepository.save(CreateOrderObject.getOrderDetail(product, item, order))
+            val orderDetail: OrderDetail =
+                orderDetailRepository.save(CreateOrderObject.getOrderDetail(product, item, order))
             order.addOrderDetail(orderDetail)
         }
     }
 
-    fun createOrderWithStatus(status: Status):Order {
+    fun createOrderWithStatus(status: Status): Order {
         val member: Member = memberRepository.save(CreateOrderObject.getMember())
         val address = addressRepository.save(CreateOrderObject.getAddress(member))
         val category = categoryRepository.save(CreateOrderObject.getCategory())
@@ -154,7 +155,8 @@ private val orderDetailRepository: OrderDetailRepository,
         val order: Order = CreateOrderObject.getOrder(member, address)
         order.updateStatus(status)
         orderRepository.save(order)
-        val orderDetail: OrderDetail = orderDetailRepository.save(CreateOrderObject.getOrderDetail(product, item, order))
+        val orderDetail: OrderDetail =
+            orderDetailRepository.save(CreateOrderObject.getOrderDetail(product, item, order))
         order.addOrderDetail(orderDetail)
 
         return order

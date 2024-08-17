@@ -68,7 +68,8 @@ class ProductService(
         }
     }
 
-    fun getAllProductsOffsetPaging(pageable: Pageable, keyword: String?
+    fun getAllProductsOffsetPaging(
+        pageable: Pageable, keyword: String?
     ): Page<ProductListResponse> {
 
         val productPages = productRepository.findAllOffsetPaging(pageable, keyword)
@@ -80,7 +81,8 @@ class ProductService(
         }
     }
 
-    fun getAllProductsSlicePaging(pageable: Pageable, keyword: String?
+    fun getAllProductsSlicePaging(
+        pageable: Pageable, keyword: String?
     ): Slice<ProductListResponse> {
 
         val productPages = productRepository.findAllSlicePaging(pageable, keyword)
