@@ -287,52 +287,53 @@ class OrderUserServiceTest {
 //
 //    }
 
-//    @Test
-//    @DisplayName("주문 상세 추가 - 성공 테스트")
-//    fun addOrderDetail_success_test() {
-//        val addOrderDetailRequest = AddOrderDetailRequest(
-//            orderId = orderId,
-//            productId = productId,
-//            itemId = itemId,
-//            quantity = 1,
-//        )
-//        every { orderRepository.findByIdOrNull(orderId) } returns order
-//        every { productService.getProductById(productId) } returns product
-//        every { itemService.getItemById(itemId) } returns item
-//        every { item.stock } returns 10
-//        every { order.status } returns Status.CONFIRMED
-//
-//        every { product.price } returns 1000
-//        every { product.productId } returns productId
-//        every { item.itemId } returns itemId
-//        every { orderDetail.order } returns order
-//        every { orderDetail.quantity } returns addOrderDetailRequest.quantity
-//        every { orderDetail.price } returns price
-//        every { orderDetail.orderDetailId } returns 123L
-//        every { orderDetail.price.oneKindTotalPrice } returns 10000
-//
-//        every { addOrderDetailRequest.toOrderDetail(order, product, item) } returns orderDetail
-//        justRun { orderDetailRepository.save(orderDetail) }
-//
-//        every { order.totalPrice } returns totalPrice
-//        every { totalPrice.products } returns 10000
-//        every { totalPrice.shipping } returns 3000
-//        every { totalPrice.payment } returns 130000
-//
-//        val newTotalProductsPrice = order.totalPrice.products + orderDetail.price.oneKindTotalPrice
-//        val newTotalPaymentPrice =
-//            order.totalPrice.products + order.totalPrice.shipping + orderDetail.price.oneKindTotalPrice
-//
-//        justRun { order.totalPrice.updatePrices(newTotalProductsPrice,newTotalPaymentPrice) }
-//        justRun { orderUserService.updateProductStock(item, orderDetail.quantity) }
-//
-//        //when
-//        val orderDetailId = orderUserService.addOrderDetail(addOrderDetailRequest)
-//
-//        //then
-//        assertEquals(orderDetailId, 123L)
-//        verify(exactly = 1) { orderRepository.findByIdOrNull(orderId) }
-//    }
+    @Test
+    @DisplayName("주문 상세 추가 - 성공 테스트")
+    fun addOrderDetail_success_test() {
+        // 요청 DTO 모킹
+        val addOrderDetailRequest = mockk<AddOrderDetailRequest>()
+        every { addOrderDetailRequest.orderId } returns orderId
+        every { addOrderDetailRequest.productId } returns productId
+        every { addOrderDetailRequest.itemId } returns itemId
+        every { addOrderDetailRequest.quantity } returns 1
+
+        // 요청 DTO와 관련된 order, product, item 불러오기
+        every { orderRepository.findByIdOrNull(orderId) } returns order
+        every { productService.getProductById(productId) } returns product
+        every { itemService.getItemById(itemId) } returns item
+
+        every { item.stock } returns 10
+        every { order.status } returns Status.CONFIRMED
+
+        every { product.price } returns 1000
+        every { product.productId } returns productId
+        every { item.itemId } returns itemId
+
+        every { addOrderDetailRequest.toOrderDetail(order, product, item) } returns orderDetail
+        every { orderDetailRepository.save(orderDetail) } returns orderDetail
+
+        every { order.totalPrice } returns totalPrice
+        every { orderDetail.price } returns price
+        every { order.totalPrice.products } returns 10000
+        every { orderDetail.price.oneKindTotalPrice } returns 10000
+        every { order.totalPrice.shipping } returns 3000
+
+        every { orderDetail.quantity } returns addOrderDetailRequest.quantity
+
+        justRun { order.totalPrice.updatePrices(any(),any()) }
+        justRun { item.updateStock(any()) }
+
+        justRun { orderUserService.updateProductStock(item, orderDetail.quantity) }
+        every { orderDetail.orderDetailId } returns 123L
+
+        //when
+        val orderDetailId: Long = orderUserService.addOrderDetail(addOrderDetailRequest)
+
+        //then
+        assertEquals(orderDetailId, orderDetail.orderDetailId)
+        verify(exactly = 1) { orderRepository.findByIdOrNull(orderId) }
+        verify(exactly = 1) { orderDetailRepository.save(orderDetail) }
+    }
 
     @Test
     @DisplayName("주문 상세 추가 - 주문번호가 존재하지 않을 때 예외처리 테스트")
