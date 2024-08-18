@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.server.ResponseStatusException
 import org.store.clothstar.common.error.ErrorCode
 import org.store.clothstar.common.error.exception.order.InsufficientStockException
+import org.store.clothstar.common.error.exception.order.InvalidOrderStatusException
 import org.store.clothstar.common.error.exception.order.OrderNotFoundException
 import org.store.clothstar.member.domain.Address
 import org.store.clothstar.member.domain.Member
@@ -73,9 +74,9 @@ class OrderUserService(
 
         // Map으로부터 Id, Entity를 가져오면서 주문상세 DTO 리스트 만들기
         val orderDetailDTOList: List<OrderDetailDTO> = orderDetails.map {
-            val product: Product = productMap[it.productId]
+            val product: Product = productMap[it.productId]!!
                 ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found")
-            val item: Item = itemMap[it.itemId]
+            val item: Item = itemMap[it.itemId]!!
                 ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found")
             val brandName: String = seller.brandName
             OrderDetailDTO.from(it, item, product, brandName)
@@ -195,7 +196,7 @@ class OrderUserService(
         }
 
         if (order.status != Status.CONFIRMED) {
-            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 입금된 상태에서는 추가 주문이 불가능합니다.")
+            throw InvalidOrderStatusException(ErrorCode.INVALID_ORDER_STATUS_CONFIRMED)
         }
 
         val orderDetail = addOrderDetailRequest.toOrderDetail(order, product, item)

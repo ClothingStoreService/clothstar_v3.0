@@ -1,19 +1,22 @@
 package org.store.clothstar.order.service
 
-import io.mockk.every
+import io.mockk.*
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
-import io.mockk.justRun
-import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.store.clothstar.common.error.ErrorCode
+import org.store.clothstar.common.error.exception.order.InsufficientStockException
+import org.store.clothstar.common.error.exception.order.InvalidOrderStatusException
 import org.store.clothstar.common.error.exception.order.OrderNotFoundException
 import org.store.clothstar.member.domain.Address
 import org.store.clothstar.member.domain.Member
@@ -25,6 +28,7 @@ import org.store.clothstar.member.service.SellerService
 import org.store.clothstar.order.domain.Order
 import org.store.clothstar.order.domain.OrderDetail
 import org.store.clothstar.order.domain.vo.*
+import org.store.clothstar.order.dto.request.AddOrderDetailRequest
 import org.store.clothstar.order.dto.response.OrderResponse
 import org.store.clothstar.order.repository.OrderDetailRepository
 import org.store.clothstar.order.repository.OrderRepository
@@ -34,6 +38,7 @@ import org.store.clothstar.product.domain.Product
 import org.store.clothstar.product.service.ItemService
 import org.store.clothstar.product.service.ProductService
 import java.time.LocalDateTime
+import java.util.*
 import kotlin.test.Test
 
 @ExtendWith(MockKExtension::class)
@@ -98,18 +103,20 @@ class OrderUserServiceTest {
     @MockK
     lateinit var price: Price
 
+    @MockK
+    lateinit var pageable: Pageable
+
     val orderId = "4b1a17b5-45f0-455a-a5e3-2c863de18b05"
+    val memberId = 1L
+    val addressId = 2L
+    val productId = 3L
+    val itemId = 4L
 
     // 단일 주문 조회 - getOrder
     @Test
     @DisplayName("단일 주문 조회 - 성공 테스트")
     fun getOrder_success_test() {
         //given
-        val memberId = 1L
-        val addressId = 2L
-        val productId = 3L
-        val itemId = 4L
-
         // orderId 관련 order, member, address, seller 불러오기
         every { orderRepository.findByOrderIdAndDeletedAtIsNull(orderId) } returns order
         every { order.memberId } returns memberId
@@ -137,27 +144,27 @@ class OrderUserServiceTest {
         // 응답 DTO 생성(주문상세 리스트는 빈 상태)
         val expectedorderResponse = OrderResponse.from(order,member,address)
 
+        every { order.orderDetails } returns mutableListOf(orderDetail)
+        every { orderDetail.deletedAt } returns null
+
         // productIds, itemIds로부터 Product/Item 리스트 가져오기
         every { orderDetail.itemId } returns itemId
         every { orderDetail.productId } returns productId
         every { productService.findByProductIdIn(listOf(productId))} returns listOf(product)
         every { itemService.findByIdIn(listOf(itemId))} returns listOf(item)
 
+        every { item.itemId } returns itemId
+        every { product.productId } returns productId
+
         every { orderDetail.orderDetailId } returns 1L
         every { product.name } returns "상품이름"
         every { item.name } returns "상품옵션이름"
-        every { seller.brandName} returns "brandName"
+        every { seller.brandName } returns "brandName"
         every { product.price } returns 1000
         every { orderDetail.quantity } returns 1
         every { orderDetail.price } returns price
         every { item.finalPrice } returns 10000
-        every { price.fixedPrice } returns 10000
         every { price.oneKindTotalPrice } returns 10000
-
-        every { order.orderDetails } returns mutableListOf(orderDetail)
-        every { orderDetail.deletedAt } returns null
-        every { item.itemId } returns itemId
-        every { product.productId } returns productId
 
         // 주문상세 DTO 리스트 만들기
         val orderDetailDTOs = listOf(OrderDetailDTO.from(orderDetail,item,product,seller.brandName))
@@ -187,6 +194,208 @@ class OrderUserServiceTest {
             orderUserService.getOrder(orderId)
         }
         assertEquals(ErrorCode.NOT_FOUND_ORDER, exception.errorCode)
+    }
+
+//    // 전체 주문 페이징 조회
+//    @Test
+//    @DisplayName("전체 주문 페이징 조회 offset 방식 - 성공 테스트")
+//    fun getAllOrderOffsetPaging_success_test() {
+//        //given
+//        val orders = listOf(order)
+////        every { pageable.offset } returns 0L
+//        every { pageable.pageSize } returns 10
+//        every { pageable.toOptional() } returns Optional.of(pageable)
+//        val ordersPage: Page<Order> = PageImpl(orders,pageable,orders.size.toLong())
+//        every { orderRepository.findAll(pageable) } returns ordersPage
+//
+//        // order 관련 member, address, seller 불러오기
+//        every { order.memberId } returns memberId
+//        every { order.addressId } returns addressId
+//        every { memberService.getMemberByMemberId(memberId) } returns member
+//        every { addressService.getAddressById(addressId) } returns address
+//        every { sellerService.getSellerById(memberId) } returns seller
+//
+//        every { totalPrice.shipping } returns 3000
+//        every { totalPrice.products } returns 5000
+//        every { totalPrice.payment } returns 8000
+//        every { order.orderId } returns orderId
+//        every { member.name } returns "수빈"
+//        every { order.createdAt } returns LocalDateTime.now()
+//        every { order.status } returns Status.CONFIRMED
+//        every { order.paymentMethod } returns PaymentMethod.CARD
+//        every { order.totalPrice } returns totalPrice
+//        every { address.addressInfo } returns addressInfo
+//        every { address.receiverName } returns "수빈"
+//        every { addressInfo.addressBasic } returns "address1"
+//        every { addressInfo.addressDetail } returns "address2"
+//        every { address.telNo } returns "010-1111-1111"
+//        every { address.deliveryRequest } returns "문앞"
+//
+//        // 응답 DTO 생성(주문상세 리스트는 빈 상태)
+//        val expectedorderResponse = OrderResponse.from(order,member,address)
+//        every { order.orderDetails } returns mutableListOf(orderDetail)
+//        every { orderDetails.size } returns 3
+//
+////        every { orderDetails.iterator() } returns
+//
+//        // productIds, itemIds로부터 Product/Item 리스트 가져오기
+//        every { orderDetail.itemId } returns itemId
+//        every { orderDetail.productId } returns productId
+//        every { productService.findByProductIdIn(listOf(productId))} returns listOf(product)
+//        every { itemService.findByIdIn(listOf(itemId))} returns listOf(item)
+//
+//        every { orderDetail.orderDetailId } returns 1L
+//        every { product.name } returns "상품이름"
+//        every { item.name } returns "상품옵션이름"
+//        every { seller.brandName} returns "brandName"
+//        every { product.price } returns 1000
+//        every { orderDetail.quantity } returns 1
+//        every { orderDetail.price } returns price
+//        every { item.finalPrice } returns 10000
+//        every { price.fixedPrice } returns 10000
+//        every { price.oneKindTotalPrice } returns 10000
+//
+//        every { order.orderDetails } returns mutableListOf(orderDetail)
+//        every { orderDetail.deletedAt } returns null
+//        every { item.itemId } returns itemId
+//        every { product.productId } returns productId
+//
+//        // 주문상세 DTO 리스트 만들기
+//        val orderDetils: List<OrderDetail> = listOf(orderDetail)
+//        val orderDetailDTOs: List<OrderDetailDTO> = orderDetails.map{
+//            it -> OrderDetailDTO.from(it,item,product,seller.brandName)
+//        }
+//
+//        // 응답 DTO에 주문상세 DTO 리스트 추가
+//        expectedorderResponse.updateOrderDetailList(orderDetailDTOs)
+//
+//        //when
+//        val orderReponses: Page<OrderResponse> = orderUserService.getAllOrderOffsetPaging(pageable)
+//
+//        // then
+//        assertThat(orderReponses.content.get(0)).usingRecursiveComparison().isEqualTo(expectedorderResponse)
+//        verify(exactly = 1) { orderRepository.findAll(pageable) }
+//        verify(exactly = 1) { memberService.getMemberByMemberId(memberId) }
+//        verify(exactly = 1) { addressService.getAddressById(addressId) }
+//        verify(exactly = 1) { itemService.findByIdIn(listOf(itemId)) }
+//        verify(exactly = 1) { productService.findByProductIdIn(listOf(productId)) }
+//    }
+//
+//    @Test
+//    @DisplayName("전체 주문 페이징 조회 slice 방식 - 성공 테스트")
+//    fun getAllOrderSlicePaging_success_test() {
+//
+//    }
+
+//    @Test
+//    @DisplayName("주문 상세 추가 - 성공 테스트")
+//    fun addOrderDetail_success_test() {
+//        val addOrderDetailRequest = AddOrderDetailRequest(
+//            orderId = orderId,
+//            productId = productId,
+//            itemId = itemId,
+//            quantity = 1,
+//        )
+//        every { orderRepository.findByIdOrNull(orderId) } returns order
+//        every { productService.getProductById(productId) } returns product
+//        every { itemService.getItemById(itemId) } returns item
+//        every { item.stock } returns 10
+//        every { order.status } returns Status.CONFIRMED
+//
+//        every { product.price } returns 1000
+//        every { product.productId } returns productId
+//        every { item.itemId } returns itemId
+//        every { orderDetail.order } returns order
+//        every { orderDetail.quantity } returns addOrderDetailRequest.quantity
+//        every { orderDetail.price } returns price
+//        every { orderDetail.orderDetailId } returns 123L
+//        every { orderDetail.price.oneKindTotalPrice } returns 10000
+//
+//        every { addOrderDetailRequest.toOrderDetail(order, product, item) } returns orderDetail
+//        justRun { orderDetailRepository.save(orderDetail) }
+//
+//        every { order.totalPrice } returns totalPrice
+//        every { totalPrice.products } returns 10000
+//        every { totalPrice.shipping } returns 3000
+//        every { totalPrice.payment } returns 130000
+//
+//        val newTotalProductsPrice = order.totalPrice.products + orderDetail.price.oneKindTotalPrice
+//        val newTotalPaymentPrice =
+//            order.totalPrice.products + order.totalPrice.shipping + orderDetail.price.oneKindTotalPrice
+//
+//        justRun { order.totalPrice.updatePrices(newTotalProductsPrice,newTotalPaymentPrice) }
+//        justRun { orderUserService.updateProductStock(item, orderDetail.quantity) }
+//
+//        //when
+//        val orderDetailId = orderUserService.addOrderDetail(addOrderDetailRequest)
+//
+//        //then
+//        assertEquals(orderDetailId, 123L)
+//        verify(exactly = 1) { orderRepository.findByIdOrNull(orderId) }
+//    }
+
+    @Test
+    @DisplayName("주문 상세 추가 - 주문번호가 존재하지 않을 때 예외처리 테스트")
+    fun addOrderDetail_orderNotFound_exception_test() {
+        //given
+        val addOrderDetailRequest = AddOrderDetailRequest(
+            orderId = orderId,
+            productId = productId,
+            itemId = itemId,
+            quantity = 1,
+        )
+        every { orderRepository.findByIdOrNull(orderId) } returns null
+
+        //when & then
+        val exception = assertThrows<OrderNotFoundException> {
+            orderUserService.addOrderDetail(addOrderDetailRequest)
+        }
+        assertEquals(ErrorCode.NOT_FOUND_ORDER, exception.errorCode)
+    }
+
+    @Test
+    @DisplayName("주문 상세 추가 - 주문수량이 재고보다 더 많을 때 예외처리 테스트")
+    fun addOrderDetail_insufficientStock_exception_test() {
+        //given
+        val addOrderDetailRequest = AddOrderDetailRequest(
+            orderId = orderId,
+            productId = productId,
+            itemId = itemId,
+            quantity = 100,
+        )
+        every { orderRepository.findByIdOrNull(orderId) } returns order
+        every { productService.getProductById(productId) } returns product
+        every { itemService.getItemById(itemId) } returns item
+        every { item.stock } returns 10
+
+        //when & then
+        val exception = assertThrows<InsufficientStockException> {
+            orderUserService.addOrderDetail(addOrderDetailRequest)
+        }
+        assertEquals(ErrorCode.INSUFFICIENT_STOCK, exception.errorCode)
+    }
+
+    @Test
+    @DisplayName("주문 상세 추가 - 주문상태가 CONFIRMED가 아닐 때 예외처리 테스트")
+    fun addOrderDetail_invalidOrderStatusException_exception_test() {
+        //given
+        val addOrderDetailRequest = AddOrderDetailRequest(
+            orderId = orderId,
+            productId = productId,
+            itemId = itemId,
+            quantity = 1,
+        )
+        every { orderRepository.findByIdOrNull(orderId) } returns order
+        every { productService.getProductById(productId) } returns product
+        every { itemService.getItemById(itemId) } returns item
+        every { item.stock } returns 10
+        every { order.status } returns Status.DELIVERED
+
+        //when & then
+        val exception = assertThrows<InvalidOrderStatusException> {
+            orderUserService.addOrderDetail(addOrderDetailRequest)
+        }
+        assertEquals(ErrorCode.INVALID_ORDER_STATUS_CONFIRMED, exception.errorCode)
     }
 
     // 구매자 구매 확정 - completeOrder

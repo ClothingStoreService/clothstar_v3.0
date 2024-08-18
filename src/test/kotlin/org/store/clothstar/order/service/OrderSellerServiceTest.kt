@@ -51,6 +51,13 @@ class OrderSellerServiceTest {
 
     val orderId = "4b1a17b5-45f0-455a-a5e3-2c863de18b05"
 
+    // 판매자 주문(CONFIRMED) 리스트 조회
+    @Test
+    @DisplayName("판매자 주문(CONFIRMED) 리스트 조회 - 성공 테스트")
+    fun addOrderDetail_success_test() {
+
+    }
+
     // 판매자 주문 승인 - approveOrder
     @Test
     @DisplayName("판매자 주문 승인 - 성공 테스트")
