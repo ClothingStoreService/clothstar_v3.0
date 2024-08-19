@@ -1,5 +1,6 @@
 package org.store.clothstar.order.service
 
+import io.kotest.matchers.ints.exactly
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -30,6 +31,9 @@ import org.store.clothstar.order.domain.Order
 import org.store.clothstar.order.domain.OrderDetail
 import org.store.clothstar.order.domain.vo.*
 import org.store.clothstar.order.dto.request.AddOrderDetailRequest
+import org.store.clothstar.order.dto.request.CreateOrderDetailRequest
+import org.store.clothstar.order.dto.request.CreateOrderRequest
+import org.store.clothstar.order.dto.request.OrderRequestWrapper
 import org.store.clothstar.order.dto.response.OrderResponse
 import org.store.clothstar.order.repository.OrderDetailRepository
 import org.store.clothstar.order.repository.OrderRepository
@@ -344,6 +348,20 @@ class OrderUserServiceTest {
         verify(exactly = 1) { sellerService.getSellerById(memberId) }
         verify(exactly = 1) { productService.findByProductIdIn(listOf(productId)) }
         verify(exactly = 1) { itemService.findByIdIn(listOf(itemId)) }
+    }
+
+    @Test
+    @DisplayName("주문 저장")
+    fun saveOrder() {
+        //given
+        val orderRequestWrapper = mockk<OrderRequestWrapper>()
+        every { orderUserService.saveOrder(orderRequestWrapper) } returns orderId
+
+        //when
+        orderUserService.saveOrder(orderRequestWrapper)
+
+        //then
+        verify(exactly = 1) { orderSaveFacade.saveOrder(orderRequestWrapper) }
     }
 
     @Test
