@@ -4,10 +4,8 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Slice
 import org.springframework.data.repository.findByIdOrNull
-import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.web.server.ResponseStatusException
 import org.store.clothstar.common.error.ErrorCode
 import org.store.clothstar.common.error.exception.order.InsufficientStockException
 import org.store.clothstar.common.error.exception.order.InvalidOrderStatusException

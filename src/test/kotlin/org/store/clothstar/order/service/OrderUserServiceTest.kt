@@ -1,9 +1,12 @@
 package org.store.clothstar.order.service
 
-import io.mockk.*
+import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.justRun
+import io.mockk.mockk
+import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -30,13 +33,11 @@ import org.store.clothstar.order.dto.request.AddOrderDetailRequest
 import org.store.clothstar.order.dto.response.OrderResponse
 import org.store.clothstar.order.repository.OrderDetailRepository
 import org.store.clothstar.order.repository.OrderRepository
-import org.store.clothstar.order.service.OrderSave.OrderSaveFacade
 import org.store.clothstar.product.domain.Item
 import org.store.clothstar.product.domain.Product
 import org.store.clothstar.product.service.ItemService
 import org.store.clothstar.product.service.ProductService
 import java.time.LocalDateTime
-import java.util.*
 import kotlin.test.Test
 
 @ExtendWith(MockKExtension::class)
@@ -66,9 +67,6 @@ class OrderUserServiceTest {
     lateinit var productService: ProductService
 
     @MockK
-    lateinit var orderSaveFacade: OrderSaveFacade
-
-    @MockK
     lateinit var order: Order
 
     @MockK
@@ -84,9 +82,6 @@ class OrderUserServiceTest {
     lateinit var address: Address
 
     @MockK
-    lateinit var orderDetails: List<OrderDetail>
-
-    @MockK
     lateinit var product: Product
 
     @MockK
@@ -100,9 +95,6 @@ class OrderUserServiceTest {
 
     @MockK
     lateinit var price: Price
-
-    @MockK
-    lateinit var pageable: Pageable
 
     val orderId = "4b1a17b5-45f0-455a-a5e3-2c863de18b05"
     val memberId = 1L
@@ -140,7 +132,7 @@ class OrderUserServiceTest {
         every { address.deliveryRequest } returns "문앞"
 
         // 응답 DTO 생성(주문상세 리스트는 빈 상태)
-        val expectedorderResponse = OrderResponse.from(order,member,address)
+        val expectedorderResponse = OrderResponse.from(order, member, address)
 
         every { order.orderDetails } returns mutableListOf(orderDetail)
         every { orderDetail.deletedAt } returns null
@@ -148,8 +140,8 @@ class OrderUserServiceTest {
         // productIds, itemIds로부터 Product/Item 리스트 가져오기
         every { orderDetail.itemId } returns itemId
         every { orderDetail.productId } returns productId
-        every { productService.findByProductIdIn(listOf(productId))} returns listOf(product)
-        every { itemService.findByIdIn(listOf(itemId))} returns listOf(item)
+        every { productService.findByProductIdIn(listOf(productId)) } returns listOf(product)
+        every { itemService.findByIdIn(listOf(itemId)) } returns listOf(item)
 
         every { item.itemId } returns itemId
         every { product.productId } returns productId
@@ -165,7 +157,7 @@ class OrderUserServiceTest {
         every { price.oneKindTotalPrice } returns 10000
 
         // 주문상세 DTO 리스트 만들기
-        val orderDetailDTOs = listOf(OrderDetailDTO.from(orderDetail,item,product,seller.brandName))
+        val orderDetailDTOs = listOf(OrderDetailDTO.from(orderDetail, item, product, seller.brandName))
 
         // 응답 DTO에 주문상세 DTO 리스트 추가
         expectedorderResponse.updateOrderDetailList(orderDetailDTOs)
@@ -236,8 +228,8 @@ class OrderUserServiceTest {
         // productIds, itemIds로부터 Product/Item 리스트 가져오기
         every { orderDetail.itemId } returns itemId
         every { orderDetail.productId } returns productId
-        every { productService.findByProductIdIn(listOf(productId))} returns listOf(product)
-        every { itemService.findByIdIn(listOf(itemId))} returns listOf(item)
+        every { productService.findByProductIdIn(listOf(productId)) } returns listOf(product)
+        every { itemService.findByIdIn(listOf(itemId)) } returns listOf(item)
 
         every { item.itemId } returns itemId
         every { product.productId } returns productId
@@ -253,7 +245,8 @@ class OrderUserServiceTest {
         every { price.oneKindTotalPrice } returns 10000
 
         // 주문상세 DTO 리스트 만들기
-        val orderDetailDTOs: List<OrderDetailDTO> = listOf(OrderDetailDTO.from(orderDetail, item, product, seller.brandName))
+        val orderDetailDTOs: List<OrderDetailDTO> =
+            listOf(OrderDetailDTO.from(orderDetail, item, product, seller.brandName))
 
         // 응답 DTO 생성 및 주문상세 DTO 리스트 추가
         expectedOrderResponse.updateOrderDetailList(orderDetailDTOs)
@@ -313,8 +306,8 @@ class OrderUserServiceTest {
         // productIds, itemIds로부터 Product/Item 리스트 가져오기
         every { orderDetail.itemId } returns itemId
         every { orderDetail.productId } returns productId
-        every { productService.findByProductIdIn(listOf(productId))} returns listOf(product)
-        every { itemService.findByIdIn(listOf(itemId))} returns listOf(item)
+        every { productService.findByProductIdIn(listOf(productId)) } returns listOf(product)
+        every { itemService.findByIdIn(listOf(itemId)) } returns listOf(item)
 
         every { item.itemId } returns itemId
         every { product.productId } returns productId
@@ -330,7 +323,8 @@ class OrderUserServiceTest {
         every { price.oneKindTotalPrice } returns 10000
 
         // 주문상세 DTO 리스트 만들기
-        val orderDetailDTOs: List<OrderDetailDTO> = listOf(OrderDetailDTO.from(orderDetail, item, product, seller.brandName))
+        val orderDetailDTOs: List<OrderDetailDTO> =
+            listOf(OrderDetailDTO.from(orderDetail, item, product, seller.brandName))
 
         // 응답 DTO 생성 및 주문상세 DTO 리스트 추가
         expectedOrderResponse.updateOrderDetailList(orderDetailDTOs)
@@ -381,7 +375,7 @@ class OrderUserServiceTest {
 
         every { orderDetail.quantity } returns addOrderDetailRequest.quantity
 
-        justRun { order.totalPrice.updatePrices(any(),any()) }
+        justRun { order.totalPrice.updatePrices(any(), any()) }
         justRun { item.updateStock(any()) }
 
         justRun { orderUserService.updateProductStock(item, orderDetail.quantity) }

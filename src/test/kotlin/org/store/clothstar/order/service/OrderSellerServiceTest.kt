@@ -120,15 +120,15 @@ class OrderSellerServiceTest {
         every { address.telNo } returns "010-1111-1111"
         every { address.deliveryRequest } returns "문앞"
 
-        val expectedorderResponse = OrderResponse.from(order,member,address)
+        val expectedorderResponse = OrderResponse.from(order, member, address)
         every { order.orderDetails } returns mutableListOf(orderDetail)
         every { orderDetail.deletedAt } returns null
 
         // productIds, itemIds로부터 Product/Item 리스트 가져오기
         every { orderDetail.itemId } returns itemId
         every { orderDetail.productId } returns productId
-        every { productService.findByProductIdIn(listOf(productId))} returns listOf(product)
-        every { itemService.findByIdIn(listOf(itemId))} returns listOf(item)
+        every { productService.findByProductIdIn(listOf(productId)) } returns listOf(product)
+        every { itemService.findByIdIn(listOf(itemId)) } returns listOf(item)
 
         every { item.itemId } returns itemId
         every { product.productId } returns productId
@@ -144,7 +144,7 @@ class OrderSellerServiceTest {
         every { price.oneKindTotalPrice } returns 10000
 
         // 주문상세 DTO 리스트 만들기
-        val orderDetailDTOs = listOf(OrderDetailDTO.from(orderDetail,item,product,seller.brandName))
+        val orderDetailDTOs = listOf(OrderDetailDTO.from(orderDetail, item, product, seller.brandName))
 
         // 응답 DTO에 주문상세 DTO 리스트 추가
         expectedorderResponse.updateOrderDetailList(orderDetailDTOs)
