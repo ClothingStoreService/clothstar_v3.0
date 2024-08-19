@@ -10,9 +10,7 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageImpl
-import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.*
 import org.springframework.data.repository.findByIdOrNull
 import org.store.clothstar.common.error.ErrorCode
 import org.store.clothstar.common.error.exception.order.InsufficientStockException
@@ -196,96 +194,159 @@ class OrderUserServiceTest {
         assertEquals(ErrorCode.NOT_FOUND_ORDER, exception.errorCode)
     }
 
-//    // 전체 주문 페이징 조회
-//    @Test
-//    @DisplayName("전체 주문 페이징 조회 offset 방식 - 성공 테스트")
-//    fun getAllOrderOffsetPaging_success_test() {
-//        //given
-//        val orders = listOf(order)
-////        every { pageable.offset } returns 0L
-//        every { pageable.pageSize } returns 10
-//        every { pageable.toOptional() } returns Optional.of(pageable)
-//        val ordersPage: Page<Order> = PageImpl(orders,pageable,orders.size.toLong())
-//        every { orderRepository.findAll(pageable) } returns ordersPage
-//
-//        // order 관련 member, address, seller 불러오기
-//        every { order.memberId } returns memberId
-//        every { order.addressId } returns addressId
-//        every { memberService.getMemberByMemberId(memberId) } returns member
-//        every { addressService.getAddressById(addressId) } returns address
-//        every { sellerService.getSellerById(memberId) } returns seller
-//
-//        every { totalPrice.shipping } returns 3000
-//        every { totalPrice.products } returns 5000
-//        every { totalPrice.payment } returns 8000
-//        every { order.orderId } returns orderId
-//        every { member.name } returns "수빈"
-//        every { order.createdAt } returns LocalDateTime.now()
-//        every { order.status } returns Status.CONFIRMED
-//        every { order.paymentMethod } returns PaymentMethod.CARD
-//        every { order.totalPrice } returns totalPrice
-//        every { address.addressInfo } returns addressInfo
-//        every { address.receiverName } returns "수빈"
-//        every { addressInfo.addressBasic } returns "address1"
-//        every { addressInfo.addressDetail } returns "address2"
-//        every { address.telNo } returns "010-1111-1111"
-//        every { address.deliveryRequest } returns "문앞"
-//
-//        // 응답 DTO 생성(주문상세 리스트는 빈 상태)
-//        val expectedorderResponse = OrderResponse.from(order,member,address)
-//        every { order.orderDetails } returns mutableListOf(orderDetail)
-//        every { orderDetails.size } returns 3
-//
-////        every { orderDetails.iterator() } returns
-//
-//        // productIds, itemIds로부터 Product/Item 리스트 가져오기
-//        every { orderDetail.itemId } returns itemId
-//        every { orderDetail.productId } returns productId
-//        every { productService.findByProductIdIn(listOf(productId))} returns listOf(product)
-//        every { itemService.findByIdIn(listOf(itemId))} returns listOf(item)
-//
-//        every { orderDetail.orderDetailId } returns 1L
-//        every { product.name } returns "상품이름"
-//        every { item.name } returns "상품옵션이름"
-//        every { seller.brandName} returns "brandName"
-//        every { product.price } returns 1000
-//        every { orderDetail.quantity } returns 1
-//        every { orderDetail.price } returns price
-//        every { item.finalPrice } returns 10000
-//        every { price.fixedPrice } returns 10000
-//        every { price.oneKindTotalPrice } returns 10000
-//
-//        every { order.orderDetails } returns mutableListOf(orderDetail)
-//        every { orderDetail.deletedAt } returns null
-//        every { item.itemId } returns itemId
-//        every { product.productId } returns productId
-//
-//        // 주문상세 DTO 리스트 만들기
-//        val orderDetils: List<OrderDetail> = listOf(orderDetail)
-//        val orderDetailDTOs: List<OrderDetailDTO> = orderDetails.map{
-//            it -> OrderDetailDTO.from(it,item,product,seller.brandName)
-//        }
-//
-//        // 응답 DTO에 주문상세 DTO 리스트 추가
-//        expectedorderResponse.updateOrderDetailList(orderDetailDTOs)
-//
-//        //when
-//        val orderReponses: Page<OrderResponse> = orderUserService.getAllOrderOffsetPaging(pageable)
-//
-//        // then
-//        assertThat(orderReponses.content.get(0)).usingRecursiveComparison().isEqualTo(expectedorderResponse)
-//        verify(exactly = 1) { orderRepository.findAll(pageable) }
-//        verify(exactly = 1) { memberService.getMemberByMemberId(memberId) }
-//        verify(exactly = 1) { addressService.getAddressById(addressId) }
-//        verify(exactly = 1) { itemService.findByIdIn(listOf(itemId)) }
-//        verify(exactly = 1) { productService.findByProductIdIn(listOf(productId)) }
-//    }
-//
-//    @Test
-//    @DisplayName("전체 주문 페이징 조회 slice 방식 - 성공 테스트")
-//    fun getAllOrderSlicePaging_success_test() {
-//
-//    }
+    @Test
+    @DisplayName("전체 주문 페이징 조회 offset 방식 - 성공 테스트")
+    fun getAllOrderOffsetPaging_success_test() {
+        // given
+        val pageable: Pageable = PageRequest.of(0, 10)
+        val orders: Page<Order> = PageImpl(listOf(order))
+        every { orderRepository.findAll(pageable) } returns orders
+
+        // order 관련 member, address, seller 불러오기
+        every { order.memberId } returns memberId
+        every { order.addressId } returns addressId
+        every { memberService.getMemberByMemberId(memberId) } returns member
+        every { addressService.getAddressById(addressId) } returns address
+        every { sellerService.getSellerById(memberId) } returns seller
+
+        every { totalPrice.shipping } returns 3000
+        every { totalPrice.products } returns 5000
+        every { totalPrice.payment } returns 8000
+        every { order.orderId } returns orderId
+        every { member.name } returns "수빈"
+        every { order.createdAt } returns LocalDateTime.now()
+        every { order.status } returns Status.CONFIRMED
+        every { order.paymentMethod } returns PaymentMethod.CARD
+        every { order.totalPrice } returns totalPrice
+        every { address.addressInfo } returns addressInfo
+        every { address.receiverName } returns "수빈"
+        every { addressInfo.addressBasic } returns "address1"
+        every { addressInfo.addressDetail } returns "address2"
+        every { address.telNo } returns "010-1111-1111"
+        every { address.deliveryRequest } returns "문앞"
+
+        // 응답 DTO 생성(주문상세 리스트는 빈 상태)
+        val expectedOrderResponse = OrderResponse.from(order, member, address)
+
+        every { order.orderDetails } returns mutableListOf(orderDetail)
+        every { orderDetail.deletedAt } returns null
+
+        every { product.productId } returns productId
+
+        // productIds, itemIds로부터 Product/Item 리스트 가져오기
+        every { orderDetail.itemId } returns itemId
+        every { orderDetail.productId } returns productId
+        every { productService.findByProductIdIn(listOf(productId))} returns listOf(product)
+        every { itemService.findByIdIn(listOf(itemId))} returns listOf(item)
+
+        every { item.itemId } returns itemId
+        every { product.productId } returns productId
+
+        every { orderDetail.orderDetailId } returns 1L
+        every { product.name } returns "상품이름"
+        every { item.name } returns "상품옵션이름"
+        every { seller.brandName } returns "brandName"
+        every { product.price } returns 1000
+        every { orderDetail.quantity } returns 1
+        every { orderDetail.price } returns price
+        every { item.finalPrice } returns 10000
+        every { price.oneKindTotalPrice } returns 10000
+
+        // 주문상세 DTO 리스트 만들기
+        val orderDetailDTOs: List<OrderDetailDTO> = listOf(OrderDetailDTO.from(orderDetail, item, product, seller.brandName))
+
+        // 응답 DTO 생성 및 주문상세 DTO 리스트 추가
+        expectedOrderResponse.updateOrderDetailList(orderDetailDTOs)
+
+        // when
+        val orderResponses: Page<OrderResponse> = orderUserService.getAllOrderOffsetPaging(pageable)
+
+        // then
+        assertThat(orderResponses.content).usingRecursiveComparison().isEqualTo(listOf(expectedOrderResponse))
+        verify(exactly = 1) { orderRepository.findAll(pageable) }
+        verify(exactly = 1) { memberService.getMemberByMemberId(memberId) }
+        verify(exactly = 1) { addressService.getAddressById(addressId) }
+        verify(exactly = 1) { sellerService.getSellerById(memberId) }
+        verify(exactly = 1) { productService.findByProductIdIn(listOf(productId)) }
+        verify(exactly = 1) { itemService.findByIdIn(listOf(itemId)) }
+    }
+
+    @Test
+    @DisplayName("전체 주문 페이징 조회 slice 방식 - 성공 테스트")
+    fun getAllOrderSlicePaging_success_test() {
+        // given
+        val pageable: Pageable = PageRequest.of(0, 10)
+        val orders: Page<Order> = PageImpl(listOf(order))
+        every { orderRepository.findAll(pageable) } returns orders
+
+        // order 관련 member, address, seller 불러오기
+        every { order.memberId } returns memberId
+        every { order.addressId } returns addressId
+        every { memberService.getMemberByMemberId(memberId) } returns member
+        every { addressService.getAddressById(addressId) } returns address
+        every { sellerService.getSellerById(memberId) } returns seller
+
+        every { totalPrice.shipping } returns 3000
+        every { totalPrice.products } returns 5000
+        every { totalPrice.payment } returns 8000
+        every { order.orderId } returns orderId
+        every { member.name } returns "수빈"
+        every { order.createdAt } returns LocalDateTime.now()
+        every { order.status } returns Status.CONFIRMED
+        every { order.paymentMethod } returns PaymentMethod.CARD
+        every { order.totalPrice } returns totalPrice
+        every { address.addressInfo } returns addressInfo
+        every { address.receiverName } returns "수빈"
+        every { addressInfo.addressBasic } returns "address1"
+        every { addressInfo.addressDetail } returns "address2"
+        every { address.telNo } returns "010-1111-1111"
+        every { address.deliveryRequest } returns "문앞"
+
+        // 응답 DTO 생성(주문상세 리스트는 빈 상태)
+        val expectedOrderResponse = OrderResponse.from(order, member, address)
+
+        every { order.orderDetails } returns mutableListOf(orderDetail)
+        every { orderDetail.deletedAt } returns null
+
+        every { product.productId } returns productId
+
+        // productIds, itemIds로부터 Product/Item 리스트 가져오기
+        every { orderDetail.itemId } returns itemId
+        every { orderDetail.productId } returns productId
+        every { productService.findByProductIdIn(listOf(productId))} returns listOf(product)
+        every { itemService.findByIdIn(listOf(itemId))} returns listOf(item)
+
+        every { item.itemId } returns itemId
+        every { product.productId } returns productId
+
+        every { orderDetail.orderDetailId } returns 1L
+        every { product.name } returns "상품이름"
+        every { item.name } returns "상품옵션이름"
+        every { seller.brandName } returns "brandName"
+        every { product.price } returns 1000
+        every { orderDetail.quantity } returns 1
+        every { orderDetail.price } returns price
+        every { item.finalPrice } returns 10000
+        every { price.oneKindTotalPrice } returns 10000
+
+        // 주문상세 DTO 리스트 만들기
+        val orderDetailDTOs: List<OrderDetailDTO> = listOf(OrderDetailDTO.from(orderDetail, item, product, seller.brandName))
+
+        // 응답 DTO 생성 및 주문상세 DTO 리스트 추가
+        expectedOrderResponse.updateOrderDetailList(orderDetailDTOs)
+
+        // when
+        val orderResponses: Slice<OrderResponse> = orderUserService.getAllOrderSlicePaging(pageable)
+
+        // then
+        assertThat(orderResponses.content).usingRecursiveComparison().isEqualTo(listOf(expectedOrderResponse))
+        verify(exactly = 1) { orderRepository.findAll(pageable) }
+        verify(exactly = 1) { memberService.getMemberByMemberId(memberId) }
+        verify(exactly = 1) { addressService.getAddressById(addressId) }
+        verify(exactly = 1) { sellerService.getSellerById(memberId) }
+        verify(exactly = 1) { productService.findByProductIdIn(listOf(productId)) }
+        verify(exactly = 1) { itemService.findByIdIn(listOf(itemId)) }
+    }
 
     @Test
     @DisplayName("주문 상세 추가 - 성공 테스트")

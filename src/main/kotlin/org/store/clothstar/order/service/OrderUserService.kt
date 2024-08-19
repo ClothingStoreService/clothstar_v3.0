@@ -75,9 +75,7 @@ class OrderUserService(
         // Map으로부터 Id, Entity를 가져오면서 주문상세 DTO 리스트 만들기
         val orderDetailDTOList: List<OrderDetailDTO> = orderDetails.map {
             val product: Product = productMap[it.productId]!!
-                ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found")
             val item: Item = itemMap[it.itemId]!!
-                ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found")
             val brandName: String = seller.brandName
             OrderDetailDTO.from(it, item, product, brandName)
         }
