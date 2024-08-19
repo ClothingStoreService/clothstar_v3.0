@@ -33,6 +33,7 @@ import org.store.clothstar.order.dto.request.AddOrderDetailRequest
 import org.store.clothstar.order.dto.response.OrderResponse
 import org.store.clothstar.order.repository.OrderDetailRepository
 import org.store.clothstar.order.repository.OrderRepository
+import org.store.clothstar.order.service.OrderSave.OrderSaveFacade
 import org.store.clothstar.product.domain.Item
 import org.store.clothstar.product.domain.Product
 import org.store.clothstar.product.service.ItemService
@@ -50,6 +51,9 @@ class OrderUserServiceTest {
 
     @MockK
     lateinit var orderDetailRepository: OrderDetailRepository
+
+    @MockK
+    lateinit var orderSaveFacade: OrderSaveFacade
 
     @MockK
     lateinit var memberService: MemberService
