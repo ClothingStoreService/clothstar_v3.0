@@ -32,6 +32,10 @@ dependencies {
     //web
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
+
+    //thymeleaf
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 
     // logging
     implementation("io.github.oshai:kotlin-logging-jvm:5.1.4")

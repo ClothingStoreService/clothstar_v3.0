@@ -43,5 +43,6 @@ springdoc:
     #path: "swagger.html" # http://localhost:8080/swagger.html? ?? ??
     path: "/" # http://localhost:8080? ?? ??
 
-
-
+kakao:
+  client_id: ENC(1c6jtMDIU7/ZloQv+k1W9YP6arHGBdguKmwtI4tU1dHAA0iYyK6pogIBiRzUp5V6)
+  redirect_uri: ENC(SvHz8bAglAd/vqUrE2NAlhyfEJ1klhK0pCEq9dfQLqCPKxG8gZjjAmYd+HXakhjjd+SxflkXRt8=)
