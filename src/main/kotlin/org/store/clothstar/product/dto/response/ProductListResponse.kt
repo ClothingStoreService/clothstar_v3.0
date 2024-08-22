@@ -2,7 +2,6 @@ package org.store.clothstar.product.dto.response
 
 import io.swagger.v3.oas.annotations.media.Schema
 import org.store.clothstar.member.dto.response.SellerSimpleResponse
-import org.store.clothstar.product.domain.Item
 import org.store.clothstar.product.domain.Product
 import org.store.clothstar.product.domain.type.SaleStatus
 

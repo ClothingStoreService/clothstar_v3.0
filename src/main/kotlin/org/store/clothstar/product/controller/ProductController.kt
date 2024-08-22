@@ -8,11 +8,7 @@ import org.springframework.data.domain.Slice
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.multipart.MultipartFile
-import org.store.clothstar.common.dto.MessageDTO
-import org.store.clothstar.product.dto.request.ProductCreateRequest
 import org.store.clothstar.product.dto.response.ProductListResponse
 import org.store.clothstar.product.dto.response.ProductResponse
 import org.store.clothstar.product.service.ProductApplicationService

@@ -13,7 +13,6 @@ import org.store.clothstar.member.service.AddressService
 import org.store.clothstar.member.service.MemberService
 import org.store.clothstar.member.service.SellerService
 import org.store.clothstar.order.domain.Order
-import org.store.clothstar.order.domain.OrderDetail
 import org.store.clothstar.order.domain.vo.Status
 import org.store.clothstar.order.repository.OrderDetailRepository
 import org.store.clothstar.order.repository.OrderRepository

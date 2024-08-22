@@ -1,6 +1,5 @@
 package org.store.clothstar.product.dto.response
 
-import org.store.clothstar.member.domain.Seller
 import org.store.clothstar.member.dto.response.SellerSimpleResponse
 import org.store.clothstar.product.domain.*
 import org.store.clothstar.product.domain.type.DisplayStatus
@@ -39,9 +38,10 @@ class ProductResponse(
     val seller: SellerSimpleResponse
 ) {
     companion object {
-        fun from(product: Product,
-                 seller: SellerSimpleResponse,
-                 isSeller: Boolean
+        fun from(
+            product: Product,
+            seller: SellerSimpleResponse,
+            isSeller: Boolean
         ): ProductResponse {
 
             val items = if (isSeller) {

@@ -78,3 +78,5 @@ select *
 from member;
 select *
 from seller;
+select *
+from category;
