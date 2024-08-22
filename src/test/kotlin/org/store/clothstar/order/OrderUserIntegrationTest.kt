@@ -1,7 +1,6 @@
 package org.store.clothstar.order
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.github.oshai.kotlinlogging.KotlinLogging
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -36,7 +35,9 @@ import org.store.clothstar.order.repository.OrderRepository
 import org.store.clothstar.order.util.CreateOrderObject
 import org.store.clothstar.product.repository.ItemRepository
 import org.store.clothstar.product.repository.ProductRepository
-import kotlin.test.assertNotNull
+import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
+import kotlin.test.assertTrue
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -89,11 +90,18 @@ class OrderUserIntegrationTest(
             MockMvcRequestBuilders.get(getOrderURL)
                 .contentType(MediaType.APPLICATION_JSON)
         )
+        val savedOrder: Order? = orderRepository.findByIdOrNull(order.orderId)
 
         //then
         actions
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.orderId").value(orderId))
+        assertEquals(orderId, savedOrder!!.orderId)
+        assertEquals(order.memberId, savedOrder.memberId)
+        assertEquals(order.addressId, savedOrder.addressId)
+        assertEquals(order.status, savedOrder.status)
+        assertEquals(order.paymentMethod, savedOrder.paymentMethod)
+        assertEquals(order.totalPrice, savedOrder.totalPrice)
     }
 
     @DisplayName("전체 주문 조회 offset 페이징 통합테스트")
@@ -101,17 +109,26 @@ class OrderUserIntegrationTest(
     fun testGetAllOrderOffsetPaging() {
         //given
         //필요한 데이터 생성(여러 주문 추가)
-        createOrders(110)
+        val orders: List<Order> = createOrders(110)
 
         //when
         val actions: ResultActions = mockMvc.perform(
             MockMvcRequestBuilders.get(ORDER_URL + "/offset")
                 .contentType(MediaType.APPLICATION_JSON)
         )
+        val expectedOrders: List<Order> = orderRepository.findAll()
 
         //then
         actions.andExpect(status().isOk())
             .andExpect(jsonPath("$.content.length()").value(10))
+            .andExpect(jsonPath("$.totalElements").value(10))
+            .andExpect(jsonPath("$.totalPages").value(1))
+        assertEquals(orders[0].orderId, expectedOrders[0].orderId)
+        assertEquals(orders[0].memberId, expectedOrders[0].memberId)
+        assertEquals(orders[0].addressId, expectedOrders[0].addressId)
+        assertEquals(orders[0].status, expectedOrders[0].status)
+        assertEquals(orders[0].paymentMethod, expectedOrders[0].paymentMethod)
+        assertEquals(orders[0].totalPrice, expectedOrders[0].totalPrice)
     }
 
     @DisplayName("전체 주문 조회 slice 페이징 통합테스트")
@@ -119,17 +136,26 @@ class OrderUserIntegrationTest(
     fun testGetAllOrderSlicePaging() {
         //given
         //필요한 데이터 생성(여러 주문 추가)
-        createOrders(110)
+        val orders: List<Order> = createOrders(110)
 
         //when
         val actions: ResultActions = mockMvc.perform(
             MockMvcRequestBuilders.get(ORDER_URL + "/slice")
                 .contentType(MediaType.APPLICATION_JSON)
         )
+        val expectedOrders: List<Order> = orderRepository.findAll()
 
         //then
         actions.andExpect(status().isOk())
             .andExpect(jsonPath("$.content.length()").value(10))
+            .andExpect(jsonPath("$.totalPages").doesNotExist())
+            .andExpect(jsonPath("$.totalElements").doesNotExist())
+        assertEquals(orders[0].orderId, expectedOrders[0].orderId)
+        assertEquals(orders[0].memberId, expectedOrders[0].memberId)
+        assertEquals(orders[0].addressId, expectedOrders[0].addressId)
+        assertEquals(orders[0].status, expectedOrders[0].status)
+        assertEquals(orders[0].paymentMethod, expectedOrders[0].paymentMethod)
+        assertEquals(orders[0].totalPrice, expectedOrders[0].totalPrice)
     }
 
     @Test
@@ -162,16 +188,13 @@ class OrderUserIntegrationTest(
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody)
         )
+        val savedOrders = orderRepository.findAll().filter { it.memberId == member.memberId }
+        val savedOrder = savedOrders.firstOrNull()
 
         //then
         actions.andExpect(jsonPath("$.statusCode").value(200))
             .andExpect(jsonPath("$.message").value("주문이 정상적으로 생성되었습니다."))
-
-        // 주문이 정상적으로 생성되었는지 DB에서 확인
-        val savedOrders = orderRepository.findAll().filter { it.memberId == member.memberId }
-        val savedOrder = savedOrders.firstOrNull()
-        assertNotNull(savedOrder)
-        assertEquals(savedOrder.memberId, member.memberId)
+        assertEquals(savedOrder!!.memberId, member.memberId)
         assertEquals(1, savedOrder.orderDetails.size)
     }
 
@@ -194,17 +217,12 @@ class OrderUserIntegrationTest(
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody)
         )
-
-        actions.andReturn().response
+        val savedOrder = orderRepository.findByIdOrNull(orderComponent.order.orderId)
 
         //then
         actions.andExpect(jsonPath("$.statusCode").value(200))
             .andExpect(jsonPath("$.message").value("주문상세가 정상적으로 생성되었습니다."))
-
-        // 주문 상세가 정상적으로 생성되었는지 DB에서 확인
-        val savedOrder = orderRepository.findByIdOrNull(orderComponent.order.orderId)
-        assertNotNull(savedOrder)
-        assertEquals(2, savedOrder.orderDetails.size)
+        assertEquals(2, savedOrder!!.orderDetails.size)
         val secondDetail = savedOrder.orderDetails[1]
         assertEquals(secondDetail.quantity, 5)
     }
@@ -223,15 +241,12 @@ class OrderUserIntegrationTest(
             MockMvcRequestBuilders.patch(completeOrderURL)
                 .contentType(MediaType.APPLICATION_JSON)
         )
+        val savedOrder: Order? = orderRepository.findByIdOrNull(order.orderId)
 
         //then
         actions.andExpect(status().isOk())
             .andExpect(jsonPath("$.message").value("주문이 정상적으로 구매 확정 되었습니다."))
-
-        //데이터베이스에서 주문 상태 조회하여 검증
-        val savedOrder: Order? = orderRepository.findByIdOrNull(order.orderId)
-        assertNotNull(savedOrder)
-        assertEquals(order.orderId, savedOrder.orderId)
+        assertEquals(savedOrder!!.status, Status.COMPLETED)
     }
 
     @DisplayName("주문 취소 통합테스트")
@@ -248,15 +263,12 @@ class OrderUserIntegrationTest(
             MockMvcRequestBuilders.patch(cancelOrderURL)
                 .contentType(MediaType.APPLICATION_JSON)
         )
+        val savedOrder: Order? = orderRepository.findByIdOrNull(order.orderId)
 
         //then
         actions.andExpect(status().isOk())
             .andExpect(jsonPath("$.message").value("주문이 정상적으로 취소되었습니다."))
-
-        // 데이터베이스에서 주문 상태 조회하여 검증
-        val savedOrder: Order? = orderRepository.findByIdOrNull(order.orderId)
-        assertNotNull(savedOrder)
-        assertEquals(Status.CANCELED, savedOrder.status)
+        assertEquals(savedOrder!!.status,Status.CANCELED)
     }
 
     @DisplayName("주문 삭제 통합테스트")
@@ -273,15 +285,14 @@ class OrderUserIntegrationTest(
             MockMvcRequestBuilders.delete(deleteOrderURL)
                 .contentType(MediaType.APPLICATION_JSON)
         )
+        val savedOrder: Order? = orderRepository.findByIdOrNull(orderId)
+        val deletedTime = LocalDateTime.now()
+        val timeDifference = ChronoUnit.SECONDS.between(deletedTime,savedOrder!!.deletedAt)
 
         //then
         actions.andExpect(status().isOk())
             .andExpect(jsonPath("$.message").value("주문이 정상적으로 삭제되었습니다."))
-
-        // 데이터베이스에서 주문 조회하여 삭제 여부 검증
-        val savedOrder: Order? = orderRepository.findByIdOrNull(order.orderId)
-        assertNotNull(savedOrder)
-        assertNotNull(savedOrder.deletedAt)
+        assertTrue(timeDifference <= 1)
     }
 
     fun createOrder(): Order {
@@ -300,7 +311,7 @@ class OrderUserIntegrationTest(
         return order
     }
 
-    fun createOrders(count: Int) {
+    fun createOrders(count: Int): List<Order> {
         for (i in 100 until count) {
             val member: Member = memberRepository.save(CreateOrderObject.getMember(i))
             val address = addressRepository.save(CreateOrderObject.getAddress(member))
@@ -313,6 +324,7 @@ class OrderUserIntegrationTest(
                 orderDetailRepository.save(CreateOrderObject.getOrderDetail(product, item, order))
             order.addOrderDetail(orderDetail)
         }
+        return orderRepository.findAll().toList()
     }
 
     fun createOrderWithStatus(status: Status): Order {

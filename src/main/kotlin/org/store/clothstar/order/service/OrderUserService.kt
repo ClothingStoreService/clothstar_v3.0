@@ -135,7 +135,7 @@ class OrderUserService(
     }
 
     fun getAllOrderSlicePaging(pageable: Pageable): Slice<OrderResponse> {
-        val orders: Slice<Order> = orderRepository.findAll(pageable)
+        val orders: Slice<Order> = orderRepository.findAllByOrderByOrderIdDesc(pageable)
 
         return orders.map {
             // order 관련 member, address, seller 불러오기
@@ -164,10 +164,8 @@ class OrderUserService(
 
             // Map으로부터 Id, Entity를 가져오면서 주문상세 DTO 리스트 만들기
             val orderDetailDTOList: List<OrderDetailDTO> = orderDetails.map {
-                val product: Product = productMap[it.productId]
-                    ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found")
-                val item: Item = itemMap[it.itemId]
-                    ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found")
+                val product: Product = productMap[it.productId]!!
+                val item: Item = itemMap[it.itemId]!!
                 val brandName: String = seller.brandName
                 OrderDetailDTO.from(it, item, product, brandName)
             }
