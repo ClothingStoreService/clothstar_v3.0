@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class KakaoCallbackController {
     @GetMapping("/auth/kakao/callback")
-    fun kakaoCallback(@RequestParam code: String): ResponseEntity<String> {
-        return ResponseEntity.ok("Authorization code: $code")
+    fun kakaoCallback(@RequestParam code: String): ResponseEntity<Void> {
+        return ResponseEntity.ok().build()
     }
 }

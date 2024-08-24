@@ -46,3 +46,5 @@ springdoc:
 kakao:
   client_id: ENC(1c6jtMDIU7/ZloQv+k1W9YP6arHGBdguKmwtI4tU1dHAA0iYyK6pogIBiRzUp5V6)
   redirect_uri: ENC(SvHz8bAglAd/vqUrE2NAlhyfEJ1klhK0pCEq9dfQLqCPKxG8gZjjAmYd+HXakhjjd+SxflkXRt8=)
+  client_secret: ENC(Z+CSlGFc9ux+mvN1t2c3mWoKv8sqoJF5gE+UoJTMHD8YZRYtOyO4WOJ9Qz7xi97E)
+  admin_key: ENC(BmWFmOXxaXogq1sWkCEZu/OM2qCKiOfPfZSUCG5Xwokpm4XKKmLJMSud7+1vbP8M)
