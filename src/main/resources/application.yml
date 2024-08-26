@@ -49,7 +49,6 @@ kakao:
   client_secret: ENC(Z+CSlGFc9ux+mvN1t2c3mWoKv8sqoJF5gE+UoJTMHD8YZRYtOyO4WOJ9Qz7xi97E)
   admin_key: ENC(BmWFmOXxaXogq1sWkCEZu/OM2qCKiOfPfZSUCG5Xwokpm4XKKmLJMSud7+1vbP8M)
 
-  api.uri.base: https://kauth.kakao.com
   api.uri.user: /v2/user/me
   login.redirect_url: http://localhost:8080/auth/kakao/callback
   login.uri.token: /oauth/token

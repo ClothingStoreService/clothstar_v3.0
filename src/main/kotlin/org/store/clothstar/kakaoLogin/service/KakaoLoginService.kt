@@ -9,6 +9,7 @@ import org.springframework.util.MultiValueMap
 import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.WebClient
 import org.store.clothstar.kakaoLogin.dto.KakaoTokenResponseDto
+import org.store.clothstar.kakaoLogin.dto.KakaoUserInfoResponseDto
 
 @Service
 class KakaoLoginService{
@@ -24,14 +25,15 @@ class KakaoLoginService{
     @Value("\${kakao.redirect_uri}")
     private lateinit var redirectUri: String
 
-    @Value("\${kakao.api.uri.base}")
-    private lateinit var baseUri: String
-
     @Value("\${kakao.login.uri.token}")
     private lateinit var tokenUri: String
 
+    @Value("\${kakao.api.uri.user}")
+    private lateinit var userUri: String
+
+    // 토큰 가져오기
     fun getAccessToken(code:String): KakaoTokenResponseDto {
-        // 토큰 요청 데이터 -> MultiValueMap
+        // 토큰 요청 데이터
         val params: MultiValueMap<String, String> = LinkedMultiValueMap()
         params.add("code", code)
         params.add("client_secret", clientSecret)
@@ -40,7 +42,7 @@ class KakaoLoginService{
         params.add("redirect_url", redirectUri)
 
         // 웹 클라이언트로 요청 보내기
-        val response = WebClient.create(baseUri)
+        val response = WebClient.create("https://kauth.kakao.com")
             .post()
             .uri(tokenUri)
             .body(BodyInserters.fromFormData(params))
@@ -51,11 +53,29 @@ class KakaoLoginService{
 
         // json 응답을 객체로 변환
         val objectMapper = ObjectMapper()
-
         val kakaoToken: KakaoTokenResponseDto = objectMapper.readValue(response,KakaoTokenResponseDto::class.java)
 
-        logger.info("Access Token : {}", kakaoToken.accessToken)
-
+        logger.info { "Access Token : ${kakaoToken.accessToken}" }
         return kakaoToken
+    }
+
+    // 사용자 정보 가져오기
+    fun getUserInfo(accessToken:String): KakaoUserInfoResponseDto {
+        // 웹 클라이언트로 요청 보내기
+        val response = WebClient.create("https://kapi.kakao.com")
+            .get()
+            .uri(userUri)
+            .header("Authorization", "Bearer $accessToken")
+            .header("Content-Type", "application/x-www-form-urlencoded;charset=utf-8")
+            .retrieve()
+            .bodyToMono(String::class.java)
+            .block()
+
+        // json 응답을 객체로 변환
+        val objectMapper = ObjectMapper()
+        val userInfo = objectMapper.readValue(response, KakaoUserInfoResponseDto::class.java)
+
+        logger.info { "email : ${userInfo.kakaoAccount!!.email}" }
+        return userInfo
     }
 }
