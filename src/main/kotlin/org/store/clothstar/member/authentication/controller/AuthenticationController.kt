@@ -15,6 +15,10 @@ import org.store.clothstar.common.dto.ErrorResponseDTO
 import org.store.clothstar.common.dto.MessageDTO
 import org.store.clothstar.common.dto.SaveResponseDTO
 import org.store.clothstar.member.application.MemberServiceApplication
+import org.store.clothstar.member.authentication.domain.SignUpType
+import org.store.clothstar.member.authentication.service.NormalSignUpService
+import org.store.clothstar.member.authentication.service.SignUpService
+import org.store.clothstar.member.authentication.service.SignUpServiceFactory
 import org.store.clothstar.member.dto.request.CertifyNumRequest
 import org.store.clothstar.member.dto.request.CreateMemberRequest
 import org.store.clothstar.member.dto.request.MemberLoginRequest
@@ -25,6 +29,8 @@ import org.store.clothstar.member.dto.response.MemberResponse
 @RestController
 class AuthenticationController(
     private val memberServiceApplication: MemberServiceApplication,
+    private val normalSignUpService: NormalSignUpService,
+    private val signUpServiceFactory: SignUpServiceFactory,
 ) {
     private val log = KotlinLogging.logger {}
 
@@ -62,8 +68,28 @@ class AuthenticationController(
 
     @Operation(summary = "회원가입", description = "회원가입시 회원 정보를 저장한다.")
     @PostMapping("/v1/members")
-    fun signup(@Validated @RequestBody createMemberDTO: CreateMemberRequest): ResponseEntity<SaveResponseDTO> {
-        val memberId = memberServiceApplication.signUp(createMemberDTO)
+    fun signup(@Validated @RequestBody createMemberDTO: CreateMemberRequest?,
+               @RequestParam signUpType: SignUpType,
+               @RequestParam(required = false) code: String?,
+               @RequestParam(required = false) name: String?,
+               @RequestParam(required = false) telNo: String?,
+    ): ResponseEntity<SaveResponseDTO> {
+//        val memberId = normalSignUpService.signUp(createMemberDTO)
+//            memberServiceApplication.signUp(createMemberDTO)
+
+        val signUpService = signUpServiceFactory.getSignUpService(signUpType)
+        log.info{ "사인업서비스종류:"+signUpService}
+
+        val memberId = when (signUpService) {
+            is NormalSignUpService -> {
+                if (createMemberDTO == null) {
+                    throw IllegalArgumentException("일반 회원가입 시 회원 정보가 필요합니다.")
+                }
+                signUpService.signUp(createMemberDTO)
+            }
+            else -> throw IllegalArgumentException("지원하지 않는 회원가입 유형입니다.")
+        }
+
 
         val saveResponseDTO = SaveResponseDTO(
             id = memberId,
