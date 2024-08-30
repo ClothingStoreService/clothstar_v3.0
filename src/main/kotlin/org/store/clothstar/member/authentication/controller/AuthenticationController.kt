@@ -20,17 +20,13 @@ import org.store.clothstar.member.authentication.service.KakaoSignUpService
 import org.store.clothstar.member.authentication.service.NormalSignUpService
 import org.store.clothstar.member.authentication.service.SignUpService
 import org.store.clothstar.member.authentication.service.SignUpServiceFactory
-import org.store.clothstar.member.dto.request.CertifyNumRequest
-import org.store.clothstar.member.dto.request.CreateMemberRequest
-import org.store.clothstar.member.dto.request.MemberLoginRequest
-import org.store.clothstar.member.dto.request.ModifyPasswordRequest
+import org.store.clothstar.member.dto.request.*
 import org.store.clothstar.member.dto.response.MemberResponse
 
 @Tag(name = "Auth", description = "회원가입과 인증에 관한 API 입니다.")
 @RestController
 class AuthenticationController(
     private val memberServiceApplication: MemberServiceApplication,
-    private val normalSignUpService: NormalSignUpService,
     private val signUpServiceFactory: SignUpServiceFactory,
 ) {
     private val log = KotlinLogging.logger {}
@@ -69,29 +65,21 @@ class AuthenticationController(
 
     @Operation(summary = "회원가입", description = "회원가입시 회원 정보를 저장한다.")
     @PostMapping("/v1/members")
-    fun signup(@Validated @RequestBody createMemberDTO: CreateMemberRequest?,
+    fun signup(@Validated @RequestBody signUpRequest: SignUpRequest,
                @RequestParam signUpType: SignUpType,
-               @RequestParam(required = false) code: String?,
-               @RequestParam(required = false) name: String?,
-               @RequestParam(required = false) telNo: String?,
     ): ResponseEntity<SaveResponseDTO> {
-//        val memberId = normalSignUpService.signUp(createMemberDTO)
-//            memberServiceApplication.signUp(createMemberDTO)
-
         val signUpService = signUpServiceFactory.getSignUpService(signUpType)
-        log.info{ "사인업서비스종류:"+signUpService}
+        log.info{ "사인업서비스종류: $signUpService" }
 
         val memberId = when (signUpService) {
             is NormalSignUpService -> {
-                if (createMemberDTO == null) {
+                if (signUpRequest.createMemberRequest == null) {
                     throw IllegalArgumentException("일반 회원가입 시 회원 정보가 필요합니다.")
                 }
-                signUpService.signUp(createMemberDTO)
+                signUpService.signUp(signUpRequest.createMemberRequest)
             }
             is KakaoSignUpService -> {
-//                if (name == null || telNo == null) {
-//                    throw IllegalArgumentException("카카오 회원가입 시 모든 정보가 필요합니다.")
-//                }
+
 //                val kakaoMemberDTO = CreateMemberRequest(
 //                    email = kakaoUserInfo.kakaoAccount!!.email,
 //                    name = name,
@@ -99,7 +87,10 @@ class AuthenticationController(
 //                    password = "OAuth2_Kakao",
 //                    certifyNum = "11"
 //                )
-                signUpService.signUp(createMemberDTO!!)
+//                if (signUpRequest.kakaoMemberRequest == null) {
+//                    throw IllegalArgumentException("카카오 회원가입 시 회원 정보가 필요합니다.")
+//                }
+                signUpService.signUp(signUpRequest.kakaoMemberRequest!!)
             }
             else -> throw IllegalArgumentException("지원하지 않는 회원가입 유형입니다.")
         }

@@ -4,11 +4,12 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Component
 import org.store.clothstar.member.authentication.domain.SignUpType
 import org.store.clothstar.member.dto.request.CreateMemberRequest
+import org.store.clothstar.member.dto.request.KakaoMemberRequest
 
 @Component
 class SignUpServiceFactory(
     @Qualifier("normalSignUpService") private val normalSignUpService: SignUpService<CreateMemberRequest>,
-    @Qualifier("kakaoSignUpService") private val kakaoSignUpService: SignUpService<CreateMemberRequest>
+    @Qualifier("kakaoSignUpService") private val kakaoSignUpService: SignUpService<KakaoMemberRequest>
 ) {
     fun getSignUpService(signUpType: SignUpType): SignUpService<*> {
         return when (signUpType) {

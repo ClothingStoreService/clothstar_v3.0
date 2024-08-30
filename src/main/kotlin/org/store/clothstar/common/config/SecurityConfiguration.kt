@@ -70,6 +70,7 @@ class SecurityConfiguration(
                         "/auth/**","/kakaoLogin/**", "/kakao_login_medium_narrow.png",
                         "/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**", "/v1/members/auth/**",
                         "config-service/**"
+                        "/auth/**","/kakaoLogin/**", "/kakao_login_medium_narrow.png", "/v1/members?signUpType=KAKAO"
                     ).permitAll()
                     .requestMatchers(HttpMethod.POST, "/v1/members").permitAll()
                     .requestMatchers(HttpMethod.POST, "/v1/sellers/**").authenticated()
