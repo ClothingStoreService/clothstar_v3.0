@@ -8,12 +8,12 @@ import org.store.clothstar.member.dto.request.CreateMemberRequest
 @Component
 class SignUpServiceFactory(
     @Qualifier("normalSignUpService") private val normalSignUpService: SignUpService<CreateMemberRequest>,
-//    @Qualifier("kakaoSignUpService") private val kakaoSignUpService: SignUpService<CreateKakaoMemberRequest>
+    @Qualifier("kakaoSignUpService") private val kakaoSignUpService: SignUpService<CreateMemberRequest>
 ) {
     fun getSignUpService(signUpType: SignUpType): SignUpService<*> {
         return when (signUpType) {
             SignUpType.NORMAL -> normalSignUpService
-//            SignUpType.KAKAO -> kakaoSignUpService
+            SignUpType.KAKAO -> kakaoSignUpService
             else -> throw IllegalArgumentException("지원하지 않는 회원가입 유형입니다.")
         }
     }

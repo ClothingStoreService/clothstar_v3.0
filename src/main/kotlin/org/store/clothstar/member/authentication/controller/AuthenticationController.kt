@@ -16,6 +16,7 @@ import org.store.clothstar.common.dto.MessageDTO
 import org.store.clothstar.common.dto.SaveResponseDTO
 import org.store.clothstar.member.application.MemberServiceApplication
 import org.store.clothstar.member.authentication.domain.SignUpType
+import org.store.clothstar.member.authentication.service.KakaoSignUpService
 import org.store.clothstar.member.authentication.service.NormalSignUpService
 import org.store.clothstar.member.authentication.service.SignUpService
 import org.store.clothstar.member.authentication.service.SignUpServiceFactory
@@ -87,16 +88,27 @@ class AuthenticationController(
                 }
                 signUpService.signUp(createMemberDTO)
             }
+            is KakaoSignUpService -> {
+//                if (name == null || telNo == null) {
+//                    throw IllegalArgumentException("카카오 회원가입 시 모든 정보가 필요합니다.")
+//                }
+//                val kakaoMemberDTO = CreateMemberRequest(
+//                    email = kakaoUserInfo.kakaoAccount!!.email,
+//                    name = name,
+//                    telNo = telNo,
+//                    password = "OAuth2_Kakao",
+//                    certifyNum = "11"
+//                )
+                signUpService.signUp(createMemberDTO!!)
+            }
             else -> throw IllegalArgumentException("지원하지 않는 회원가입 유형입니다.")
         }
-
 
         val saveResponseDTO = SaveResponseDTO(
             id = memberId,
             statusCode = HttpStatus.CREATED.value(),
             message = "회원가입이 정상적으로 되었습니다.",
         )
-
         return ResponseEntity(saveResponseDTO, HttpStatus.CREATED)
     }
 
