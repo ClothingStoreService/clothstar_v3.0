@@ -13,7 +13,7 @@ class CustomUserDetails(
     }
 
     override fun getPassword(): String {
-        return account.password
+        return account.password!!
     }
 
     override fun getUsername(): String {

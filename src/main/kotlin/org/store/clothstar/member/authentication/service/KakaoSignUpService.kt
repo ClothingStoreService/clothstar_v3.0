@@ -19,32 +19,16 @@ class KakaoSignUpService(
 
     override fun signUp(request: KakaoMemberRequest): Long {
 
-//        // 액세스 토큰 받아오기 - 저장 나중에 하기
-//        val accessToken = kakaoLoginService.getAccessToken(request.code)
-//        // 사용자 정보 받아오기 - 저장 나중에 하기
-//        val userInfo = kakaoLoginService.getUserInfo(accessToken.accessToken!!)
-//
-//        // kakaoMemberRequest의 이메일 필드 업데이트
-//        val updatedKakaoMemberRequest = request.addEmail(userInfo.kakaoAccount!!.email!!)
-
-//        val memberKakaoRequestDTO = CreateKakaoMemberRequest(
-//            email = request.email!!,
-//            name = request.name,
-//            telNo = request.telNo,
-//        )
-
-        val memberRequestDTO = CreateMemberRequest(
+        val kakaoMemberRequestDTO = CreateKakaoMemberRequest(
             email = request.email!!,
-            password = "123123123",
             name = request.name,
             telNo = request.telNo,
-            certifyNum = "1111",
         )
 
-        val memberId = memberService.saveMember(memberRequestDTO)
-        accountService.saveAccount(memberId, memberRequestDTO)
+        val memberId = memberService.saveKakaoMember(kakaoMemberRequestDTO)
+        accountService.saveKakaoAccount(memberId, kakaoMemberRequestDTO)
 
-        log.info { "KAKAOSIGNUPSERVICE 입니다입니다입니다" }
+        log.info { "KAKAOSIGNUPSERVICE 입니다" }
 
         return memberId
     }

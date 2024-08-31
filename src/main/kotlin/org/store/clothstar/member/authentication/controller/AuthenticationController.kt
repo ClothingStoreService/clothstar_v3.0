@@ -70,7 +70,7 @@ class AuthenticationController(
     @PostMapping("/v1/members")
     fun signup(@Validated @RequestBody signUpRequest: SignUpRequest,
                @RequestParam signUpType: SignUpType,
-               @RequestParam code: String,
+               @RequestParam code: String?,
     ): ResponseEntity<SaveResponseDTO> {
         val signUpService = signUpServiceFactory.getSignUpService(signUpType)
         log.info{ "사인업서비스종류: $signUpService" }
@@ -84,7 +84,7 @@ class AuthenticationController(
             }
             is KakaoSignUpService -> {
                 // 액세스 토큰 받아오기
-                val accessToken = kakaoLoginService.getAccessToken(code)
+                val accessToken = kakaoLoginService.getAccessToken(code!!)
 
                 // 사용자 정보 받아오기
                 val userInfo = kakaoLoginService.getUserInfo(accessToken.accessToken!!)
@@ -92,7 +92,7 @@ class AuthenticationController(
                 // kakaoMemberRequest의 이메일 필드 업데이트
                 val updatedKakaoMemberRequest = signUpRequest.kakaoMemberRequest!!.addEmail(userInfo.kakaoAccount!!.email!!)
 
-//                signUpService.signUp(signUpRequest.kakaoMemberRequest!!)
+                // 카카오 회원 가입
                 signUpService.signUp(updatedKakaoMemberRequest)
             }
             else -> throw IllegalArgumentException("지원하지 않는 회원가입 유형입니다.")
