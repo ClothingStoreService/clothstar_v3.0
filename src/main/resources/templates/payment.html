@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>결제창 호출</title>
+    <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+    <script>
+        var IMP = window.IMP;
+        IMP.init("imp23083500");
+
+        function requestPay() {
+            IMP.request_pay(
+                {
+                    pg: "html5_inicis.INIpayTest",
+                    pay_method: "card",
+                    merchant_uid: `payment-${crypto.randomUUID()}`, // 주문 고유 번호
+                    name: "테스트 결제",
+                    amount: 1000,
+                    buyer_email: "rkdgustn77@naver.com",
+                    buyer_name: "강현수",
+                    buyer_tel: "010-3950-5837",
+                    buyer_addr: "서울특별시 강남구 신사동",
+                    buyer_postcode: "01181",
+                },
+                function (response) {
+                    // 결제 종료 시 호출되는 콜백 함수
+                    // response.imp_uid 값으로 결제 단건조회 API를 호출하여 결제 결과를 확인하고,
+                    // 결제 결과를 처리하는 로직을 작성합니다.
+                    if (response.success) {
+                        console.log(response)
+                    } else {
+                        console.log(response)
+                    }
+                },
+            );
+        }
+
+
+    </script>
+</head>
+<body>
+<!--결제할 금액: <input type="text" id="amount"/>-->
+<button onclick="requestPay()">결제하기</button>
+</body>
+</html>

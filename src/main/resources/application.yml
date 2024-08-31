@@ -41,3 +41,4 @@ springdoc:
     tags-sorter: alpha # tag ?? ??? ??? ?
     #path: "swagger.html" # http://localhost:8080/swagger.html? ?? ??
     path: "/" # http://localhost:8080? ?? ??
+
