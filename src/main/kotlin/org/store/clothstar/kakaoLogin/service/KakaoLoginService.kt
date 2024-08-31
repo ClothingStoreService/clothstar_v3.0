@@ -42,6 +42,8 @@ class KakaoLoginService {
         params.add("grant_type", "authorization_code")
         params.add("redirect_url", redirectUri)
 
+        logger.info { "Requesting token with params: $params" }
+
         // 웹 클라이언트로 요청 보내기
         val response = WebClient.create("https://kauth.kakao.com")
             .post()
@@ -51,6 +53,8 @@ class KakaoLoginService {
             .retrieve()
             .bodyToMono(String::class.java)
             .block()
+
+        logger.info { "Token response: $response" }
 
         // json 응답을 객체로 변환
         val objectMapper = ObjectMapper()
@@ -71,6 +75,8 @@ class KakaoLoginService {
             .retrieve()
             .bodyToMono(String::class.java)
             .block()
+
+        logger.info { "User info response: $response" }
 
         // json 응답을 객체로 변환
         val objectMapper = ObjectMapper()

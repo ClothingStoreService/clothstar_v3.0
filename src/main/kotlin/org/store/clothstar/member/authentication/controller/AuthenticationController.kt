@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*
 import org.store.clothstar.common.dto.ErrorResponseDTO
 import org.store.clothstar.common.dto.MessageDTO
 import org.store.clothstar.common.dto.SaveResponseDTO
+import org.store.clothstar.kakaoLogin.dto.TokenUserInfoResponseDto
+import org.store.clothstar.kakaoLogin.service.KakaoLoginService
 import org.store.clothstar.member.application.MemberServiceApplication
 import org.store.clothstar.member.authentication.domain.SignUpType
 import org.store.clothstar.member.authentication.service.KakaoSignUpService
@@ -28,6 +30,7 @@ import org.store.clothstar.member.dto.response.MemberResponse
 class AuthenticationController(
     private val memberServiceApplication: MemberServiceApplication,
     private val signUpServiceFactory: SignUpServiceFactory,
+    private val kakaoLoginService: KakaoLoginService,
 ) {
     private val log = KotlinLogging.logger {}
 
@@ -67,6 +70,7 @@ class AuthenticationController(
     @PostMapping("/v1/members")
     fun signup(@Validated @RequestBody signUpRequest: SignUpRequest,
                @RequestParam signUpType: SignUpType,
+               @RequestParam code: String,
     ): ResponseEntity<SaveResponseDTO> {
         val signUpService = signUpServiceFactory.getSignUpService(signUpType)
         log.info{ "사인업서비스종류: $signUpService" }
@@ -79,18 +83,17 @@ class AuthenticationController(
                 signUpService.signUp(signUpRequest.createMemberRequest)
             }
             is KakaoSignUpService -> {
+                // 액세스 토큰 받아오기
+                val accessToken = kakaoLoginService.getAccessToken(code)
 
-//                val kakaoMemberDTO = CreateMemberRequest(
-//                    email = kakaoUserInfo.kakaoAccount!!.email,
-//                    name = name,
-//                    telNo = telNo,
-//                    password = "OAuth2_Kakao",
-//                    certifyNum = "11"
-//                )
-//                if (signUpRequest.kakaoMemberRequest == null) {
-//                    throw IllegalArgumentException("카카오 회원가입 시 회원 정보가 필요합니다.")
-//                }
-                signUpService.signUp(signUpRequest.kakaoMemberRequest!!)
+                // 사용자 정보 받아오기
+                val userInfo = kakaoLoginService.getUserInfo(accessToken.accessToken!!)
+
+                // kakaoMemberRequest의 이메일 필드 업데이트
+                val updatedKakaoMemberRequest = signUpRequest.kakaoMemberRequest!!.addEmail(userInfo.kakaoAccount!!.email!!)
+
+//                signUpService.signUp(signUpRequest.kakaoMemberRequest!!)
+                signUpService.signUp(updatedKakaoMemberRequest)
             }
             else -> throw IllegalArgumentException("지원하지 않는 회원가입 유형입니다.")
         }
