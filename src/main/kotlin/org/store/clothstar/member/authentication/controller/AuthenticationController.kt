@@ -86,8 +86,11 @@ class AuthenticationController(
             }
 
             is KakaoSignUpService -> {
+                log.info { "왜 아무것도 안나와" }
                 // 액세스 토큰 받아오기
                 val accessToken = kakaoLoginService.getAccessToken(code!!)
+
+                log.info { "accressToken = ${accessToken.accessToken}" }
 
                 // 사용자 정보 받아오기
                 val userInfo = kakaoLoginService.getUserInfo(accessToken.accessToken!!)

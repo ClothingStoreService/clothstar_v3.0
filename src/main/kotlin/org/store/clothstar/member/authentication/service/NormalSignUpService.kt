@@ -13,7 +13,7 @@ class NormalSignUpService(
 
     override fun signUp(request: CreateMemberRequest): Long {
 
-        log.info { "NORMALSIGNUPSERVICE 입니다입니다입니다" }
+        log.info { "NORMALSIGNUPSERVICE 입니다" }
 
         return memberServiceApplication.signUp(request)
     }
