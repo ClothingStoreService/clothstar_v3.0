@@ -190,6 +190,19 @@ class GlobalExceptionHandler {
         return ResponseEntity(errorResponseDTO, ex.errorCode.status)
     }
 
+    // 회원가입 관련 에러처리
+    @ExceptionHandler(InvalidSignupMemberRequest::class)
+    fun handleInvalidSignupMemberRequest(ex: InvalidSignupMemberRequest): ResponseEntity<ErrorResponseDTO> {
+        val errorResponseDTO = ErrorResponseDTO(ex.errorCode.status.value(), ex.errorCode.message)
+        return ResponseEntity(errorResponseDTO, ex.errorCode.status)
+    }
+
+    @ExceptionHandler(InvalidSignupType::class)
+    fun handleInvalidSignupType(ex: InvalidSignupType): ResponseEntity<ErrorResponseDTO> {
+        val errorResponseDTO = ErrorResponseDTO(ex.errorCode.status.value(), ex.errorCode.message)
+        return ResponseEntity(errorResponseDTO, ex.errorCode.status)
+    }
+
     // Order 관련 에러처리
     @ExceptionHandler(OrderNotFoundException::class)
     fun handleOrderNotFoundException(ex: OrderNotFoundException): ResponseEntity<ErrorResponseDTO> {

@@ -7,7 +7,7 @@ import org.store.clothstar.member.dto.request.KakaoMemberRequest
 import org.store.clothstar.member.service.AccountService
 import org.store.clothstar.member.service.MemberService
 
-@Service("kakaoSignUpService")
+@Service
 class KakaoSignUpService(
     private val memberService: MemberService,
     private val accountService: AccountService,
@@ -16,7 +16,6 @@ class KakaoSignUpService(
     private val log = KotlinLogging.logger {}
 
     override fun signUp(request: KakaoMemberRequest): Long {
-
         // 액세스 토큰 받아오기
         val accessToken = kakaoLoginService.getAccessToken(request.code)
 

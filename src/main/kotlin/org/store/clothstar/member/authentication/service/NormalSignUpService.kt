@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service
 import org.store.clothstar.member.application.MemberServiceApplication
 import org.store.clothstar.member.dto.request.CreateMemberRequest
 
-@Service("normalSignUpService")
+@Service
 class NormalSignUpService(
     private val memberServiceApplication: MemberServiceApplication
 ) : SignUpService<CreateMemberRequest> {

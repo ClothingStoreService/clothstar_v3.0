@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.*
 import org.store.clothstar.common.dto.ErrorResponseDTO
 import org.store.clothstar.common.dto.MessageDTO
 import org.store.clothstar.common.dto.SaveResponseDTO
+import org.store.clothstar.common.error.ErrorCode
+import org.store.clothstar.common.error.exception.InvalidSignupMemberRequest
+import org.store.clothstar.common.error.exception.InvalidSignupType
 import org.store.clothstar.member.application.MemberServiceApplication
 import org.store.clothstar.member.authentication.domain.SignUpType
 import org.store.clothstar.member.authentication.service.KakaoSignUpService
@@ -78,16 +81,16 @@ class AuthenticationController(
             // 일반 회원가입
             is NormalSignUpService -> {
                 val normalMemberRequest = signUpRequest.createMemberRequest
-                    ?: throw IllegalArgumentException("일반 회원가입 시 회원 정보가 필요합니다.")
+                    ?: throw InvalidSignupMemberRequest(ErrorCode.INVALID_SIGNUP_MEMBER_REQUEST)
                 signUpService.signUp(normalMemberRequest)
             }
             // 카카오 회원가입
             is KakaoSignUpService -> {
                 val kakaoMemberRequest = signUpRequest.kakaoMemberRequest
-                    ?: throw IllegalArgumentException("카카오 회원가입 시 회원 정보가 필요합니다.")
+                    ?: throw InvalidSignupMemberRequest(ErrorCode.INVALID_SIGNUP_MEMBER_REQUEST)
                 signUpService.signUp(kakaoMemberRequest)
             }
-            else -> throw IllegalArgumentException("지원하지 않는 회원가입 유형입니다.")
+            else -> throw InvalidSignupType(ErrorCode.INVLIAD_SIGNUP_TYPE)
         }
 
         val saveResponseDTO = SaveResponseDTO(
