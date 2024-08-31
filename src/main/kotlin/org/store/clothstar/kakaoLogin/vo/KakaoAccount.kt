@@ -2,7 +2,7 @@ package org.store.clothstar.kakaoLogin.vo
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-class KakaoAccount (
+class KakaoAccount(
     // 	사용자 동의 시 닉네임 제공 가능
     // 	필요한 동의항목: 닉네임
     @JsonProperty("profile_nickname_needs_agreement") val profileNicknameNeedsAgreement: Boolean? = null,

@@ -14,15 +14,16 @@ import org.springframework.web.bind.annotation.*
 import org.store.clothstar.common.dto.ErrorResponseDTO
 import org.store.clothstar.common.dto.MessageDTO
 import org.store.clothstar.common.dto.SaveResponseDTO
-import org.store.clothstar.kakaoLogin.dto.TokenUserInfoResponseDto
 import org.store.clothstar.kakaoLogin.service.KakaoLoginService
 import org.store.clothstar.member.application.MemberServiceApplication
 import org.store.clothstar.member.authentication.domain.SignUpType
 import org.store.clothstar.member.authentication.service.KakaoSignUpService
 import org.store.clothstar.member.authentication.service.NormalSignUpService
-import org.store.clothstar.member.authentication.service.SignUpService
 import org.store.clothstar.member.authentication.service.SignUpServiceFactory
-import org.store.clothstar.member.dto.request.*
+import org.store.clothstar.member.dto.request.CertifyNumRequest
+import org.store.clothstar.member.dto.request.MemberLoginRequest
+import org.store.clothstar.member.dto.request.ModifyPasswordRequest
+import org.store.clothstar.member.dto.request.SignUpRequest
 import org.store.clothstar.member.dto.response.MemberResponse
 
 @Tag(name = "Auth", description = "회원가입과 인증에 관한 API 입니다.")
@@ -68,12 +69,13 @@ class AuthenticationController(
 
     @Operation(summary = "회원가입", description = "회원가입시 회원 정보를 저장한다.")
     @PostMapping("/v1/members")
-    fun signup(@Validated @RequestBody signUpRequest: SignUpRequest,
-               @RequestParam signUpType: SignUpType,
-               @RequestParam code: String?,
+    fun signup(
+        @Validated @RequestBody signUpRequest: SignUpRequest,
+        @RequestParam signUpType: SignUpType,
+        @RequestParam code: String?,
     ): ResponseEntity<SaveResponseDTO> {
         val signUpService = signUpServiceFactory.getSignUpService(signUpType)
-        log.info{ "사인업서비스종류: $signUpService" }
+        log.info { "사인업서비스종류: $signUpService" }
 
         val memberId = when (signUpService) {
             is NormalSignUpService -> {
@@ -82,6 +84,7 @@ class AuthenticationController(
                 }
                 signUpService.signUp(signUpRequest.createMemberRequest)
             }
+
             is KakaoSignUpService -> {
                 // 액세스 토큰 받아오기
                 val accessToken = kakaoLoginService.getAccessToken(code!!)
@@ -90,11 +93,13 @@ class AuthenticationController(
                 val userInfo = kakaoLoginService.getUserInfo(accessToken.accessToken!!)
 
                 // kakaoMemberRequest의 이메일 필드 업데이트
-                val updatedKakaoMemberRequest = signUpRequest.kakaoMemberRequest!!.addEmail(userInfo.kakaoAccount!!.email!!)
+                val updatedKakaoMemberRequest =
+                    signUpRequest.kakaoMemberRequest!!.addEmail(userInfo.kakaoAccount!!.email!!)
 
                 // 카카오 회원 가입
                 signUpService.signUp(updatedKakaoMemberRequest)
             }
+
             else -> throw IllegalArgumentException("지원하지 않는 회원가입 유형입니다.")
         }
 

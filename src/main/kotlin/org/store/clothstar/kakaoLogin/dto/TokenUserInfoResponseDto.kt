@@ -1,6 +1,6 @@
 package org.store.clothstar.kakaoLogin.dto
 
-class TokenUserInfoResponseDto (
+class TokenUserInfoResponseDto(
     val accessToken: KakaoTokenResponseDto,
     val userInfo: KakaoUserInfoResponseDto
 )

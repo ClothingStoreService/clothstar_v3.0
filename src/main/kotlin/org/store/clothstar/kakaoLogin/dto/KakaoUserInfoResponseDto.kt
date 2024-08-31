@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import org.store.clothstar.kakaoLogin.vo.KakaoAccount
 import org.store.clothstar.kakaoLogin.vo.Properties
 
-class KakaoUserInfoResponseDto (
+class KakaoUserInfoResponseDto(
     // 회원번호
     @JsonProperty("id") val id: Long? = null,
     // 서비스에 연결 완료된 시각, UTC*

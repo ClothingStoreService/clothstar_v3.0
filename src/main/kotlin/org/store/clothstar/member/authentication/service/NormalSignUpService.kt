@@ -8,7 +8,7 @@ import org.store.clothstar.member.dto.request.CreateMemberRequest
 @Service("normalSignUpService")
 class NormalSignUpService(
     private val memberServiceApplication: MemberServiceApplication
-): SignUpService<CreateMemberRequest> {
+) : SignUpService<CreateMemberRequest> {
     private val log = KotlinLogging.logger {}
 
     override fun signUp(request: CreateMemberRequest): Long {

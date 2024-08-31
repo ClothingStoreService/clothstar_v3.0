@@ -4,7 +4,6 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Service
 import org.store.clothstar.kakaoLogin.service.KakaoLoginService
 import org.store.clothstar.member.dto.request.CreateKakaoMemberRequest
-import org.store.clothstar.member.dto.request.CreateMemberRequest
 import org.store.clothstar.member.dto.request.KakaoMemberRequest
 import org.store.clothstar.member.service.AccountService
 import org.store.clothstar.member.service.MemberService
@@ -14,7 +13,7 @@ class KakaoSignUpService(
     private val memberService: MemberService,
     private val accountService: AccountService,
     private val kakaoLoginService: KakaoLoginService,
-): SignUpService<KakaoMemberRequest> {
+) : SignUpService<KakaoMemberRequest> {
     private val log = KotlinLogging.logger {}
 
     override fun signUp(request: KakaoMemberRequest): Long {

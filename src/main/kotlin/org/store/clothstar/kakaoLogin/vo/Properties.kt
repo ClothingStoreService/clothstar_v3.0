@@ -2,7 +2,7 @@ package org.store.clothstar.kakaoLogin.vo
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-class Properties (
+class Properties(
     // 닉네임
     // 필요한 동의항목: 프로필 정보(닉네임/프로필 사진) 또는 닉네임
     @JsonProperty("nickname") val nickname: String? = null,

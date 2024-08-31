@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.store.clothstar.kakaoLogin.dto.KakaoRenewTokenResponseDto
 import org.store.clothstar.kakaoLogin.dto.KakaoTokenInfoResponseDto
-import org.store.clothstar.kakaoLogin.dto.KakaoUserInfoResponseDto
-import org.store.clothstar.kakaoLogin.dto.TokenUserInfoResponseDto
 import org.store.clothstar.kakaoLogin.service.KakaoLoginService
 
 @RestController
@@ -38,7 +36,10 @@ class KakaoController(
 
     // 액세스 토큰 갱신 - 유효성 검사 후 토큰 유효기간 만료 시 재로그인 요청
     @GetMapping("/auth/kakao/check")
-    fun checkToken(@RequestParam accessToken: String, @RequestParam refreshToken: String): ResponseEntity<KakaoRenewTokenResponseDto> {
+    fun checkToken(
+        @RequestParam accessToken: String,
+        @RequestParam refreshToken: String
+    ): ResponseEntity<KakaoRenewTokenResponseDto> {
         val renewTokenInfo: KakaoRenewTokenResponseDto = kakaoLoginService.validateToken(accessToken, refreshToken)
         return ResponseEntity.ok(renewTokenInfo)
     }

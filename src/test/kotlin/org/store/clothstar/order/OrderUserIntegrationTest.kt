@@ -268,7 +268,7 @@ class OrderUserIntegrationTest(
         //then
         actions.andExpect(status().isOk())
             .andExpect(jsonPath("$.message").value("주문이 정상적으로 취소되었습니다."))
-        assertEquals(savedOrder!!.status,Status.CANCELED)
+        assertEquals(savedOrder!!.status, Status.CANCELED)
     }
 
     @DisplayName("주문 삭제 통합테스트")
@@ -287,7 +287,7 @@ class OrderUserIntegrationTest(
         )
         val savedOrder: Order? = orderRepository.findByIdOrNull(orderId)
         val deletedTime = LocalDateTime.now()
-        val timeDifference = ChronoUnit.SECONDS.between(deletedTime,savedOrder!!.deletedAt)
+        val timeDifference = ChronoUnit.SECONDS.between(deletedTime, savedOrder!!.deletedAt)
 
         //then
         actions.andExpect(status().isOk())
