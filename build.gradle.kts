@@ -20,6 +20,7 @@ java {
 
 repositories {
     mavenCentral()
+    maven(url = "https://jitpack.io")
 }
 
 dependencies {
@@ -74,6 +75,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-mail") //mail 전송
     implementation("org.springframework.boot:spring-boot-starter-data-redis") //redis
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    // 아임포트(결제) 관련
+    implementation("com.github.iamport:iamport-rest-client-java:0.2.23")
 }
 
 jacoco {
