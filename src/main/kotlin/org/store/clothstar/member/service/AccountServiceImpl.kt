@@ -8,8 +8,8 @@ import org.store.clothstar.common.error.exception.DuplicatedEmailException
 import org.store.clothstar.common.error.exception.NotFoundAccountException
 import org.store.clothstar.member.domain.Account
 import org.store.clothstar.member.domain.MemberRole
-import org.store.clothstar.member.dto.request.CreateKakaoMemberRequest
 import org.store.clothstar.member.dto.request.CreateMemberRequest
+import org.store.clothstar.member.dto.request.KakaoMemberRequest
 import org.store.clothstar.member.repository.AccountRepository
 
 @Service
@@ -32,9 +32,9 @@ class AccountServiceImpl(
     }
 
     @Transactional
-    override fun saveKakaoAccount(memberId: Long, createKakaoMemberDTO: CreateKakaoMemberRequest): Account {
+    override fun saveKakaoAccount(memberId: Long, createKakaoMemberDTO: KakaoMemberRequest): Account {
         // 이메일 중복 검사
-        accountRepository.findByEmail(createKakaoMemberDTO.email)?.let {
+        accountRepository.findByEmail(createKakaoMemberDTO.email!!)?.let {
             throw DuplicatedEmailException(ErrorCode.DUPLICATED_EMAIL)
         }
 

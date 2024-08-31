@@ -4,8 +4,8 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Slice
 import org.store.clothstar.member.domain.Member
-import org.store.clothstar.member.dto.request.CreateKakaoMemberRequest
 import org.store.clothstar.member.dto.request.CreateMemberRequest
+import org.store.clothstar.member.dto.request.KakaoMemberRequest
 import org.store.clothstar.member.dto.request.ModifyNameRequest
 import org.store.clothstar.member.dto.response.MemberResponse
 
@@ -25,7 +25,7 @@ interface MemberService {
     fun modifyName(memberId: Long, modifyNameRequest: ModifyNameRequest)
 
     fun saveMember(createMemberDTO: CreateMemberRequest): Long
-    fun saveKakaoMember(createKakaoMemberDTO: CreateKakaoMemberRequest): Long
+    fun saveKakaoMember(createKakaoMemberDTO: KakaoMemberRequest): Long
 
     fun getMemberByMemberId(memberId: Long): Member
 }

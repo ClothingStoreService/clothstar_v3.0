@@ -11,8 +11,10 @@ class KakaoMemberRequest(
     val telNo: String,
 
     val email: String?,
+
+    val code: String,
 ) {
     fun addEmail(email: String): KakaoMemberRequest {
-        return KakaoMemberRequest(name, telNo, email)
+        return KakaoMemberRequest(name, telNo, email, code)
     }
 }

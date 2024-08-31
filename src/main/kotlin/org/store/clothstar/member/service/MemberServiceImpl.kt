@@ -14,8 +14,8 @@ import org.store.clothstar.common.error.exception.DuplicatedTelNoException
 import org.store.clothstar.common.error.exception.NotFoundMemberException
 import org.store.clothstar.member.domain.Member
 import org.store.clothstar.member.domain.vo.MemberShoppingActivity
-import org.store.clothstar.member.dto.request.CreateKakaoMemberRequest
 import org.store.clothstar.member.dto.request.CreateMemberRequest
+import org.store.clothstar.member.dto.request.KakaoMemberRequest
 import org.store.clothstar.member.dto.request.ModifyNameRequest
 import org.store.clothstar.member.dto.response.MemberResponse
 import org.store.clothstar.member.repository.AccountRepository
@@ -136,7 +136,7 @@ class MemberServiceImpl(
     }
 
     @Transactional
-    override fun saveKakaoMember(createKakaoMemberDTO: CreateKakaoMemberRequest): Long {
+    override fun saveKakaoMember(createKakaoMemberDTO: KakaoMemberRequest): Long {
         // 전화번호 중복 검사
         memberRepository.findByTelNo(createKakaoMemberDTO.telNo)?.let {
             throw DuplicatedTelNoException(ErrorCode.DUPLICATED_TEL_NO)
