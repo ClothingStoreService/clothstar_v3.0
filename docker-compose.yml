@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+
+  application:
+    container_name: clothstar-springboot-dev
+    image: ogu1208/clothstar-springboot-dev
+    environment:
+      - JASYPT_ENCRYPTOR_PASSWORD=${JASYPT_ENCRYPTOR_PASSWORD}
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    restart: on-failure
+    networks:
+      - preon_net
+
+
+#  nginx:
+#    container_name: nginx
+#    image: jonghuni/preonb-nginx
+#    ports:
+#      - 80:80
+#    depends_on:
+#      - application
+
+networks:
+  preon_net: { }

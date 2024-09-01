@@ -3,14 +3,19 @@ package org.store.clothstar.common.config
 import org.jasypt.encryption.StringEncryptor
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
 class JasyptConfig {
+
+    @Value("\${jasypt.encryptor.password}")  // 환경 변수 또는 application.yml에서 가져오기
+    private lateinit var key: String
+
     @Bean("jasyptStringEncryptor")
     fun stringEncryptor(): StringEncryptor {
-        val key = "my_jasypt_key"
+
         val encryptor = PooledPBEStringEncryptor()
         val config = SimpleStringPBEConfig()
 
