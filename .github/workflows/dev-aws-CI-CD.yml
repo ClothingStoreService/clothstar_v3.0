@@ -13,6 +13,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' || github.event_name == 'pull_request'
+    env:
+      JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -60,6 +62,8 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push'  # push일 때만 실행
     needs: build  # build 작업이 끝난 후 실행
+    env:
+      JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
 
     steps:
       # 도커 컴포즈 설정 파일 서버로 전달하기(복사 후 붙여넣기)
