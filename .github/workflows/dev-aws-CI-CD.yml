@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' || github.event_name == 'pull_request'
     env:
-      JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
+      jasypt.encryptor.password: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}  # 이름 변경
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -39,7 +39,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build With Gradle
-        run: ./gradlew build -x test
+        run: ./gradlew build -x test --warning-mode all  # 모든 경고를 표시
 
       ## build Test
       - name: 테스트 코드 실행
@@ -63,8 +63,7 @@ jobs:
     if: github.event_name == 'push'  # push일 때만 실행
     needs: build  # build 작업이 끝난 후 실행
     env:
-      JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
-
+      jasypt.encryptor.password: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}  # 이름 변경
     steps:
       # 도커 컴포즈 설정 파일 서버로 전달하기(복사 후 붙여넣기)
       - name: Send docker-compose.yml
@@ -88,8 +87,6 @@ jobs:
 
       ## springboot 도커 이미지 빌드 후 도커허브에 push하기
       - name: Docker build & Push
-        env:
-          JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -t ${{ secrets.DOCKER_REPOSITORY }} .  # 태그를 명시하지 않으면 :latest로 처리됨
@@ -102,20 +99,22 @@ jobs:
           username: ubuntu
           host: ${{ secrets.AWS_DEV_HOSTNAME }}
           key: ${{ secrets.AWS_DEV_PRIVATE_KEY }}
-          script: |
-            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY }}
-            sudo cp /home/ubuntu/nginx/nginx.conf /home/ubuntu/src/main/resources/backend-config/nginx/nginx.conf
-            # 기존 Docker 컨테이너와 이미지를 정리
-            docker-compose -f /home/ubuntu/docker-compose.yml down
-            docker rmi $(docker images -q)
-            # 새로운 Docker Compose 실행
-            docker-compose -f /home/ubuntu/docker-compose.yml up -d
+        script: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY }}
+          sudo cp /home/ubuntu/nginx/nginx.conf /home/ubuntu/src/main/resources/backend-config/nginx/nginx.conf
+          # 기존 Docker 컨테이너와 이미지를 정리
+          docker-compose -f /home/ubuntu/docker-compose.yml down
+          docker rmi $(docker images -q)
+          # 새로운 Docker Compose 실행
+          docker-compose -f /home/ubuntu/docker-compose.yml up -d
 
   discord-notify:
     name: Discord Notify
     runs-on: ubuntu-latest
     needs: [ build, deploy ]  # build와 deploy 작업이 끝난 후 실행
+    env:
+      jasypt.encryptor.password: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}  # 이름 변경
     steps:
       - name: Send Discord Notification
         uses: sarisia/actions-status-discord@v1
