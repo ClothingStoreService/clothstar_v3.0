@@ -278,7 +278,7 @@ class OrderUserServiceTest {
         // given
         val pageable: Pageable = PageRequest.of(0, 10)
         val orders: Page<Order> = PageImpl(listOf(order))
-        every { orderRepository.findAll(pageable) } returns orders
+        every { orderRepository.findAllByOrderByOrderIdDesc(pageable) } returns orders
 
         // order 관련 member, address, seller 불러오기
         every { order.memberId } returns memberId
@@ -342,7 +342,7 @@ class OrderUserServiceTest {
 
         // then
         assertThat(orderResponses.content).usingRecursiveComparison().isEqualTo(listOf(expectedOrderResponse))
-        verify(exactly = 1) { orderRepository.findAll(pageable) }
+        verify(exactly = 1) { orderRepository.findAllByOrderByOrderIdDesc(pageable) }
         verify(exactly = 1) { memberService.getMemberByMemberId(memberId) }
         verify(exactly = 1) { addressService.getAddressById(addressId) }
         verify(exactly = 1) { sellerService.getSellerById(memberId) }
@@ -394,6 +394,8 @@ class OrderUserServiceTest {
         every { order.totalPrice.products } returns 10000
         every { orderDetail.price.oneKindTotalPrice } returns 10000
         every { order.totalPrice.shipping } returns 3000
+
+        justRun { order.addOrderDetail(any()) }
 
         every { orderDetail.quantity } returns addOrderDetailRequest.quantity
 
