@@ -7,7 +7,6 @@ import org.springframework.data.domain.Slice
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import org.store.clothstar.common.error.ErrorCode
 import org.store.clothstar.common.error.exception.DuplicatedEmailException
@@ -91,7 +90,7 @@ class MemberServiceImpl(
         member.updateName(modifyNameRequest)
     }
 
-    @Transactional(propagation = Propagation.MANDATORY)
+    @Transactional
     override fun updateDeleteAt(memberId: Long) {
         log.info { "회원 삭제 memberId = ${memberId}" }
 

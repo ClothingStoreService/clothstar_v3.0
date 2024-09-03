@@ -2,7 +2,6 @@ package org.store.clothstar.member.service
 
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import org.store.clothstar.common.error.ErrorCode
 import org.store.clothstar.common.error.exception.DuplicatedEmailException
@@ -39,7 +38,7 @@ class AccountServiceImpl(
         account.updateRole(updateRole)
     }
 
-    @Transactional(propagation = Propagation.MANDATORY)
+    @Transactional
     override fun updateDeletedAt(memberId: Long, findRole: MemberRole) {
         val account = accountRepository.findByUserIdAndRole(memberId, findRole)
             ?: throw NotFoundAccountException(ErrorCode.NOT_FOUND_ACCOUNT)
