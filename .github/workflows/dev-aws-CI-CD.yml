@@ -12,6 +12,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: dev  # 환경을 명시적으로 설정
     if: github.event_name == 'push' || github.event_name == 'pull_request'
     env:
       jasypt.encryptor.password: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}  # 이름 변경
@@ -60,6 +61,7 @@ jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
+    environment: dev  # 환경을 명시적으로 설정
     if: github.event_name == 'push'  # push일 때만 실행
     needs: build  # build 작업이 끝난 후 실행
     env:
@@ -112,6 +114,7 @@ jobs:
   discord-notify:
     name: Discord Notify
     runs-on: ubuntu-latest
+    environment: dev
     needs: [ build, deploy ]  # build와 deploy 작업이 끝난 후 실행
     if: always()  # 항상 실행되도록 설정
     env:
