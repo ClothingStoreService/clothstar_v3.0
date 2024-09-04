@@ -9,6 +9,7 @@ on:
 permissions:
   contents: read
   checks: write
+  issues: write
 
 jobs:
   build:
@@ -42,8 +43,11 @@ jobs:
       - name: Grant Execute Permission For Gradlew
         run: chmod +x gradlew
 
-      - name: Set up Jasypt Encryptor Password
-        run: echo "JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}" >> $GITHUB_ENV
+      - name: Set up Environment Variables
+        run: |
+          echo "JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}" >> $GITHUB_ENV
+          echo "DOCKER_REPOSITORY=${{ secrets.DOCKER_REPOSITORY }}" >> $GITHUB_ENV
+          echo "DOCKER_REPOSITORY_NGINX=${{ secrets.DOCKER_REPOSITORY_NGINX }}" >> $GITHUB_ENV
 
       - name: Build With Gradle
         run: ./gradlew build -x test --warning-mode all
