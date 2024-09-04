@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: application
+  cloud:
+    vault:
+      uri: http://43.200.201.142:8200
+      authentication: TOKEN
+      token: hvs.SdEQtUjhGCUvZXaEO43yf5id  # Vault Root Token
+      kv:
+        enabled: true
+        backend: secret
+        default-context: application

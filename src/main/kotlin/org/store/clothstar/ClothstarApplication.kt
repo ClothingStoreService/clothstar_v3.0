@@ -11,6 +11,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 @SpringBootApplication
 @EnableJpaAuditing //Jpa Auditing 기능 활성화
 class ClothstarApplication {
+
+
 }
 
 fun main(args: Array<String>) {
