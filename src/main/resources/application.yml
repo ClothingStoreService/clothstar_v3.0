@@ -34,8 +34,6 @@ spring:
     import: vault://
   cloud:
     vault:
-      host: 43.200.201.142
-      port: 8200
       uri: http://43.200.201.142:8200
       authentication: TOKEN
       token: hvs.SdEQtUjhGCUvZXaEO43yf5id  # Vault Root Token
@@ -53,3 +51,6 @@ springdoc:
     tags-sorter: alpha # tag ?? ??? ??? ?
     #path: "swagger.html" # http://localhost:8080/swagger.html? ?? ??
     path: "/" # http://localhost:8080? ?? ??
+
+
+
