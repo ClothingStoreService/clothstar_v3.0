@@ -4,7 +4,7 @@ services:
 
   application:
     container_name: clothstar-springboot-dev
-    image: ogu1208/clothstar-springboot-dev
+    image: ${DOCKER_REPOSITORY}:latest
     environment:
       - JASYPT_ENCRYPTOR_PASSWORD=${JASYPT_ENCRYPTOR_PASSWORD}
     build:
@@ -19,11 +19,8 @@ services:
 
 #  nginx:
 #    container_name: nginx
-#    image: jonghuni/preonb-nginx
+#    image: ${DOCKER_REPOSITORY_NGINX}:latest
 #    ports:
 #      - 80:80
 #    depends_on:
 #      - application
-
-networks:
-  preon_net: { }

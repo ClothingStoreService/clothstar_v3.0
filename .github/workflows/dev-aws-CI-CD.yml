@@ -15,7 +15,9 @@ jobs:
     environment: dev  # 환경을 명시적으로 설정
     if: github.event_name == 'push' || github.event_name == 'pull_request'
     env:
-      jasypt.encryptor.password: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}  # 이름 변경
+      jasypt.encryptor.password: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
+      DOCKER_REPOSITORY: ${{ secrets.DOCKER_REPOSITORY }}  # 환경 변수 설정
+      DOCKER_REPOSITORY_NGINX: ${{ secrets.DOCKER_REPOSITORY_NGINX }}  # 환경 변수 설정
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -65,7 +67,9 @@ jobs:
     if: github.event_name == 'push'  # push일 때만 실행
     needs: build  # build 작업이 끝난 후 실행
     env:
-      jasypt.encryptor.password: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}  # 이름 변경
+      JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}  # 환경 변수 설정
+      DOCKER_REPOSITORY: ${{ secrets.DOCKER_REPOSITORY }}  # 환경 변수 설정
+      DOCKER_REPOSITORY_NGINX: ${{ secrets.DOCKER_REPOSITORY_NGINX }}  # 환경 변수 설정
     steps:
       # 도커 컴포즈 설정 파일 서버로 전달하기(복사 후 붙여넣기)
       - name: Send docker-compose.yml
@@ -87,6 +91,13 @@ jobs:
           source: "./nginx/nginx.conf"
           target: "/home/ubuntu/"
 
+      ## Nginx 도커 이미지 빌드 후 도커허브에 push하기
+      - name: Docker build & Push for Nginx
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build -f dockerfile-nginx -t ${{ secrets.DOCKER_REPOSITORY_NGINX }} .  # Nginx용 Dockerfile 사용
+          docker push ${{ secrets.DOCKER_REPOSITORY_NGINX }}
+
       ## springboot 도커 이미지 빌드 후 도커허브에 push하기
       - name: Docker build & Push
         run: |
@@ -101,20 +112,18 @@ jobs:
           username: ubuntu
           host: ${{ secrets.AWS_DEV_HOSTNAME }}
           key: ${{ secrets.AWS_DEV_PRIVATE_KEY }}
-        script: |
+        run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPOSITORY }}
-          sudo cp /home/ubuntu/nginx/nginx.conf /home/ubuntu/src/main/resources/backend-config/nginx/nginx.conf
-          # 기존 Docker 컨테이너와 이미지를 정리
-          docker-compose -f /home/ubuntu/docker-compose.yml down
-          docker rmi $(docker images -q)
-          # 새로운 Docker Compose 실행
-          docker-compose -f /home/ubuntu/docker-compose.yml up -d
+          export DOCKER_REPOSITORY=${{ secrets.DOCKER_REPOSITORY }}
+          export DOCKER_REPOSITORY_NGINX=${{ secrets.DOCKER_REPOSITORY_NGINX }}
+          export JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
+          sudo docker-compose -f /home/ubuntu/docker-compose.yml down
+          sudo docker-compose -f /home/ubuntu/docker-compose.yml up -d
 
   discord-notify:
     name: Discord Notify
     runs-on: ubuntu-latest
-    environment: dev
+    environment: dev  # 환경을 명시적으로 설정
     needs: [ build, deploy ]  # build와 deploy 작업이 끝난 후 실행
     if: always()  # 항상 실행되도록 설정
     env:
