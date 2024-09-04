@@ -74,6 +74,7 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     //vault
+    implementation("org.springframework.cloud:spring-cloud-starter-bootstrap:4.1.4")
     implementation("org.springframework.cloud:spring-cloud-config-server:4.1.3")
     implementation("org.springframework.cloud:spring-cloud-starter-vault-config:4.1.3")
 }

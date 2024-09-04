@@ -1,15 +1,16 @@
 package org.store.clothstar.common.config
 
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class VaultDataTest(
-//    @Autowired private val vaultData: VaultData,
-) {
+class VaultDataTest {
+    @Value("\${email.send}")
+    lateinit var email: String
+
     @Test
     fun demoTest() {
-//        println("username : ${vaultData.username}")
-//        println("password : ${vaultData.password}")
+        println("email : ${email}")
     }
 }
