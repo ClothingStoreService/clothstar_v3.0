@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping
 @Controller
 class KakaoLoginPageController {
 
-    @Value("\${kakao.client_id}")
+    @Value("\${spring.security.oauth2.client.registration.kakao.client_id}")
     private lateinit var clientId: String
 
-    @Value("\${kakao.redirect_uri}")
+    @Value("\${spring.security.oauth2.client.registration.kakao.redirect_uri}")
     private lateinit var redirectUri: String
 
     @GetMapping("/kakaoLogin/page")

@@ -31,7 +31,6 @@ dependencies {
 
     //web
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
 
     //thymeleaf
@@ -69,6 +68,10 @@ dependencies {
     testImplementation("io.kotest:kotest-runner-junit5:${kotestVersion}")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+
+    //oauth2
+    implementation ("org.springframework.boot:spring-boot-starter-oauth2-client")
+    implementation ("org.springframework.security:spring-security-oauth2-jose")
 
     //etc
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0") //swagger

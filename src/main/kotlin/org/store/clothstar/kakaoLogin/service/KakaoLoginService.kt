@@ -20,19 +20,19 @@ class KakaoLoginService {
 
     private val logger = KotlinLogging.logger {}
 
-    @Value("\${kakao.client_id}")
+    @Value("\${spring.security.oauth2.client.registration.kakao.client_id}")
     private lateinit var clientId: String
 
-    @Value("\${kakao.client_secret}")
+    @Value("\${spring.security.oauth2.client.registration.kakao.client_secret}")
     private lateinit var clientSecret: String
 
-    @Value("\${kakao.redirect_uri}")
+    @Value("\${spring.security.oauth2.client.registration.kakao.redirect_uri}")
     private lateinit var redirectUri: String
 
-    @Value("\${kakao.login.uri.token}")
+    @Value("\${spring.security.oauth2.client.provider.kakao.token_uri}")
     private lateinit var tokenUri: String
 
-    @Value("\${kakao.api.uri.user}")
+    @Value("\${spring.security.oauth2.client.provider.kakao.user_info_uri}")
     private lateinit var userUri: String
 
     // 토큰 가져오기
@@ -48,9 +48,8 @@ class KakaoLoginService {
         logger.info { "Requesting token with params: $params" }
 
         // 웹 클라이언트로 요청 보내기
-        val response = WebClient.create("https://kauth.kakao.com")
+        val response = WebClient.create(tokenUri)
             .post()
-            .uri(tokenUri)
             .body(BodyInserters.fromFormData(params))
             .header("Content-Type", "application/x-www-form-urlencoded;charset=utf-8")
             .retrieve()
@@ -70,9 +69,8 @@ class KakaoLoginService {
     // 사용자 정보 가져오기
     fun getUserInfo(accessToken: String): KakaoUserInfoResponseDto {
         // 웹 클라이언트로 요청 보내기
-        val response = WebClient.create("https://kapi.kakao.com")
+        val response = WebClient.create(userUri)
             .get()
-            .uri(userUri)
             .header("Authorization", "Bearer $accessToken")
             .header("Content-Type", "application/x-www-form-urlencoded;charset=utf-8")
             .retrieve()
