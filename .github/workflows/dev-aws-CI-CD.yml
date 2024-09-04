@@ -42,6 +42,9 @@ jobs:
       - name: Grant Execute Permission For Gradlew
         run: chmod +x gradlew
 
+      - name: Set up Jasypt Encryptor Password
+        run: echo "JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}" >> $GITHUB_ENV
+
       - name: Build With Gradle
         run: ./gradlew build -x test --warning-mode all
 
