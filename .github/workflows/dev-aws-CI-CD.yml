@@ -106,29 +106,29 @@ jobs:
           docker build -t ${{ secrets.DOCKER_REPOSITORY }} .
           docker push ${{ secrets.DOCKER_REPOSITORY }}
 
-      # 도커 허브에서 이미지 Pull 및 Docker Compose로 컨테이너 실행
-      - name: Deploy to Dev with Docker Compose
+      # SSH로 서버에 연결
+      - name: Connect to Server
         uses: appleboy/ssh-action@master
         with:
           username: ubuntu
           host: ${{ secrets.AWS_DEV_HOSTNAME }}
           key: ${{ secrets.AWS_DEV_PRIVATE_KEY }}
-        run: |
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          export DOCKER_REPOSITORY=${{ secrets.DOCKER_REPOSITORY }}
-          export DOCKER_REPOSITORY_NGINX=${{ secrets.DOCKER_REPOSITORY_NGINX }}
-          export JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
-          # Pull 최신 이미지
-          docker-compose -f /home/ubuntu/docker-compose.yml pull
-          # 새 컨테이너 실행
-          docker-compose -f /home/ubuntu/docker-compose.yml up -d --build
+          script: | # SSH 연결 후 실행할 명령어들
+            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            export DOCKER_REPOSITORY=${{ secrets.DOCKER_REPOSITORY }}
+            export DOCKER_REPOSITORY_NGINX=${{ secrets.DOCKER_REPOSITORY_NGINX }}
+            export JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
+            # Pull 최신 이미지
+            docker-compose -f /home/ubuntu/docker-compose.yml pull
+            # 새 컨테이너 실행
+            docker-compose -f /home/ubuntu/docker-compose.yml up -d --build
 
   discord-notify:
     name: Discord Notify
     runs-on: ubuntu-latest
-    environment: dev  # 환경을 명시적으로 설정
-    needs: [ build, deploy ]  # build와 deploy 작업이 끝난 후 실행
-    if: always()  # 항상 실행되도록 설정
+    environment: dev
+    needs: [ build, deploy ]
+    if: always()
     env:
       jasypt.encryptor.password: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
     steps:
@@ -136,7 +136,7 @@ jobs:
         uses: sarisia/actions-status-discord@v1
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          status: ${{ job.status }}  # 현재 작업(job)의 상태 (성공, 실패 등)
+          status: ${{ job.status }}
           title: "CI/CD Pipeline Status"
           description: |
             ${{ format(
