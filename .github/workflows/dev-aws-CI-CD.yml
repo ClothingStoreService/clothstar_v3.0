@@ -16,10 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: dev
     if: github.event_name == 'push' || github.event_name == 'pull_request'
-    env:
-      jasypt.encryptor.password: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
-      DOCKER_REPOSITORY: ${{ secrets.DOCKER_REPOSITORY }}
-      DOCKER_REPOSITORY_NGINX: ${{ secrets.DOCKER_REPOSITORY_NGINX }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -43,13 +39,9 @@ jobs:
       - name: Grant Execute Permission For Gradlew
         run: chmod +x gradlew
 
-      - name: Set up Environment Variables
-        run: |
-          echo "JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}" >> $GITHUB_ENV
-          echo "DOCKER_REPOSITORY=${{ secrets.DOCKER_REPOSITORY }}" >> $GITHUB_ENV
-          echo "DOCKER_REPOSITORY_NGINX=${{ secrets.DOCKER_REPOSITORY_NGINX }}" >> $GITHUB_ENV
-
       - name: Build With Gradle
+        env:
+          JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
         run: ./gradlew build -x test --info
 
       - name: List All Files for Debugging
@@ -67,10 +59,6 @@ jobs:
     environment: dev
     if: github.event_name == 'push'
     needs: build
-    env:
-      JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
-      DOCKER_REPOSITORY: ${{ secrets.DOCKER_REPOSITORY }}
-      DOCKER_REPOSITORY_NGINX: ${{ secrets.DOCKER_REPOSITORY_NGINX }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -158,8 +146,6 @@ jobs:
     environment: dev
     needs: [ build, deploy ]
     if: always()
-    env:
-      jasypt.encryptor.password: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
     steps:
       - name: Send Discord Notification
         uses: sarisia/actions-status-discord@v1
