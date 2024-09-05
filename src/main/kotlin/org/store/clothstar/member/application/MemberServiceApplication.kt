@@ -49,7 +49,7 @@ class MemberServiceApplication(
 
     fun signUp(createMemberRequest: CreateMemberRequest): Long {
         //인증번호 확인
-//        authenticationService.verifyEmailCertifyNum(createMemberRequest.email, createMemberRequest.certifyNum)
+        authenticationService.verifyEmailCertifyNum(createMemberRequest.email, createMemberRequest.certifyNum)
 
         val memberId = memberService.saveMember(createMemberRequest)
         accountService.saveAccount(memberId, createMemberRequest)

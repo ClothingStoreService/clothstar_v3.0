@@ -2,7 +2,7 @@ package org.store.clothstar.kakaoLogin.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-class KakaoTokenResponseDto {
+class KakaoTokenResponseDto(s: String, accessToken: String, i: Int, s1: String, i1: Int) {
     // 토큰 타입, bearer로 고정
     @JsonProperty("token_type")
     private val tokenType: String? = null

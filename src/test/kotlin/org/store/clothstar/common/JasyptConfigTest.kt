@@ -15,7 +15,7 @@ class JasyptConfigTest {
         val username = ""
         val password = ""
 
-        println(jasyptDecoding(url))
+        println(jasyptEncoding(url))
         println(jasyptEncoding(username))
         println(jasyptEncoding(password))
     }
