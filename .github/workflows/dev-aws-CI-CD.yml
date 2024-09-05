@@ -50,7 +50,7 @@ jobs:
           echo "DOCKER_REPOSITORY_NGINX=${{ secrets.DOCKER_REPOSITORY_NGINX }}" >> $GITHUB_ENV
 
       - name: Build With Gradle
-        run: ./gradlew build -x test --warning-mode all
+        run: ./gradlew build -x test --info
 
   deploy:
     name: Deploy
