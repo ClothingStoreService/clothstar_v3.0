@@ -94,7 +94,12 @@ jobs:
           key: ${{ secrets.AWS_DEV_PRIVATE_KEY }}
           script: |
             sudo mkdir -p /etc/nginx/conf.d/
-            sudo mv /home/ubuntu/nginx.conf /etc/nginx/conf.d/nginx.conf
+            if [ -f /home/ubuntu/nginx.conf ]; then
+              sudo mv /home/ubuntu/nginx.conf /etc/nginx/conf.d/nginx.conf
+            else
+              echo "nginx.conf not found in /home/ubuntu/"
+              exit 1
+            fi
 
       ## Docker login
       - name: Docker Login
