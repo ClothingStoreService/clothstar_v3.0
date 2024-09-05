@@ -114,7 +114,7 @@ jobs:
       ## Nginx 도커 이미지 빌드 후 도커허브에 push하기
       - name: Docker build & Push for Nginx
         run: |
-          docker build -f dockerfile-nginx -t ${{ secrets.DOCKER_REPOSITORY_NGINX }} .
+          docker build -f Dockerfile-nginx -t ${{ secrets.DOCKER_REPOSITORY_NGINX }} .
           docker push ${{ secrets.DOCKER_REPOSITORY_NGINX }}
 
       ## Spring Boot 도커 이미지 빌드 후 도커허브에 push하기
