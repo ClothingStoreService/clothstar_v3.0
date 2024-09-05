@@ -79,6 +79,11 @@ dependencies {
 
     // 아임포트(결제) 관련
     implementation("com.github.iamport:iamport-rest-client-java:0.2.23")
+
+    //vault
+    implementation("org.springframework.cloud:spring-cloud-starter-bootstrap:4.1.4")
+    implementation("org.springframework.cloud:spring-cloud-config-server:4.1.3")
+    implementation("org.springframework.cloud:spring-cloud-starter-vault-config:4.1.3")
 }
 
 jacoco {

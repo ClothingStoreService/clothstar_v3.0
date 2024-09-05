@@ -21,7 +21,7 @@ class OrderSellerController(
     private val orderSellerService: OrderSellerService
 ) {
 
-    @Operation(summary = "(판매자) WAITING 주문 리스트 조회", description = "(판매자) 주문상태가 '승인대기'인 주문 리스트를 조회한다.")
+    @Operation(summary = "(판매자) CONFIRMED 주문 리스트 조회", description = "(판매자) 주문상태가 '승인대기'인 주문 리스트를 조회한다.")
     @GetMapping
     fun getWaitingOrder(): ResponseEntity<List<OrderResponse>> {
         val orderResponseList: List<OrderResponse> = orderSellerService.getConfirmedOrders()
@@ -48,7 +48,7 @@ class OrderSellerController(
     @PatchMapping("/{orderId}/process")
     fun approveOrder(@PathVariable orderId: String): ResponseEntity<MessageDTO> {
         orderSellerService.approveOrder(orderId)
-        val messageDTO = MessageDTO(HttpStatus.OK.value(), "주문이 정상적으로 출고처리 되었습니다.")
+        val messageDTO = MessageDTO(HttpStatus.OK.value(), "주문이 정상적으로 출고처리되었습니다.")
         return ResponseEntity.ok(messageDTO)
     }
 
@@ -72,7 +72,7 @@ class OrderSellerController(
     @PatchMapping("/{orderId}/cancel")
     fun cancelOrder(@PathVariable orderId: String): ResponseEntity<MessageDTO> {
         orderSellerService.cancelOrder(orderId)
-        val messageDTO = MessageDTO(HttpStatus.OK.value(), "주문이 정상적으로 취소 되었습니다.")
+        val messageDTO = MessageDTO(HttpStatus.OK.value(), "주문이 정상적으로 취소되었습니다.")
         return ResponseEntity.ok(messageDTO)
     }
 }

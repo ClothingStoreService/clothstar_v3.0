@@ -61,13 +61,13 @@ class SecurityConfiguration(
                         "/v1/members/login", "/signup", "/v1/members/email/**", "/v1/access",
                         "/v1/categories/**", "/v1/products/**", "/v1/productLines/**", "/v2/productLines/**",
                         "/productLinePagingSlice", "/productLinePagingOffset",
-                        "/v3/products/**",
+                        "/v3/products/**", "v3/sellers/products/**",
                         "/v1/orderdetails", "/v1/orders", "membersPagingOffset", "membersPagingSlice",
                         "/v1/orderdetails", "/v1/orders", "/v2/orders", "/v3/orders", "/v1/orders/list",
                         "/v1/orders/list", "/ordersPagingOffset", "/ordersPagingSlice", "/v2/orders/list",
                         "/v1/seller/orders/**", "/v1/seller/orders", "/v1/orders/**", "/v1/orderdetails/**",
                         "/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**", "/v1/members/auth/**",
-                        "payment"
+                        "payment", "config-service/**"
                     ).permitAll()
                     .requestMatchers(HttpMethod.POST, "/v1/members").permitAll()
                     .requestMatchers(HttpMethod.POST, "/v1/sellers/**").authenticated()

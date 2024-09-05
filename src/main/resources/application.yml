@@ -1,6 +1,7 @@
 jasypt:
   encryptor:
     bean: jasyptStringEncryptor
+    password: ${ JASYPT_ENCRYPTOR_PASSWORD}
 
 spring:
   profiles:
@@ -31,7 +32,7 @@ spring:
       port: 6379
       duration: 600
 
-email.send: ENC(kGXTSlfxUWNbRoGuBwNRTJBETjMz04AChYMrwDeY3Cs=)
+email.send: ${email.send}
 
 springdoc:
   default-consumes-media-type: application/json # ?? ??? ??
@@ -41,4 +42,3 @@ springdoc:
     tags-sorter: alpha # tag ?? ??? ??? ?
     #path: "swagger.html" # http://localhost:8080/swagger.html? ?? ??
     path: "/" # http://localhost:8080? ?? ??
-

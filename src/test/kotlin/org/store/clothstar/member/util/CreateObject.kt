@@ -1,14 +1,12 @@
 package org.store.clothstar.member.util
 
-import org.store.clothstar.member.domain.Account
-import org.store.clothstar.member.domain.Member
-import org.store.clothstar.member.domain.MemberRole
+import org.store.clothstar.member.domain.*
+import org.store.clothstar.member.domain.vo.AddressInfo
 import org.store.clothstar.member.domain.vo.MemberShoppingActivity
 import org.store.clothstar.member.dto.request.CreateAddressRequest
 import org.store.clothstar.member.dto.request.CreateMemberRequest
 import org.store.clothstar.member.dto.request.CreateSellerRequest
 import org.store.clothstar.member.dto.request.MemberLoginRequest
-
 
 class CreateObject {
     companion object {
@@ -44,9 +42,30 @@ class CreateObject {
 
         fun getMember(): Member {
             return Member(
+                memberId = 1L,
                 telNo = "010-1234-4444",
                 name = "현수",
                 memberShoppingActivity = MemberShoppingActivity.init()
+            )
+        }
+
+        fun getAddress(): Address {
+            return Address(
+                addressId = 1L,
+                receiverName = "현수",
+                telNo = "010-1234-4444",
+                memberId = this.getMember().memberId!!,
+                deliveryRequest = "문 앞에 놔주세요",
+                addressInfo = AddressInfo.init()
+            )
+        }
+
+        fun getSeller(): Seller {
+            return Seller(
+                memberId = this.getMember().memberId!!,
+                brandName = "나이키",
+                bizNo = "123-123",
+                totalSellPrice = 1000
             )
         }
 

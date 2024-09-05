@@ -26,7 +26,6 @@ spring:
       host: ENC(GUuFDW7HjE98e7N28Vkb/xoIEgLeOCb5)
       port: 6379
       duration: 600
-
   jpa:
     hibernate:
       ddl-auto: create
@@ -45,4 +44,4 @@ jwt:
   accessTokenValidTimeMillis: 120000
   refreshTokenValidTimeMillis: 1200000
 
-email.send: ENC(kGXTSlfxUWNbRoGuBwNRTJBETjMz04AChYMrwDeY3Cs=)
+email.send: ${email.send}
