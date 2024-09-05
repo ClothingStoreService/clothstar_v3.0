@@ -135,8 +135,8 @@ jobs:
             ls -la /home/ubuntu/  # AWS 서버에서 파일이 있는지 확인
             cat /home/ubuntu/docker-compose.yml  # AWS 서버에서 파일 내용 확인
 
-      # SSH로 서버에 연결
-      - name: Connect to Server
+      # SSH로 서버에 연결 및 Docker compose 실행
+      - name: Deploy and Run Docker Compose on Server
         uses: appleboy/ssh-action@master
         with:
           username: ubuntu
