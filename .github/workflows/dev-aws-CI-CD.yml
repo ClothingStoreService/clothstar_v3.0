@@ -51,6 +51,9 @@ jobs:
 
       - name: Build With Gradle
         run: ./gradlew build -x test --info
+        
+      - name: List All Files for Debugging
+        run: ls -laR  # 모든 디렉토리의 파일 나열
 
   deploy:
     name: Deploy
