@@ -8,10 +8,10 @@ services:
       - "8080:8080"
     restart: on-failure
 
-#  nginx:
-#    container_name: nginx
-#    image: ${DOCKER_REPOSITORY_NGINX}:latest
-#    ports:
-#      - 80:80
-#    depends_on:
-#      - application
+  nginx:
+    container_name: nginx
+    image: ${DOCKER_REPOSITORY_NGINX}:latest
+    ports:
+      - 80:80
+    depends_on:
+      - application
