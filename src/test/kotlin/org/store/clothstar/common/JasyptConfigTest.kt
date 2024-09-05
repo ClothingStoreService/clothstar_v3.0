@@ -11,7 +11,7 @@ class JasyptConfigTest {
 
     @Test
     fun jasypt() {
-        val url = "kGXTSlfxUWNbRoGuBwNRTJBETjMz04AChYMrwDeY3Cs="
+        val url = ""
         val username = ""
         val password = ""
 

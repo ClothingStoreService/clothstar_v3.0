@@ -67,10 +67,10 @@ class SecurityConfiguration(
                         "/v1/orders/list", "/ordersPagingOffset", "/ordersPagingSlice", "/v2/orders/list",
                         "/v1/seller/orders/**", "/v1/seller/orders", "/v1/orders/**", "/v1/orderdetails/**",
                         "/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**", "/v1/members/auth/**",
-                        "/auth/**", "/kakaoLogin/**", "/kakao_login_medium_narrow.png", "/v1/members?signUpType=KAKAO"
+                        "/auth/**", "/kakaoLogin/**", "/kakao_login_medium_narrow.png", "/v1/members?signUpType=KAKAO",
                         "/auth/**","/kakaoLogin/**", "/kakao_login_medium_narrow.png",
                         "/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**", "/v1/members/auth/**",
-                        "config-service/**"
+                        "config-service/**",
                         "/auth/**","/kakaoLogin/**", "/kakao_login_medium_narrow.png", "/v1/members?signUpType=KAKAO",
                         "/auth/**", "/kakaoLogin/**", "/kakao_login_medium_narrow.png", "/v1/members?signUpType=KAKAO",
                         "/v1/members?signUpType=KAKAO",
