@@ -2,6 +2,6 @@ package org.store.clothstar.common.error.exception
 
 import org.store.clothstar.common.error.ErrorCode
 
-class InvalidSignupType (
+class InvalidSignupType(
     val errorCode: ErrorCode
 ) : RuntimeException(errorCode.message)

@@ -90,6 +90,7 @@ class AuthenticationController(
                     ?: throw InvalidSignupMemberRequest(ErrorCode.INVALID_SIGNUP_MEMBER_REQUEST)
                 signUpService.signUp(kakaoMemberRequest)
             }
+
             else -> throw InvalidSignupType(ErrorCode.INVLIAD_SIGNUP_TYPE)
         }
 

@@ -1,25 +1,25 @@
 package org.store.clothstar.member.authentication.controller
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.MediaType
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.transaction.annotation.Transactional
 import org.store.clothstar.common.config.redis.RedisUtil
-import org.store.clothstar.member.util.CreateObject
-import com.fasterxml.jackson.databind.ObjectMapper
-import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.MediaType
 import org.store.clothstar.kakaoLogin.service.KakaoLoginService
+import org.store.clothstar.member.authentication.domain.SignUpType
 import org.store.clothstar.member.dto.request.KakaoMemberRequest
 import org.store.clothstar.member.dto.request.SignUpRequest
-import org.store.clothstar.member.authentication.domain.SignUpType
+import org.store.clothstar.member.util.CreateObject
 
 @SpringBootTest
 @AutoConfigureMockMvc

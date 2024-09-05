@@ -57,7 +57,9 @@ class MemberSignupValidTest(
 
         //then
         actions.andExpect(status().is4xxClientError())
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.errorMap['createMemberRequest.password']").value("비밀번호는 최소 8자 이상이어야 합니다."))
+        actions.andExpect(
+            MockMvcResultMatchers.jsonPath("$.errorMap['createMemberRequest.password']").value("비밀번호는 최소 8자 이상이어야 합니다.")
+        )
     }
 
     @DisplayName("회원가입시 이름은 필수 값이다.")
@@ -85,7 +87,9 @@ class MemberSignupValidTest(
         //then
         Assertions.assertThat(createMemberRequest.password.length).isLessThan(8)
         actions.andExpect(status().is4xxClientError())
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.errorMap.['createMemberRequest.name']").value("이름은 비어 있을 수 없습니다."))
+        actions.andExpect(
+            MockMvcResultMatchers.jsonPath("$.errorMap.['createMemberRequest.name']").value("이름은 비어 있을 수 없습니다.")
+        )
     }
 
     @DisplayName("회원가입시 전화번호 양식이 지켜져야 한다.")
@@ -113,7 +117,9 @@ class MemberSignupValidTest(
         //then
         Assertions.assertThat(createMemberRequest.password.length).isLessThan(8)
         actions.andExpect(status().is4xxClientError())
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.errorMap.['createMemberRequest.telNo']").value("유효하지 않은 전화번호 형식입니다."))
+        actions.andExpect(
+            MockMvcResultMatchers.jsonPath("$.errorMap.['createMemberRequest.telNo']").value("유효하지 않은 전화번호 형식입니다.")
+        )
     }
 
     @DisplayName("비밀번호 변경 요청시에도 비밀번호는 8자리 이상이여야 한다.")
