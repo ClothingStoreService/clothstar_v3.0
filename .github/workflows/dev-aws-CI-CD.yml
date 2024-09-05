@@ -83,7 +83,7 @@ jobs:
           host: ${{ secrets.AWS_DEV_HOSTNAME }}
           key: ${{ secrets.AWS_DEV_PRIVATE_KEY }}
           source: "./nginx/conf.d/nginx.conf"
-          target: "/home/ubuntu/"
+          target: "/home/ubuntu/nginx.conf"  # 정확한 파일 경로 지정
 
       # Move nginx.conf from Home Directory to /etc/nginx/conf.d
       - name: Move nginx.conf to /etc/nginx/conf.d
