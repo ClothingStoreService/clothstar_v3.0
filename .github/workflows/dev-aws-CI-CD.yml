@@ -92,6 +92,8 @@ jobs:
           key: ${{ secrets.AWS_DEV_PRIVATE_KEY }}
           source: "./nginx/conf.d/nginx.conf"
           target: "/etc/nginx/conf.d/"
+          # 복사하기 전에 /etc/nginx/conf.d/ 디렉토리가 존재하는지 확인하고, 존재하지 않는다면 해당 디렉토리를 생성
+          command: "sudo mkdir -p /etc/nginx/conf.d/ && sudo scp"
 
       ## Docker login
       - name: Docker Login
