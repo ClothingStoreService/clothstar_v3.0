@@ -30,10 +30,10 @@ class KakaoLoginService {
     private lateinit var redirectUri: String
 
     @Value("\${spring.security.oauth2.client.provider.kakao.token_uri}")
-    private lateinit var tokenUri: String
+    lateinit var tokenUri: String
 
     @Value("\${spring.security.oauth2.client.provider.kakao.user_info_uri}")
-    private lateinit var userUri: String
+    lateinit var userUri: String
 
     // 토큰 가져오기
     fun getAccessToken(code: String): KakaoTokenResponseDto {

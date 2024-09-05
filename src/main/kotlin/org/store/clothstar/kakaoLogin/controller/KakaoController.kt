@@ -12,18 +12,9 @@ import org.store.clothstar.kakaoLogin.service.KakaoLoginService
 class KakaoController(
     private val kakaoLoginService: KakaoLoginService,
 ) {
-    // 인가코드 받기 - 액세스 토큰 받기 - 사용자 정보 받기
+    // 인가코드 받기
     @GetMapping("/auth/kakao/callback")
     fun kakaoCallback(@RequestParam code: String): ResponseEntity<String> {
-        // 액세스 토큰 받아오기 - 저장 나중에 하기
-//        val accessToken = kakaoLoginService.getAccessToken(code)
-//        // 사용자 정보 받아오기 - 저장 나중에 하기
-//        val userInfo = kakaoLoginService.getUserInfo(accessToken.accessToken!!)
-//        // 두 정보를 KakaoTokenUserInfoResponseDto로 합쳐서 반환
-//        val tokenUserInfo = TokenUserInfoResponseDto(
-//            accessToken = accessToken,
-//            userInfo = userInfo
-//        )
         return ResponseEntity.ok(code)
     }
 
