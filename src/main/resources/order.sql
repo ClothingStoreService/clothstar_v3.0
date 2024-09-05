@@ -77,6 +77,8 @@ from address;
 select *
 from member;
 select *
+from account;
+select *
 from seller;
 select *
 from category;

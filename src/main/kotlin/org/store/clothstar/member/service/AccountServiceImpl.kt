@@ -9,6 +9,7 @@ import org.store.clothstar.common.error.exception.NotFoundAccountException
 import org.store.clothstar.member.domain.Account
 import org.store.clothstar.member.domain.MemberRole
 import org.store.clothstar.member.dto.request.CreateMemberRequest
+import org.store.clothstar.member.dto.request.KakaoMemberRequest
 import org.store.clothstar.member.repository.AccountRepository
 
 @Service
@@ -23,6 +24,22 @@ class AccountServiceImpl(
         val account = Account(
             email = createMemberDTO.email,
             password = passwordEncoder.encode(createMemberDTO.password),
+            role = MemberRole.USER,
+            userId = memberId,
+        )
+
+        return accountRepository.save(account)
+    }
+
+    @Transactional
+    override fun saveKakaoAccount(memberId: Long, createKakaoMemberDTO: KakaoMemberRequest): Account {
+        // 이메일 중복 검사
+        accountRepository.findByEmail(createKakaoMemberDTO.email!!)?.let {
+            throw DuplicatedEmailException(ErrorCode.DUPLICATED_EMAIL)
+        }
+
+        val account = Account(
+            email = createKakaoMemberDTO.email,
             role = MemberRole.USER,
             userId = memberId,
         )

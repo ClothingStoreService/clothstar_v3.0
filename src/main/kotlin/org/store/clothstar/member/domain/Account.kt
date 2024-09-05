@@ -11,7 +11,7 @@ class Account(
 
     @Column(unique = true)
     val email: String, //getter 자동 생성
-    var password: String,
+    var password: String? = null,
 
     @Enumerated(EnumType.STRING)
     var role: MemberRole,
