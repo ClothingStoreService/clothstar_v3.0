@@ -91,7 +91,7 @@ jobs:
           host: ${{ secrets.AWS_DEV_HOSTNAME }}
           key: ${{ secrets.AWS_DEV_PRIVATE_KEY }}
           source: "./nginx/conf.d/nginx.conf"
-          target: "/home/ubuntu/"
+          target: "/etc/nginx/conf.d/"
 
       ## Docker login
       - name: Docker Login
