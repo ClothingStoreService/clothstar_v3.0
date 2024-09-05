@@ -40,8 +40,6 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build With Gradle
-        env:
-          JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
         run: ./gradlew build -x test --info
 
       - name: List All Files for Debugging
@@ -143,7 +141,6 @@ jobs:
             docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
             export DOCKER_REPOSITORY=${{ secrets.DOCKER_REPOSITORY }}
             export DOCKER_REPOSITORY_NGINX=${{ secrets.DOCKER_REPOSITORY_NGINX }}
-            export JASYPT_ENCRYPTOR_PASSWORD=${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
             # Pull 최신 이미지
             docker-compose -f /home/ubuntu/docker-compose.yml pull
             # 새 컨테이너 실행

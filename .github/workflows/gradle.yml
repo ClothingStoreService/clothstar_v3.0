@@ -30,8 +30,6 @@ jobs:
         run: |
           ./gradlew build
           ./gradlew --info test
-        env:
-          JASYPT_ENCRYPTOR_PASSWORD: ${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
 
       - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1
