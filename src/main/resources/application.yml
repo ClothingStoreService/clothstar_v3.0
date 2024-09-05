@@ -1,7 +1,7 @@
 jasypt:
   encryptor:
     bean: jasyptStringEncryptor
-    password: ${ JASYPT_ENCRYPTOR_PASSWORD}
+    password: ${jasypt.encryptor.password}
 
 spring:
   profiles:

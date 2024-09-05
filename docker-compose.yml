@@ -1,26 +1,17 @@
-version: '3'
-
 services:
-
   application:
     container_name: clothstar-springboot-dev
     image: ${DOCKER_REPOSITORY}:latest
     environment:
       - JASYPT_ENCRYPTOR_PASSWORD=${JASYPT_ENCRYPTOR_PASSWORD}
-    build:
-      context: ./
-      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     restart: on-failure
-    networks:
-      - preon_net
 
-
-#  nginx:
-#    container_name: nginx
-#    image: ${DOCKER_REPOSITORY_NGINX}:latest
-#    ports:
-#      - 80:80
-#    depends_on:
-#      - application
+  nginx:
+    container_name: nginx
+    image: ${DOCKER_REPOSITORY_NGINX}:latest
+    ports:
+      - 80:80
+    depends_on:
+      - application
