@@ -1,6 +1,5 @@
 package org.store.clothstar.order.service
 
-import io.kotest.matchers.ints.exactly
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -31,8 +30,6 @@ import org.store.clothstar.order.domain.Order
 import org.store.clothstar.order.domain.OrderDetail
 import org.store.clothstar.order.domain.vo.*
 import org.store.clothstar.order.dto.request.AddOrderDetailRequest
-import org.store.clothstar.order.dto.request.CreateOrderDetailRequest
-import org.store.clothstar.order.dto.request.CreateOrderRequest
 import org.store.clothstar.order.dto.request.OrderRequestWrapper
 import org.store.clothstar.order.dto.response.OrderResponse
 import org.store.clothstar.order.repository.OrderDetailRepository
@@ -74,122 +71,109 @@ class OrderUserServiceTest {
     @MockK
     lateinit var productService: ProductService
 
-    @MockK
-    lateinit var order: Order
-
-    @MockK
-    lateinit var orderDetail: OrderDetail
-
-    @MockK
-    lateinit var member: Member
-
-    @MockK
-    lateinit var seller: Seller
-
-    @MockK
-    lateinit var address: Address
-
-    @MockK
-    lateinit var product: Product
-
-    @MockK
-    lateinit var item: Item
-
-    @MockK
-    lateinit var addressInfo: AddressInfo
-
-    @MockK
-    lateinit var totalPrice: TotalPrice
-
-    @MockK
-    lateinit var price: Price
-
-    val orderId = "4b1a17b5-45f0-455a-a5e3-2c863de18b05"
-    val memberId = 1L
-    val addressId = 2L
-    val productId = 3L
-    val itemId = 4L
-
-    // 단일 주문 조회 - getOrder
     @Test
     @DisplayName("단일 주문 조회 - 성공 테스트")
     fun getOrder_success_test() {
-        //given
-        // orderId 관련 order, member, address, seller 불러오기
-        every { orderRepository.findByOrderIdAndDeletedAtIsNull(orderId) } returns order
-        every { order.memberId } returns memberId
-        every { order.addressId } returns addressId
-        every { memberService.getMemberByMemberId(memberId) } returns member
-        every { addressService.getAddressById(addressId) } returns address
-        every { sellerService.getSellerById(memberId) } returns seller
+        // Mock 객체 생성 및 설정
+        val orderPrice = mockk<Price> {
+            every { fixedPrice } returns 10000
+            every { oneKindTotalPrice } returns 10000
+        }
 
-        every { totalPrice.shipping } returns 3000
-        every { totalPrice.products } returns 5000
-        every { totalPrice.payment } returns 8000
-        every { order.orderId } returns orderId
-        every { member.name } returns "수빈"
-        every { order.createdAt } returns LocalDateTime.now()
-        every { order.status } returns Status.CONFIRMED
-        every { order.paymentMethod } returns PaymentMethod.CARD
-        every { order.totalPrice } returns totalPrice
-        every { address.addressInfo } returns addressInfo
-        every { address.receiverName } returns "수빈"
-        every { addressInfo.addressBasic } returns "address1"
-        every { addressInfo.addressDetail } returns "address2"
-        every { address.telNo } returns "010-1111-1111"
-        every { address.deliveryRequest } returns "문앞"
+        val orderDetail = mockk<OrderDetail> {
+            every { price } returns orderPrice
+            every { quantity } returns 1
+            every { orderDetailId } returns 1L
+            every { deletedAt } returns null
+            every { itemId } returns 1L
+            every { productId } returns 1L
+        }
 
-        // 응답 DTO 생성(주문상세 리스트는 빈 상태)
-        val expectedorderResponse = OrderResponse.from(order, member, address)
+        val item = mockk<Item> {
+            every { itemId } returns 1L
+            every { name } returns "상품옵션이름"
+            every { finalPrice } returns 10000
+        }
 
-        every { order.orderDetails } returns mutableListOf(orderDetail)
-        every { orderDetail.deletedAt } returns null
+        val product = mockk<Product> {
+            every { productId } returns 1L
+            every { name } returns "상품이름"
+            every { price } returns 1000
+        }
 
-        // productIds, itemIds로부터 Product/Item 리스트 가져오기
-        every { orderDetail.itemId } returns itemId
-        every { orderDetail.productId } returns productId
-        every { productService.findByProductIdIn(listOf(productId)) } returns listOf(product)
-        every { itemService.findByIdIn(listOf(itemId)) } returns listOf(item)
+        val member = mockk<Member> {
+            every { name } returns "수빈"
+        }
 
-        every { item.itemId } returns itemId
-        every { product.productId } returns productId
+        val orderAddressInfo = mockk<AddressInfo> {
+            every { addressBasic } returns "address1"
+            every { addressDetail } returns "address2"
+        }
 
-        every { orderDetail.orderDetailId } returns 1L
-        every { product.name } returns "상품이름"
-        every { item.name } returns "상품옵션이름"
-        every { seller.brandName } returns "brandName"
-        every { product.price } returns 1000
-        every { orderDetail.quantity } returns 1
-        every { orderDetail.price } returns price
-        every { item.finalPrice } returns 10000
-        every { price.oneKindTotalPrice } returns 10000
+        val address = mockk<Address> {
+            every { addressInfo } returns orderAddressInfo
+            every { receiverName } returns "수빈"
+            every { telNo } returns "010-1111-1111"
+            every { deliveryRequest } returns "문앞"
+        }
 
-        // 주문상세 DTO 리스트 만들기
+        val seller = mockk<Seller> {
+            every { brandName } returns "brandName"
+        }
+
+        val orderTotalPrice = mockk<TotalPrice> {
+            every { shipping } returns 3000
+            every { products } returns 5000
+            every { payment } returns 8000
+        }
+
+        val order = mockk<Order> {
+            every { orderId } returns "4b1a17b5-45f0-455a-a5e3-2c863de18b05"
+            every { memberId } returns 1L
+            every { addressId } returns 1L
+            every { createdAt } returns LocalDateTime.now()
+            every { status } returns Status.CONFIRMED
+            every { paymentMethod } returns PaymentMethod.CARD
+            every { totalPrice } returns orderTotalPrice
+            every { orderDetails } returns mutableListOf(orderDetail)
+        }
+
+        // OrderDetailDTO 생성
         val orderDetailDTOs = listOf(OrderDetailDTO.from(orderDetail, item, product, seller.brandName))
 
-        // 응답 DTO에 주문상세 DTO 리스트 추가
-        expectedorderResponse.updateOrderDetailList(orderDetailDTOs)
+        // 기대하는 OrderResponse 생성
+        val expectedOrderResponse = OrderResponse.from(order, member, address).apply {
+            updateOrderDetailList(orderDetailDTOs)
+        }
 
-        //when
-        val orderReponse = orderUserService.getOrder(orderId)
+        // Mock 동작 설정
+        every { orderRepository.findByOrderIdAndDeletedAtIsNull(any()) } returns order
+        every { memberService.getMemberByMemberId(any()) } returns member
+        every { addressService.getAddressById((any())) } returns address
+        every { sellerService.getSellerById((any())) } returns seller
+        every { productService.findByProductIdIn(any()) } returns listOf(product)
+        every { itemService.findByIdIn(any()) } returns listOf(item)
+
+        // when
+        val orderResponse = orderUserService.getOrder(order.orderId)
 
         // then
-        assertThat(orderReponse).usingRecursiveComparison().isEqualTo(expectedorderResponse)
-        verify(exactly = 1) { orderRepository.findByOrderIdAndDeletedAtIsNull(orderId) }
-        verify(exactly = 1) { memberService.getMemberByMemberId(memberId) }
-        verify(exactly = 1) { itemService.findByIdIn(listOf(itemId)) }
-        verify(exactly = 1) { productService.findByProductIdIn(listOf(productId)) }
+        assertThat(orderResponse).usingRecursiveComparison().isEqualTo(expectedOrderResponse)
+        verify(exactly = 1) { orderRepository.findByOrderIdAndDeletedAtIsNull(any()) }
+        verify(exactly = 1) { memberService.getMemberByMemberId(any()) }
+        verify(exactly = 1) { itemService.findByIdIn(any()) }
+        verify(exactly = 1) { productService.findByProductIdIn(any()) }
     }
 
     @Test
     @DisplayName("단일 주문 조회 - 주문번호가 존재하지 않을 때 예외처리 테스트")
     fun getOrder_orderNotFound_exception_test() {
         //given
-        every { orderRepository.findByOrderIdAndDeletedAtIsNull(orderId) } returns null
+        every { orderRepository.findByOrderIdAndDeletedAtIsNull(any()) } returns null
 
         //when & then
         val exception = assertThrows<OrderNotFoundException> {
-            orderUserService.getOrder(orderId)
+            orderUserService.getOrder("4b1a17b5-45f0-455a-a5e3-2c863de18b05")
         }
         assertEquals(ErrorCode.NOT_FOUND_ORDER, exception.errorCode)
     }
@@ -197,60 +181,85 @@ class OrderUserServiceTest {
     @Test
     @DisplayName("전체 주문 페이징 조회 offset 방식 - 성공 테스트")
     fun getAllOrderOffsetPaging_success_test() {
+        // Mock 객체 생성 및 설정
+        val orderPrice = mockk<Price> {
+            every { fixedPrice } returns 10000
+            every { oneKindTotalPrice } returns 10000
+        }
+
+        val orderDetail = mockk<OrderDetail> {
+            every { price } returns orderPrice
+            every { quantity } returns 1
+            every { orderDetailId } returns 1L
+            every { deletedAt } returns null
+            every { itemId } returns 1L
+            every { productId } returns 1L
+        }
+
+        val item = mockk<Item> {
+            every { itemId } returns 1L
+            every { name } returns "상품옵션이름"
+            every { finalPrice } returns 10000
+        }
+
+        val product = mockk<Product> {
+            every { productId } returns 1L
+            every { name } returns "상품이름"
+            every { price } returns 1000
+        }
+
+        val member = mockk<Member> {
+            every { name } returns "수빈"
+        }
+
+        val orderAddressInfo = mockk<AddressInfo> {
+            every { addressBasic } returns "address1"
+            every { addressDetail } returns "address2"
+        }
+
+        val address = mockk<Address> {
+            every { addressInfo } returns orderAddressInfo
+            every { receiverName } returns "수빈"
+            every { telNo } returns "010-1111-1111"
+            every { deliveryRequest } returns "문앞"
+        }
+
+        val seller = mockk<Seller> {
+            every { brandName } returns "brandName"
+        }
+
+        val orderTotalPrice = mockk<TotalPrice> {
+            every { shipping } returns 3000
+            every { products } returns 5000
+            every { payment } returns 8000
+        }
+
+        val order = mockk<Order> {
+            every { orderId } returns "4b1a17b5-45f0-455a-a5e3-2c863de18b05"
+            every { memberId } returns 1L
+            every { addressId } returns 1L
+            every { createdAt } returns LocalDateTime.now()
+            every { status } returns Status.CONFIRMED
+            every { paymentMethod } returns PaymentMethod.CARD
+            every { totalPrice } returns orderTotalPrice
+            every { orderDetails } returns mutableListOf(orderDetail)
+        }
+
         // given
         val pageable: Pageable = PageRequest.of(0, 10)
         val orders: Page<Order> = PageImpl(listOf(order))
         every { orderRepository.findAll(pageable) } returns orders
 
         // order 관련 member, address, seller 불러오기
-        every { order.memberId } returns memberId
-        every { order.addressId } returns addressId
-        every { memberService.getMemberByMemberId(memberId) } returns member
-        every { addressService.getAddressById(addressId) } returns address
-        every { sellerService.getSellerById(memberId) } returns seller
-
-        every { totalPrice.shipping } returns 3000
-        every { totalPrice.products } returns 5000
-        every { totalPrice.payment } returns 8000
-        every { order.orderId } returns orderId
-        every { member.name } returns "수빈"
-        every { order.createdAt } returns LocalDateTime.now()
-        every { order.status } returns Status.CONFIRMED
-        every { order.paymentMethod } returns PaymentMethod.CARD
-        every { order.totalPrice } returns totalPrice
-        every { address.addressInfo } returns addressInfo
-        every { address.receiverName } returns "수빈"
-        every { addressInfo.addressBasic } returns "address1"
-        every { addressInfo.addressDetail } returns "address2"
-        every { address.telNo } returns "010-1111-1111"
-        every { address.deliveryRequest } returns "문앞"
+        every { memberService.getMemberByMemberId(any()) } returns member
+        every { addressService.getAddressById(any()) } returns address
+        every { sellerService.getSellerById(any()) } returns seller
 
         // 응답 DTO 생성(주문상세 리스트는 빈 상태)
         val expectedOrderResponse = OrderResponse.from(order, member, address)
 
-        every { order.orderDetails } returns mutableListOf(orderDetail)
-        every { orderDetail.deletedAt } returns null
-
-        every { product.productId } returns productId
-
-        // productIds, itemIds로부터 Product/Item 리스트 가져오기
-        every { orderDetail.itemId } returns itemId
-        every { orderDetail.productId } returns productId
-        every { productService.findByProductIdIn(listOf(productId)) } returns listOf(product)
-        every { itemService.findByIdIn(listOf(itemId)) } returns listOf(item)
-
-        every { item.itemId } returns itemId
-        every { product.productId } returns productId
-
-        every { orderDetail.orderDetailId } returns 1L
-        every { product.name } returns "상품이름"
-        every { item.name } returns "상품옵션이름"
-        every { seller.brandName } returns "brandName"
-        every { product.price } returns 1000
-        every { orderDetail.quantity } returns 1
-        every { orderDetail.price } returns price
-        every { item.finalPrice } returns 10000
-        every { price.oneKindTotalPrice } returns 10000
+        every { productService.findByProductIdIn(any()) } returns listOf(product)
+        every { itemService.findByIdIn(any()) } returns listOf(item)
 
         // 주문상세 DTO 리스트 만들기
         val orderDetailDTOs: List<OrderDetailDTO> =
@@ -265,70 +274,96 @@ class OrderUserServiceTest {
         // then
         assertThat(orderResponses.content).usingRecursiveComparison().isEqualTo(listOf(expectedOrderResponse))
         verify(exactly = 1) { orderRepository.findAll(pageable) }
-        verify(exactly = 1) { memberService.getMemberByMemberId(memberId) }
-        verify(exactly = 1) { addressService.getAddressById(addressId) }
-        verify(exactly = 1) { sellerService.getSellerById(memberId) }
-        verify(exactly = 1) { productService.findByProductIdIn(listOf(productId)) }
-        verify(exactly = 1) { itemService.findByIdIn(listOf(itemId)) }
+        verify(exactly = 1) { memberService.getMemberByMemberId(any()) }
+        verify(exactly = 1) { addressService.getAddressById(any()) }
+        verify(exactly = 1) { sellerService.getSellerById(any()) }
+        verify(exactly = 1) { productService.findByProductIdIn(any()) }
+        verify(exactly = 1) { itemService.findByIdIn(any()) }
     }
 
     @Test
     @DisplayName("전체 주문 페이징 조회 slice 방식 - 성공 테스트")
     fun getAllOrderSlicePaging_success_test() {
+        // Mock 객체 생성 및 설정
+        val orderPrice = mockk<Price> {
+            every { fixedPrice } returns 10000
+            every { oneKindTotalPrice } returns 10000
+        }
+
+        val orderDetail = mockk<OrderDetail> {
+            every { price } returns orderPrice
+            every { quantity } returns 1
+            every { orderDetailId } returns 1L
+            every { deletedAt } returns null
+            every { itemId } returns 1L
+            every { productId } returns 1L
+        }
+
+        val item = mockk<Item> {
+            every { itemId } returns 1L
+            every { name } returns "상품옵션이름"
+            every { finalPrice } returns 10000
+        }
+
+        val product = mockk<Product> {
+            every { productId } returns 1L
+            every { name } returns "상품이름"
+            every { price } returns 1000
+        }
+
+        val member = mockk<Member> {
+            every { name } returns "수빈"
+        }
+
+        val orderAddressInfo = mockk<AddressInfo> {
+            every { addressBasic } returns "address1"
+            every { addressDetail } returns "address2"
+        }
+
+        val address = mockk<Address> {
+            every { addressInfo } returns orderAddressInfo
+            every { receiverName } returns "수빈"
+            every { telNo } returns "010-1111-1111"
+            every { deliveryRequest } returns "문앞"
+        }
+
+        val seller = mockk<Seller> {
+            every { brandName } returns "brandName"
+        }
+
+        val orderTotalPrice = mockk<TotalPrice> {
+            every { shipping } returns 3000
+            every { products } returns 5000
+            every { payment } returns 8000
+        }
+
+        val order = mockk<Order> {
+            every { orderId } returns "4b1a17b5-45f0-455a-a5e3-2c863de18b05"
+            every { memberId } returns 1L
+            every { addressId } returns 1L
+            every { createdAt } returns LocalDateTime.now()
+            every { status } returns Status.CONFIRMED
+            every { paymentMethod } returns PaymentMethod.CARD
+            every { totalPrice } returns orderTotalPrice
+            every { orderDetails } returns mutableListOf(orderDetail)
+        }
+
         // given
         val pageable: Pageable = PageRequest.of(0, 10)
         val orders: Page<Order> = PageImpl(listOf(order))
         every { orderRepository.findAllByOrderByOrderIdDesc(pageable) } returns orders
 
         // order 관련 member, address, seller 불러오기
-        every { order.memberId } returns memberId
-        every { order.addressId } returns addressId
-        every { memberService.getMemberByMemberId(memberId) } returns member
-        every { addressService.getAddressById(addressId) } returns address
-        every { sellerService.getSellerById(memberId) } returns seller
-
-        every { totalPrice.shipping } returns 3000
-        every { totalPrice.products } returns 5000
-        every { totalPrice.payment } returns 8000
-        every { order.orderId } returns orderId
-        every { member.name } returns "수빈"
-        every { order.createdAt } returns LocalDateTime.now()
-        every { order.status } returns Status.CONFIRMED
-        every { order.paymentMethod } returns PaymentMethod.CARD
-        every { order.totalPrice } returns totalPrice
-        every { address.addressInfo } returns addressInfo
-        every { address.receiverName } returns "수빈"
-        every { addressInfo.addressBasic } returns "address1"
-        every { addressInfo.addressDetail } returns "address2"
-        every { address.telNo } returns "010-1111-1111"
-        every { address.deliveryRequest } returns "문앞"
+        every { memberService.getMemberByMemberId(any()) } returns member
+        every { addressService.getAddressById(any()) } returns address
+        every { sellerService.getSellerById(any()) } returns seller
 
         // 응답 DTO 생성(주문상세 리스트는 빈 상태)
         val expectedOrderResponse = OrderResponse.from(order, member, address)
 
-        every { order.orderDetails } returns mutableListOf(orderDetail)
-        every { orderDetail.deletedAt } returns null
-
-        every { product.productId } returns productId
-
         // productIds, itemIds로부터 Product/Item 리스트 가져오기
-        every { orderDetail.itemId } returns itemId
-        every { orderDetail.productId } returns productId
-        every { productService.findByProductIdIn(listOf(productId)) } returns listOf(product)
-        every { itemService.findByIdIn(listOf(itemId)) } returns listOf(item)
-
-        every { item.itemId } returns itemId
-        every { product.productId } returns productId
-
-        every { orderDetail.orderDetailId } returns 1L
-        every { product.name } returns "상품이름"
-        every { item.name } returns "상품옵션이름"
-        every { seller.brandName } returns "brandName"
-        every { product.price } returns 1000
-        every { orderDetail.quantity } returns 1
-        every { orderDetail.price } returns price
-        every { item.finalPrice } returns 10000
-        every { price.oneKindTotalPrice } returns 10000
+        every { productService.findByProductIdIn(any()) } returns listOf(product)
+        every { itemService.findByIdIn(any()) } returns listOf(item)
 
         // 주문상세 DTO 리스트 만들기
         val orderDetailDTOs: List<OrderDetailDTO> =
@@ -343,11 +378,11 @@ class OrderUserServiceTest {
         // then
         assertThat(orderResponses.content).usingRecursiveComparison().isEqualTo(listOf(expectedOrderResponse))
         verify(exactly = 1) { orderRepository.findAllByOrderByOrderIdDesc(pageable) }
-        verify(exactly = 1) { memberService.getMemberByMemberId(memberId) }
-        verify(exactly = 1) { addressService.getAddressById(addressId) }
-        verify(exactly = 1) { sellerService.getSellerById(memberId) }
-        verify(exactly = 1) { productService.findByProductIdIn(listOf(productId)) }
-        verify(exactly = 1) { itemService.findByIdIn(listOf(itemId)) }
+        verify(exactly = 1) { memberService.getMemberByMemberId(any()) }
+        verify(exactly = 1) { addressService.getAddressById(any()) }
+        verify(exactly = 1) { sellerService.getSellerById(any()) }
+        verify(exactly = 1) { productService.findByProductIdIn(any()) }
+        verify(exactly = 1) { itemService.findByIdIn(any()) }
     }
 
     @Test
@@ -355,7 +390,7 @@ class OrderUserServiceTest {
     fun saveOrder() {
         //given
         val orderRequestWrapper = mockk<OrderRequestWrapper>()
-        every { orderUserService.saveOrder(orderRequestWrapper) } returns orderId
+        every { orderUserService.saveOrder(orderRequestWrapper) } returns "4b1a17b5-45f0-455a-a5e3-2c863de18b05"
 
         //when
         orderUserService.saveOrder(orderRequestWrapper)
@@ -367,50 +402,66 @@ class OrderUserServiceTest {
     @Test
     @DisplayName("주문 상세 추가 - 성공 테스트")
     fun addOrderDetail_success_test() {
-        // 요청 DTO 모킹
-        val addOrderDetailRequest = mockk<AddOrderDetailRequest>()
-        every { addOrderDetailRequest.orderId } returns orderId
-        every { addOrderDetailRequest.productId } returns productId
-        every { addOrderDetailRequest.itemId } returns itemId
-        every { addOrderDetailRequest.quantity } returns 1
+        // Mock 객체 생성 및 설정
+        val orderPrice = mockk<Price> {
+            every { oneKindTotalPrice } returns 10000
+        }
+
+        val item = mockk<Item> {
+            every { itemId } returns 1L
+            every { stock } returns 10
+        }
+
+        val product = mockk<Product> {
+            every { productId } returns 1L
+            every { price } returns 1000
+        }
+
+        val orderTotalPrice = mockk<TotalPrice> {
+            every { shipping } returns 3000
+            every { products } returns 5000
+        }
+
+        val order = mockk<Order> {
+            every { orderId } returns "4b1a17b5-45f0-455a-a5e3-2c863de18b05"
+            every { status } returns Status.CONFIRMED
+            every { totalPrice } returns orderTotalPrice
+            every { totalPrice.products } returns 5000
+            every { totalPrice.shipping } returns 3000
+        }
+
+        val addOrderDetailRequest = mockk<AddOrderDetailRequest> {
+            every { orderId } returns order.orderId
+            every { productId } returns 1L
+            every { itemId } returns 1L
+            every { quantity } returns 1
+        }
+
+        val orderDetail = mockk<OrderDetail> {
+            every { price } returns orderPrice
+            every { quantity } returns addOrderDetailRequest.quantity
+            every { orderDetailId } returns 1L
+        }
 
         // 요청 DTO와 관련된 order, product, item 불러오기
-        every { orderRepository.findByIdOrNull(orderId) } returns order
-        every { productService.getProductById(productId) } returns product
-        every { itemService.getItemById(itemId) } returns item
-
-        every { item.stock } returns 10
-        every { order.status } returns Status.CONFIRMED
-
-        every { product.price } returns 1000
-        every { product.productId } returns productId
-        every { item.itemId } returns itemId
+        every { orderRepository.findByIdOrNull(any()) } returns order
+        every { productService.getProductById(any()) } returns product
+        every { itemService.getItemById(any()) } returns item
 
         every { addOrderDetailRequest.toOrderDetail(order, product, item) } returns orderDetail
         every { orderDetailRepository.save(orderDetail) } returns orderDetail
 
-        every { order.totalPrice } returns totalPrice
-        every { orderDetail.price } returns price
-        every { order.totalPrice.products } returns 10000
-        every { orderDetail.price.oneKindTotalPrice } returns 10000
-        every { order.totalPrice.shipping } returns 3000
-
         justRun { order.addOrderDetail(any()) }
-
-        every { orderDetail.quantity } returns addOrderDetailRequest.quantity
-
         justRun { order.totalPrice.updatePrices(any(), any()) }
         justRun { item.updateStock(any()) }
-
         justRun { orderUserService.updateProductStock(item, orderDetail.quantity) }
-        every { orderDetail.orderDetailId } returns 123L
 
         //when
         val orderDetailId: Long = orderUserService.addOrderDetail(addOrderDetailRequest)
 
         //then
         assertEquals(orderDetailId, orderDetail.orderDetailId)
-        verify(exactly = 1) { orderRepository.findByIdOrNull(orderId) }
+        verify(exactly = 1) { orderRepository.findByIdOrNull(any()) }
         verify(exactly = 1) { orderDetailRepository.save(orderDetail) }
     }
 
@@ -419,12 +470,12 @@ class OrderUserServiceTest {
     fun addOrderDetail_orderNotFound_exception_test() {
         //given
         val addOrderDetailRequest = AddOrderDetailRequest(
-            orderId = orderId,
-            productId = productId,
-            itemId = itemId,
+            orderId = "4b1a17b5-45f0-455a-a5e3-2c863de18b05",
+            productId = 1L,
+            itemId = 1L,
             quantity = 1,
         )
-        every { orderRepository.findByIdOrNull(orderId) } returns null
+        every { orderRepository.findByIdOrNull(any()) } returns null
 
         //when & then
         val exception = assertThrows<OrderNotFoundException> {
@@ -438,15 +489,20 @@ class OrderUserServiceTest {
     fun addOrderDetail_insufficientStock_exception_test() {
         //given
         val addOrderDetailRequest = AddOrderDetailRequest(
-            orderId = orderId,
-            productId = productId,
-            itemId = itemId,
+            orderId = "4b1a17b5-45f0-455a-a5e3-2c863de18b05",
+            productId = 1L,
+            itemId = 1L,
             quantity = 100,
         )
-        every { orderRepository.findByIdOrNull(orderId) } returns order
-        every { productService.getProductById(productId) } returns product
-        every { itemService.getItemById(itemId) } returns item
-        every { item.stock } returns 10
+        val item = mockk<Item> {
+            every { stock } returns 10
+        }
+        val product = mockk<Product> {}
+        val order = mockk<Order> {}
+
+        every { orderRepository.findByIdOrNull(any()) } returns order
+        every { productService.getProductById(any()) } returns product
+        every { itemService.getItemById(any()) } returns item
 
         //when & then
         val exception = assertThrows<InsufficientStockException> {
@@ -460,16 +516,22 @@ class OrderUserServiceTest {
     fun addOrderDetail_invalidOrderStatusException_exception_test() {
         //given
         val addOrderDetailRequest = AddOrderDetailRequest(
-            orderId = orderId,
-            productId = productId,
-            itemId = itemId,
+            orderId = "4b1a17b5-45f0-455a-a5e3-2c863de18b05",
+            productId = 1L,
+            itemId = 1L,
             quantity = 1,
         )
-        every { orderRepository.findByIdOrNull(orderId) } returns order
-        every { productService.getProductById(productId) } returns product
-        every { itemService.getItemById(itemId) } returns item
-        every { item.stock } returns 10
-        every { order.status } returns Status.DELIVERED
+        val item = mockk<Item> {
+            every { stock } returns 10
+        }
+        val product = mockk<Product> {}
+        val order = mockk<Order> {
+            every { status } returns Status.DELIVERED
+        }
+
+        every { orderRepository.findByIdOrNull(any()) } returns order
+        every { productService.getProductById(any()) } returns product
+        every { itemService.getItemById(any()) } returns item
 
         //when & then
         val exception = assertThrows<InvalidOrderStatusException> {
@@ -483,18 +545,20 @@ class OrderUserServiceTest {
     @DisplayName("구매자 구매 확정 - 성공 테스트")
     fun completeOrder_success_test() {
         //given
-        every { order.status } returns Status.DELIVERED
-        every { orderRepository.findByIdOrNull(orderId) } returns order
+        val order = mockk<Order> {
+            every { status } returns Status.DELIVERED
+        }
+        every { orderRepository.findByIdOrNull(any()) } returns order
         justRun { order.validateForStatusDELIVEREDAndDeletedAt() }
         every { order.updateStatus(Status.COMPLETED) } answers {
             every { order.status } returns Status.COMPLETED
         }
 
         //when
-        orderUserService.completeOrder(orderId)
+        orderUserService.completeOrder("4b1a17b5-45f0-455a-a5e3-2c863de18b05")
 
         //then
-        verify(exactly = 1) { orderRepository.findByIdOrNull(orderId) }
+        verify(exactly = 1) { orderRepository.findByIdOrNull(any()) }
         verify(exactly = 1) { order.validateForStatusDELIVEREDAndDeletedAt() }
         verify(exactly = 1) { order.updateStatus(Status.COMPLETED) }
         assertEquals(Status.COMPLETED, order.status)
@@ -504,12 +568,14 @@ class OrderUserServiceTest {
     @DisplayName("구매자 구매 확정 - 주문번호가 존재하지 않을 때 예외처리 테스트")
     fun completeOrder_orderNotFound_exception_test() {
         //given
-        every { order.status } returns Status.DELIVERED
-        every { orderRepository.findByIdOrNull(orderId) } returns null
+        val order = mockk<Order> {
+            every { status } returns Status.DELIVERED
+        }
+        every { orderRepository.findByIdOrNull(any()) } returns null
 
         //when & then
         val exception = assertThrows<OrderNotFoundException> {
-            orderUserService.completeOrder(orderId)
+            orderUserService.completeOrder("4b1a17b5-45f0-455a-a5e3-2c863de18b05")
         }
         assertEquals(ErrorCode.NOT_FOUND_ORDER, exception.errorCode)
     }
@@ -519,18 +585,20 @@ class OrderUserServiceTest {
     @DisplayName("구매자 주문 취소 - 성공 테스트")
     fun cancelOrder_success_test() {
         //given
-        every { order.status } returns Status.CONFIRMED
-        every { orderRepository.findByIdOrNull(orderId) } returns order
+        val order = mockk<Order> {
+            every { status } returns Status.CONFIRMED
+        }
+        every { orderRepository.findByIdOrNull(any()) } returns order
         justRun { order.validateForStatusCONFIRMEDAndDeletedAt() }
         every { order.updateStatus(Status.CANCELED) } answers {
             every { order.status } returns Status.CANCELED
         }
 
         //when
-        orderUserService.cancelOrder(orderId)
+        orderUserService.cancelOrder("4b1a17b5-45f0-455a-a5e3-2c863de18b05")
 
         //then
-        verify(exactly = 1) { orderRepository.findByIdOrNull(orderId) }
+        verify(exactly = 1) { orderRepository.findByIdOrNull(any()) }
         verify(exactly = 1) { order.validateForStatusCONFIRMEDAndDeletedAt() }
         verify(exactly = 1) { order.updateStatus(Status.CANCELED) }
         assertEquals(Status.CANCELED, order.status)
@@ -540,12 +608,14 @@ class OrderUserServiceTest {
     @DisplayName("구매자 주문 취소 - 주문번호가 존재하지 않을 때 예외처리 테스트")
     fun cancelOrder_orderNotFound_exception_test() {
         //given
-        every { order.status } returns Status.CONFIRMED
-        every { orderRepository.findByIdOrNull(orderId) } returns null
+        val order = mockk<Order> {
+            every { status } returns Status.CONFIRMED
+        }
+        every { orderRepository.findByIdOrNull(any()) } returns null
 
         //when & then
         val exception = assertThrows<OrderNotFoundException> {
-            orderUserService.cancelOrder(orderId)
+            orderUserService.cancelOrder("4b1a17b5-45f0-455a-a5e3-2c863de18b05")
         }
         assertEquals(ErrorCode.NOT_FOUND_ORDER, exception.errorCode)
     }
@@ -555,9 +625,14 @@ class OrderUserServiceTest {
     @DisplayName("주문 삭제 - 성공 테스트")
     fun updateDeleteAt_success_test() {
         //given
-        every { orderRepository.findByIdOrNull(orderId) } returns order
+        val order = mockk<Order> {
+            every { status } returns Status.CONFIRMED
+        }
+        val orderDetail = mockk<OrderDetail> {}
+
+        every { orderRepository.findByIdOrNull(any()) } returns order
         justRun { order.validateForDeletedAt() }
-        every { orderDetailRepository.findOrderDetailListByOrderId(orderId) } returns listOf(orderDetail)
+        every { orderDetailRepository.findOrderDetailListByOrderId(any()) } returns listOf(orderDetail)
         every { orderDetail.updateDeletedAt() } answers {
             every { orderDetail.deletedAt } returns LocalDateTime.now()
         }
@@ -566,12 +641,12 @@ class OrderUserServiceTest {
         }
 
         //when
-        orderUserService.updateDeleteAt(orderId)
+        orderUserService.updateDeleteAt("4b1a17b5-45f0-455a-a5e3-2c863de18b05")
 
         //then
-        verify(exactly = 1) { orderRepository.findByIdOrNull(orderId) }
+        verify(exactly = 1) { orderRepository.findByIdOrNull(any()) }
         verify(exactly = 1) { order.validateForDeletedAt() }
-        verify(exactly = 1) { orderDetailRepository.findOrderDetailListByOrderId(orderId) }
+        verify(exactly = 1) { orderDetailRepository.findOrderDetailListByOrderId(any()) }
         verify(exactly = 1) { orderDetail.updateDeletedAt() }
         verify(exactly = 1) { order.updateDeletedAt() }
 
@@ -583,11 +658,11 @@ class OrderUserServiceTest {
     @DisplayName("주문 삭제 - 주문번호가 존재하지 않을 때 예외처리 테스트")
     fun updateDeleteAt_orderNotFound_exception_test() {
         //given
-        every { orderRepository.findByIdOrNull(orderId) } returns null
+        every { orderRepository.findByIdOrNull(any()) } returns null
 
         //when & then
         val exception = assertThrows<OrderNotFoundException> {
-            orderUserService.updateDeleteAt(orderId)
+            orderUserService.updateDeleteAt("4b1a17b5-45f0-455a-a5e3-2c863de18b05")
         }
         assertEquals(ErrorCode.NOT_FOUND_ORDER, exception.errorCode)
     }
