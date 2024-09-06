@@ -8,6 +8,11 @@
             justify-content: center;
             margin-top: 20px;
         }
+
+        tr:hover {
+            cursor: pointer;
+            background-color: #f0f0f0; /* 마우스를 올렸을 때 배경색 변경 */
+        }
     </style>
 </head>
 <body>
@@ -39,11 +44,8 @@
             <th>Name</th>
             <th>Content</th>
             <th>Price</th>
-            <th>Total Stock</th>
             <th>Status</th>
-            <th>Created At</th>
-            <th>Brand Names</th>
-            <th>Option Names</th>
+            <th>Brand Name</th>
         </tr>
         </thead>
         <tbody id="product-lines-table-body">
@@ -76,27 +78,22 @@
     function loadProductLines(page = 0) {
         const searchKeyword = document.getElementById('search-input').value;
         const sortOption = document.getElementById('sort-select').value;
-        const url = `/v1/productLines/offset?page=${page}&keyword=${searchKeyword}&sort=${sortOption}`;
+        const url = `/v3/products/offset?page=${page}&keyword=${searchKeyword}&sort=${sortOption}`;
 
         fetch(url)
             .then(response => response.json())
             .then(data => {
                 const tableBody = document.getElementById('product-lines-table-body');
                 tableBody.innerHTML = ''; // 기존 내용을 지웁니다.
-                data.content.forEach((productLine) => {
-                    const brandNames = productLine.productList.map(product => product.brandName).join(', ');
-                    const optionNames = productLine.productList.map(product => product.name).join(', ');
+                data.content.forEach((products) => {
                     const row = `
-                        <tr>
-                            <td>${productLine.productLineId}</td>
-                            <td>${productLine.name}</td>
-                            <td>${productLine.content}</td>
-                            <td>${productLine.price}</td>
-                            <td>${productLine.totalStock}</td>
-                            <td>${productLine.status}</td>
-                            <td>${productLine.createdAt}</td>
-                            <td>${brandNames}</td>
-                            <td>${optionNames}</td>
+                        <tr id="product" onclick="location.href='/products/${products.productId}'">
+                            <td>${products.productId}</td>
+                            <td>${products.name}</td>
+                            <td>${products.content}</td>
+                            <td>${products.price}</td>
+                            <td>${products.saleStatus}</td>
+                            <td>${products.seller.brandName}</td>
                         </tr>
                     `;
                     tableBody.innerHTML += row;

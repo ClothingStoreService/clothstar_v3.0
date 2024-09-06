@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.configurers.*
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.store.clothstar.common.config.jwt.JwtAuthenticationFilter
@@ -25,6 +26,7 @@ class SecurityConfiguration(
     private val authenticationConfiguration: AuthenticationConfiguration,
     private val jwtAuthenticationFilter: JwtAuthenticationFilter,
     private val jwtUtil: JwtUtil,
+    private val customAuthenticationEntryPoint: AuthenticationEntryPoint,
 ) {
     @Bean
     fun passwordEncoder(): PasswordEncoder {
@@ -52,6 +54,10 @@ class SecurityConfiguration(
             .csrf { obj: CsrfConfigurer<HttpSecurity> -> obj.disable() }
             .httpBasic { obj: HttpBasicConfigurer<HttpSecurity> -> obj.disable() }
             .formLogin { obj: FormLoginConfigurer<HttpSecurity> -> obj.disable() }
+            .exceptionHandling { exception ->
+                exception.authenticationEntryPoint(customAuthenticationEntryPoint)
+            }
+
 
         http.authorizeHttpRequests(
             Customizer { auth ->
@@ -60,14 +66,14 @@ class SecurityConfiguration(
                         "/", "/login", "/userPage", "/sellerPage", "/adminPage", "/main",
                         "/v1/members/login", "/signup", "/v1/members/email/**", "/v1/access",
                         "/v1/categories/**", "/v1/products/**", "/v1/productLines/**", "/v2/productLines/**",
-                        "/productLinePagingSlice", "/productLinePagingOffset",
+                        "/productPagingSlice", "/productPagingOffset",
                         "/v3/products/**", "v3/sellers/products/**",
                         "/v1/orderdetails", "/v1/orders", "membersPagingOffset", "membersPagingSlice",
                         "/v1/orderdetails", "/v1/orders", "/v2/orders", "/v3/orders", "/v1/orders/list",
                         "/v1/orders/list", "/ordersPagingOffset", "/ordersPagingSlice", "/v2/orders/list",
                         "/v1/seller/orders/**", "/v1/seller/orders", "/v1/orders/**", "/v1/orderdetails/**",
                         "/swagger-resources/**", "/swagger-ui/**", "/v3/api-docs/**", "/v1/members/auth/**",
-                        "payment", "config-service/**"
+                        "config-service/**", "products/**", "productDetail", "payment/**", "/v1/payments/**"
                     ).permitAll()
                     .requestMatchers(HttpMethod.POST, "/v1/members").permitAll()
                     .requestMatchers(HttpMethod.POST, "/v1/sellers/**").authenticated()
