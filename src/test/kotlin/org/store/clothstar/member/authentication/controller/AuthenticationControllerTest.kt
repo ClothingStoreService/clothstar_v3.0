@@ -3,10 +3,8 @@ package org.store.clothstar.member.authentication.controller
 import com.fasterxml.jackson.databind.ObjectMapper
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
@@ -17,9 +15,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import org.springframework.transaction.annotation.Transactional
 import org.store.clothstar.common.config.redis.RedisUtil
-import org.store.clothstar.common.error.ErrorCode
-import org.store.clothstar.common.error.exception.InvalidSignupMemberRequest
-import org.store.clothstar.common.error.exception.order.OrderNotFoundException
 import org.store.clothstar.kakaoLogin.service.KakaoLoginService
 import org.store.clothstar.member.authentication.domain.SignUpType
 import org.store.clothstar.member.dto.request.KakaoMemberRequest
@@ -193,15 +188,15 @@ class AuthenticationControllerTest(
         val requestBody = objectMapper.writeValueAsString(signUpRequest)
 
         //when & then
-            mockMvc.perform(
-                post(MEMBER_URL)
-                    .param("signUpType", SignUpType.KAKAO.toString())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(requestBody)
-            )
-                .andExpect(status().isBadRequest)
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.errorCode").value(400))
-                .andExpect(jsonPath("$.message").value("회원가입 시 회원 정보가 필요합니다."))
-        }
+        mockMvc.perform(
+            post(MEMBER_URL)
+                .param("signUpType", SignUpType.KAKAO.toString())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody)
+        )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.errorCode").value(400))
+            .andExpect(jsonPath("$.message").value("회원가입 시 회원 정보가 필요합니다."))
+    }
 }
