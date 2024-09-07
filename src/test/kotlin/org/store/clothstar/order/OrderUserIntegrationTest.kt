@@ -1,6 +1,8 @@
 package org.store.clothstar.order
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -13,8 +15,7 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import org.springframework.transaction.annotation.Transactional
 import org.store.clothstar.category.repository.CategoryJpaRepository
 import org.store.clothstar.member.domain.Member
@@ -33,6 +34,9 @@ import org.store.clothstar.order.dto.request.OrderRequestWrapper
 import org.store.clothstar.order.repository.OrderDetailRepository
 import org.store.clothstar.order.repository.OrderRepository
 import org.store.clothstar.order.util.CreateOrderObject
+import org.store.clothstar.product.domain.Item
+import org.store.clothstar.product.domain.type.DisplayStatus
+import org.store.clothstar.product.domain.type.SaleStatus
 import org.store.clothstar.product.repository.ItemRepository
 import org.store.clothstar.product.repository.ProductRepository
 import java.time.LocalDateTime
@@ -196,6 +200,82 @@ class OrderUserIntegrationTest(
             .andExpect(jsonPath("$.message").value("주문이 정상적으로 생성되었습니다."))
         assertEquals(savedOrder!!.memberId, member.memberId)
         assertEquals(1, savedOrder.orderDetails.size)
+    }
+
+    @Test
+    @DisplayName("주문 생성시 상품재고가 0일경우 에러처리 테스트")
+    fun testCreateOrder_itemStockZeroException() {
+        //given
+        val member: Member = memberRepository.save(CreateOrderObject.getMember())
+        val address = addressRepository.save(CreateOrderObject.getAddress(member))
+        val category = categoryRepository.save(CreateOrderObject.getCategory())
+        sellerRepository.save(CreateOrderObject.getSeller(member))
+        val product = productRepository.save(CreateOrderObject.getProduct(member, category))
+        val item = itemRepository.save(CreateOrderObject.getItem(product)).apply {
+            stock = 0
+        }
+
+        val createOrderRequest = CreateOrderRequest(
+            paymentMethod = PaymentMethod.CARD,
+            memberId = member.memberId!!,
+            addressId = address.addressId!!
+        )
+        val createOrderDetailRequest = CreateOrderDetailRequest(
+            productId = product.productId!!,
+            itemId = item.itemId!!,
+            quantity = 1
+        )
+        val orderRequestWrapper = OrderRequestWrapper(createOrderRequest, createOrderDetailRequest)
+        val requestBody = objectMapper.writeValueAsString(orderRequestWrapper)
+
+        //when & then
+        val actions: ResultActions = mockMvc.perform(
+            MockMvcRequestBuilders.post(ORDER_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody)
+        )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.errorCode").value(400))
+            .andExpect(jsonPath("$.message").value("품절된 상품입니다."))
+    }
+
+    @Test
+    @DisplayName("주문 생성시, 주문개수가 상품재고보다 많을 때 재고 부족 예외처리 테스트")
+    fun testCreateOrder_InsufficientStock_Exception() {
+        //given
+        val member: Member = memberRepository.save(CreateOrderObject.getMember())
+        val address = addressRepository.save(CreateOrderObject.getAddress(member))
+        val category = categoryRepository.save(CreateOrderObject.getCategory())
+        sellerRepository.save(CreateOrderObject.getSeller(member))
+        val product = productRepository.save(CreateOrderObject.getProduct(member, category))
+        val item = itemRepository.save(CreateOrderObject.getItem(product)).apply {
+            stock = 1
+        }
+
+        val createOrderRequest = CreateOrderRequest(
+            paymentMethod = PaymentMethod.CARD,
+            memberId = member.memberId!!,
+            addressId = address.addressId!!
+        )
+        val createOrderDetailRequest = CreateOrderDetailRequest(
+            productId = product.productId!!,
+            itemId = item.itemId!!,
+            quantity = 5
+        )
+        val orderRequestWrapper = OrderRequestWrapper(createOrderRequest, createOrderDetailRequest)
+        val requestBody = objectMapper.writeValueAsString(orderRequestWrapper)
+
+        //when & then
+        val actions: ResultActions = mockMvc.perform(
+            MockMvcRequestBuilders.post(ORDER_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody)
+        )
+            .andExpect(status().isBadRequest)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.errorCode").value(400))
+            .andExpect(jsonPath("$.message").value("주문 개수가 상품 재고보다 더 많아 요청을 처리할 수 없습니다."))
     }
 
     @Test
