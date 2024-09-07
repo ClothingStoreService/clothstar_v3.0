@@ -1,8 +1,6 @@
 package org.store.clothstar.order
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.mockk.every
-import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -34,9 +32,6 @@ import org.store.clothstar.order.dto.request.OrderRequestWrapper
 import org.store.clothstar.order.repository.OrderDetailRepository
 import org.store.clothstar.order.repository.OrderRepository
 import org.store.clothstar.order.util.CreateOrderObject
-import org.store.clothstar.product.domain.Item
-import org.store.clothstar.product.domain.type.DisplayStatus
-import org.store.clothstar.product.domain.type.SaleStatus
 import org.store.clothstar.product.repository.ItemRepository
 import org.store.clothstar.product.repository.ProductRepository
 import java.time.LocalDateTime
@@ -229,7 +224,7 @@ class OrderUserIntegrationTest(
         val requestBody = objectMapper.writeValueAsString(orderRequestWrapper)
 
         //when & then
-        val actions: ResultActions = mockMvc.perform(
+        mockMvc.perform(
             MockMvcRequestBuilders.post(ORDER_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody)
@@ -267,7 +262,7 @@ class OrderUserIntegrationTest(
         val requestBody = objectMapper.writeValueAsString(orderRequestWrapper)
 
         //when & then
-        val actions: ResultActions = mockMvc.perform(
+        mockMvc.perform(
             MockMvcRequestBuilders.post(ORDER_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody)
