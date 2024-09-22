@@ -8,7 +8,7 @@ import jakarta.persistence.Embeddable
 @Embeddable
 data class ItemAttribute(
     var optionId: Long,
-    var name: String,
-    var value: String,
+    var option: String,
     var valueId: Long,
+    var value: String,
 )
