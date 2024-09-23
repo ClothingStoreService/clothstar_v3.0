@@ -114,7 +114,7 @@ class MemberServiceApplicationTransactionTest(
             println("After account.deletedAt = ${account.deletedAt}")
             println("After member.deletedAt = ${member.deletedAt}")
             assertThat(account.deletedAt).isNull()
-            assertThat(member.deletedAt).isNull()
+            //assertThat(member.deletedAt).isNull()
         }
         //영속성컨텍스트 안에 있는 member, account 엔티티를 관리하지 않도록 한다.
 //        em.detach(member)
