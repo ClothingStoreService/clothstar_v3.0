@@ -5,6 +5,9 @@ plugins {
     kotlin("jvm") version "1.9.24"
     kotlin("plugin.spring") version "1.9.24"
     kotlin("plugin.jpa") version "1.9.24" //Entity의 기본생성자를 자동으로 만들어줌
+
+    java
+    jacoco
 }
 
 group = "org.store"
@@ -18,6 +21,7 @@ java {
 
 repositories {
     mavenCentral()
+    maven(url = "https://jitpack.io")
 }
 
 dependencies {
@@ -82,12 +86,75 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-redis") //redis
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
+    // 아임포트(결제) 관련
+    implementation("com.github.iamport:iamport-rest-client-java:0.2.23")
+
     //vault
     implementation("org.springframework.cloud:spring-cloud-starter-bootstrap:4.1.4")
     implementation("org.springframework.cloud:spring-cloud-config-server:4.1.3")
     implementation("org.springframework.cloud:spring-cloud-starter-vault-config:4.1.3")
 }
 
+jacoco {
+    // JaCoCo 버전
+    toolVersion = "0.8.8"
+
+//  테스트결과 리포트를 저장할 경로 변경
+//  default는 "${project.reporting.baseDir}/jacoco"
+//  reportsDir = file("$buildDir/customJacocoReportDir")
+}
+
+// kotlin DSL
+
+tasks.jacocoTestReport {
+    reports {
+        // 원하는 리포트를 켜고 끌 수 있습니다.
+//        html.isEnabled = true
+//        xml.isEnabled = false
+//        csv.isEnabled = false
+
+        //.isEnabled 가 Deprecated 되었습니다 (저는 gradle 7.2 버전에 kotlin DSL 사용하고 있습니다)
+        html.required.set(true)
+        xml.required.set(false)
+        csv.required.set(false)
+
+//  각 리포트 타입 마다 리포트 저장 경로를 설정할 수 있습니다.
+//  html.destination = file("$buildDir/jacocoHtml")
+//  xml.destination = file("$buildDir/jacoco.xml")
+    }
+}
+
+tasks.jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            // 룰을 간단히 켜고 끌 수 있다.
+            enabled = true
+
+            // 룰을 체크할 단위는 클래스 단위
+            element = "CLASS"
+
+            // 메서드 커버리지를 최소한 00% 만족시켜야 한다.
+            limit {
+                counter = "METHOD"
+                value = "COVEREDRATIO"
+                minimum = "0.00".toBigDecimal()
+            }
+
+            // 라인 커버리지를 최소한 00% 만족시켜야 한다.
+            limit {
+                counter = "LINE"
+                value = "COVEREDRATIO"
+                minimum = "0.00".toBigDecimal()
+            }
+        }
+    }
+}
+
 tasks.withType<Test> {
     useJUnitPlatform()
+    finalizedBy("jacocoTestReport")
+}
+
+tasks.jacocoTestReport {
+    finalizedBy("jacocoTestCoverageVerification")
 }

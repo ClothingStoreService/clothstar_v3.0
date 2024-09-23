@@ -1,8 +1,8 @@
 package org.store.clothstar.member.service
 
-import jakarta.transaction.Transactional
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.store.clothstar.common.error.ErrorCode
 import org.store.clothstar.common.error.exception.DuplicatedEmailException
 import org.store.clothstar.common.error.exception.NotFoundAccountException

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>상품 상세</title>
+    <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+    <script
+            src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"
+    ></script>
+</head>
+<body>
+<div class="container">
+    <input type="hidden" id="productId" th:value="${productId}"/>
+
+    <table class="table" id="product">
+        <p th:text="|상품 아이디 : ${productId}|"></p>
+        <thead class="thead-dark">
+        <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>description</th>
+            <th>Price</th>
+        </tr>
+        </thead>
+        <tbody id="product-body">
+        <!-- JavaScript로 데이터 로드 -->
+        </tbody>
+    </table>
+</div>
+
+<div class="container" style="padding-left: 60px;">
+    <table class="table" id="item">
+        <thead>
+        <tr>
+            <th>itemId</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>구매</th>
+        </tr>
+        </thead>
+        <tbody id="item-body">
+        <!-- JavaScript로 데이터 로드 -->
+        </tbody>
+    </table>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        loadProductDetail();
+    });
+
+    function loadProductDetail() {
+        var productId = document.getElementById("productId").value;
+        const url = `/v3/products/${productId}`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                const tableProductBody = document.getElementById('product-body');
+                tableProductBody.innerHTML = ''; // 기존 내용을 지웁니다.
+                console.log(data)
+                const productRow = `
+                        <tr>
+                            <td><img src="${data.imageList[0].url}" height="100"></td>
+                            <td>${data.name}</td>
+                            <td>${data.description}</td>
+                            <td>${data.price}</td>
+                        </tr>
+                    `;
+
+                tableProductBody.innerHTML += productRow;
+
+
+                const tableItemBody = document.getElementById('item-body');
+                tableItemBody.innerHTML = ''; // 기존 내용을 지웁니다.
+                data.items.forEach((items) => {
+                    const row = `
+                        <tr>
+                            <td>${items.id}</td>
+                            <td>${items.name}</td>
+                            <td>${items.price}</td>
+                            <td>${items.remainStock}</td>
+                            <td><button onclick="location.href='/payment/${productId}/${items.id}'">구매하기</button></td>
+                    </tr>
+                    `;
+                    tableItemBody.innerHTML += row;
+                });
+
+            })
+            .catch(error => {
+                console.error('Error fetching product data:', error);
+            });
+    }
+</script>
+</body>
+</html>

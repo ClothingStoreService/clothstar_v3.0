@@ -63,7 +63,7 @@ class MemberServiceImpl(
     override fun getMemberById(memberId: Long): MemberResponse {
         log.info { "회원 상세 조회 memberId = ${memberId}" }
 
-        return memberRepository.findByMemberId(memberId)?.let { member ->
+        return memberRepository.findByIdOrNull(memberId)?.let { member ->
             MemberResponse(
                 memberId = member.memberId!!,
                 name = member.name,

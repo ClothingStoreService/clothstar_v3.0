@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>결제 화면</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+    <script
+            src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"
+    ></script>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script>
+        //본 예제에서는 도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합하여 올바른 주소를 구성하는 방법을 설명합니다.
+        function sample4_execDaumPostcode() {
+            new daum.Postcode({
+                oncomplete: function (data) {
+                    // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+                    // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
+                    // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                    var roadAddr = data.roadAddress; // 도로명 주소 변수
+                    var extraRoadAddr = ''; // 참고 항목 변수
+
+                    // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+                    // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+                    if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+                        extraRoadAddr += data.bname;
+                    }
+                    // 건물명이 있고, 공동주택일 경우 추가한다.
+                    if (data.buildingName !== '' && data.apartment === 'Y') {
+                        extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+                    if (extraRoadAddr !== '') {
+                        extraRoadAddr = ' (' + extraRoadAddr + ')';
+                    }
+
+                    // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                    document.getElementById('sample4_postcode').value = data.zonecode;
+                    document.getElementById("sample4_roadAddress").value = roadAddr;
+                    document.getElementById("sample4_jibunAddress").value = data.jibunAddress;
+
+                    // 참고항목 문자열이 있을 경우 해당 필드에 넣는다.
+                    if (roadAddr !== '') {
+                        document.getElementById("sample4_extraAddress").value = extraRoadAddr;
+                    } else {
+                        document.getElementById("sample4_extraAddress").value = '';
+                    }
+
+                    var guideTextBox = document.getElementById("guide");
+                    // 사용자가 '선택 안함'을 클릭한 경우, 예상 주소라는 표시를 해준다.
+                    if (data.autoRoadAddress) {
+                        var expRoadAddr = data.autoRoadAddress + extraRoadAddr;
+                        guideTextBox.innerHTML = '(예상 도로명 주소 : ' + expRoadAddr + ')';
+                        guideTextBox.style.display = 'block';
+
+                    } else if (data.autoJibunAddress) {
+                        var expJibunAddr = data.autoJibunAddress;
+                        guideTextBox.innerHTML = '(예상 지번 주소 : ' + expJibunAddr + ')';
+                        guideTextBox.style.display = 'block';
+                    } else {
+                        guideTextBox.innerHTML = '';
+                        guideTextBox.style.display = 'none';
+                    }
+                }
+            }).open();
+        }
+    </script>
+    <script>
+        var IMP = window.IMP;
+        IMP.init("imp23083500");
+
+        function requestPay() {
+            const productId = document.getElementById("productId").value;
+            const itemId = document.getElementById("itemId").value;
+            const itemOption = document.getElementById("itemOption").value;
+            const itemName = document.getElementById('itemName').value;
+            const quantity = document.getElementById('quantity').value;
+            const price = document.getElementById('price').value;
+            const buyerEmail = document.getElementById('buyerEmail').value;
+            const buyerName = document.getElementById('buyerName').value;
+            const buyerTelNo = document.getElementById('buyerTelNo').value;
+            const postCode = document.getElementById('sample4_postcode').value;
+            const addr = document.getElementById('sample4_jibunAddress').value;
+
+            IMP.request_pay(
+                {
+                    pg: "html5_inicis.INIpayTest",
+                    pay_method: "card",
+                    merchant_uid: `payment-${crypto.randomUUID()}`, // 주문 고유 번호
+                    name: itemName,
+                    amount: price,
+                    buyer_email: buyerEmail,
+                    buyer_name: buyerName,
+                    buyer_tel: buyerTelNo,
+                    buyer_addr: addr,
+                    buyer_postcode: postCode,
+                },
+                function (response) {
+                    // 결제 종료 시 호출되는 콜백 함수
+                    // response.imp_uid 값으로 결제 단건조회 API를 호출하여 결제 결과를 확인하고,
+                    // 결제 결과를 처리하는 로직을 작성합니다.
+                    if (response.success) {
+                        /* response 예제
+                        {
+                            "success": true,
+                            "imp_uid": "imp_351689807761",
+                            "pay_method": "card",
+                            "merchant_uid": "payment-41698881-e87b-468e-be62-b4485941",
+                            "name": "오구 슬리퍼",
+                            "paid_amount": 1990,
+                            "currency": "KRW",
+                            "pg_provider": "html5_inicis",
+                            "pg_type": "payment",
+                            "pg_tid": "StdpayCARDINIpayTest20240907044147194653",
+                            "apply_num": "61058823",
+                            "buyer_name": "강현수",
+                            "buyer_email": "rkdgustn77@naver.com",
+                            "buyer_tel": "010-3950-5837",
+                            "buyer_addr": "서울 노원구 공릉동 366-5",
+                            "buyer_postcode": "01839",
+                            "custom_data": null,
+                            "status": "paid",
+                            "paid_at": 1725651707,
+                            "receipt_url": "https://iniweb.inicis.com/DefaultWebApp/mall/cr/cm/mCmReceipt_head.jsp?noTid=StdpayCARDINIpayTest20240907044147194653&noMethod=1",
+                            "card_name": "BC카드",
+                            "bank_name": null,
+                            "card_quota": 0,
+                            "card_number": "910003*********5"
+                        }*/
+                        console.log(response)
+                        if (response.success) {
+                            console.log("구매이력 저장 로직실행")
+                            fetch("/v1/payments", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify({
+                                    productId: productId,
+                                    itemId: itemId,
+                                    impUid: response.imp_uid,
+                                    merchantUid: response.merchant_uid,
+                                    itemName: response.name,
+                                    itemOption: itemOption,
+                                    buyQuantity: quantity,
+                                    paidAmount: response.paid_amount,
+                                    buyerName: response.buyer_name,
+                                    buyerEmail: response.buyer_email,
+                                    buyerTelNo: response.buyer_tel,
+                                    buyerAddr: response.buyer_addr,
+                                    buyerPostCode: response.buyer_postcode,
+                                }),
+                            }).then((res) => res.json())
+                                .then((res) => {
+                                    console.log(res)
+                                    if (res.success) {
+                                        alert(res.message);
+                                    } else {
+                                        alert(res.message);
+                                    }
+                                }).catch(() => {
+                                alert("ajax 호출 에러")
+                            });
+                        }
+                    } else {
+                        console.log(response)
+                        alert(response)
+                    }
+                },
+            );
+        }
+
+        function cancelPay() {
+            jQuery.ajax({
+                // 예: http://www.myservice.com/payments/cancel
+                "url": "{환불정보를 수신할 고객사 서비스 URL}",
+                "type": "POST",
+                "contentType": "application/json",
+                "data": JSON.stringify({
+                    "merchant_uid": "{결제건의 주문번호}", // 예: ORD20180131-0000011
+                    "cancel_request_amount": 2000, // 환불금액
+                    "reason": "테스트 결제 환불", // 환불사유
+                    // [가상계좌 환불시 필수입력] 환불 수령계좌 예금주
+                    "refund_holder": "강현수",
+                    // [가상계좌 환불시 필수입력] 환불 수령계좌 은행코드(예: KG이니시스의 경우 신한은행은 88번)
+                    "refund_bank": "88",
+                    // [가상계좌 환불시 필수입력] 환불 수령계좌 번호
+                    "refund_account": "56211105948400"
+                }),
+                "dataType": "json"
+            });
+        }
+
+
+    </script>
+</head>
+<body>
+<input type="hidden" id="itemId" th:value="${itemId}"/>
+
+<div class="container">
+    <div class="py-2 text-center">
+        <h4>주문 상세</h4>
+    </div>
+
+    <div>
+        <label for="productId">상품 ID</label>
+        <input type="text" id="productId" name="productId" class="form-control"
+               th:value="${productId}" readonly>
+    </div>
+    <div>
+        <label for="itemName">상품명</label>
+        <input type="text" id="itemName" name="itemName" class="form-control" value="" readonly></div>
+    <div>
+    <div>
+        <label for="itemOption">옵션</label>
+        <input type="text" id="itemOption" name="itemOption" class="form-control" value="" readonly></div>
+        <div>
+            <label for="stock">재고 수량</label>
+            <input type="text" id="stock" name="stock" class="form-control" value="" readonly></div>
+    <div>
+        <label for="price">가격</label>
+        <input type="text" id="price" name="price" class="form-control" value="" readonly>
+    </div>
+    <div>
+        <label for="quantity">구매 수량</label>
+        <input type="text" id="quantity" name="quantity" class="form-control"
+               value="1" readonly>
+    </div>
+
+    <div class="py-2 text-center">
+        <h4>구매자 정보</h4>
+    </div>
+    <div>
+        <label for="buyerName">이름</label>
+        <input type="text" id="buyerName" name="buyerName" class="form-control">
+    </div>
+    <div>
+        <label for="buyerEmail">이메일</label>
+        <input type="text" id="buyerEmail" name="buyerEmail" class="form-control"></div>
+    <div>
+
+    <div>
+        <label for="buyerTelNo">전화번호</label>
+        <input type="text" id="buyerTelNo" name="buyerTelNo" class="form-control"></div>
+    <div>
+
+    <div class="py-2 text-center">
+        <h4>배송지</h4>
+    </div>
+
+    <div>
+        <input type="text" id="sample4_postcode" placeholder="우편번호">
+        <input type="button" onclick="sample4_execDaumPostcode()" value="우편번호 찾기"><br>
+        <input type="text" id="sample4_roadAddress" placeholder="도로명주소">
+        <input type="text" id="sample4_jibunAddress" placeholder="지번주소">
+        <span id="guide" style="color:#999;display:none"></span>
+        <input type="text" id="sample4_detailAddress" placeholder="상세주소">
+        <input type="text" id="sample4_extraAddress" placeholder="참고항목">
+    </div>
+
+    <div class="py-5 text-center">
+        <button onclick="requestPay()">결제하기</button>
+    </div>
+</div>
+</body>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        loadProductDetail();
+    });
+
+    function loadProductDetail() {
+        var productId = document.getElementById("productId").value;
+        var itemId = document.getElementById("itemId").value;
+        const url = `/v3/products/${productId}`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                const itemName = document.getElementById('itemName');
+                const price = document.getElementById('price');
+                const itemOption = document.getElementById('itemOption');
+                const stock = document.getElementById('stock');
+                itemName.value = data.name
+
+                var item = data.items.filter(item => {
+                    console.log(item.id, itemId, item.id == itemId)
+                    return item.id == itemId;
+                });
+
+                console.log(item[0]);
+                price.value = item[0].price;
+                itemOption.value = item[0].name;
+                stock.value = item[0].remainStock;
+            })
+            .catch(error => {
+                console.error('Error fetching product data:', error);
+            });
+    }
+</script>
+
+</html>

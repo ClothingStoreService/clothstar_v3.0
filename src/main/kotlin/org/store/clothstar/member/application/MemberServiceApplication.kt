@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Slice
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.store.clothstar.member.authentication.service.AuthenticationService
 import org.store.clothstar.member.domain.MemberRole
 import org.store.clothstar.member.dto.request.CreateMemberRequest
@@ -13,6 +14,7 @@ import org.store.clothstar.member.service.AccountService
 import org.store.clothstar.member.service.MemberService
 
 @Service
+@Transactional
 class MemberServiceApplication(
     private val memberService: MemberService,
     private val accountService: AccountService,
@@ -42,11 +44,13 @@ class MemberServiceApplication(
         memberService.updatePassword(accountId, password)
     }
 
+    @Transactional
     fun updateDeleteAt(memberId: Long) {
         memberService.updateDeleteAt(memberId)
         accountService.updateDeletedAt(memberId, MemberRole.USER)
     }
 
+    @Transactional
     fun signUp(createMemberRequest: CreateMemberRequest): Long {
         //인증번호 확인
         authenticationService.verifyEmailCertifyNum(createMemberRequest.email, createMemberRequest.certifyNum)

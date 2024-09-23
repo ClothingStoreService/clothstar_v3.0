@@ -37,6 +37,7 @@ spring:
 
 logging.level:
   org.hibernate.SQL: debug
+  org.springframework.transaction.interceptor: trace
 
 jwt:
   secret_key: Y2xvdGhzaG9wcGluZ21hbGxjbG90aHN0YXJjbG90aHNob3BwaW5nbWFsbGNsb3Roc3RhcmNsb3Roc2hvcHBpbmdtYWxsY2xvdGhzdGFyY2xvdGhzaG9wcGluZ21hbGxjbG90aHN0YXIK
