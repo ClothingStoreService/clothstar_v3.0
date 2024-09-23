@@ -32,6 +32,31 @@ spring:
       port: 6379
       duration: 600
 
+  #oauth2
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client_id: ${kakao.client.id}
+            client_secret: ${kakao.client.secret}
+            redirect_uri: http://localhost:8080/auth/kakao/callback
+            scope:
+              - name
+              - email
+              - profile_image
+            authorization_grant_type: authorization_code
+            client_name: Kakao
+            client_authentication_method: post
+            provider: kakao
+
+        provider:
+          kakao:
+            authorization_uri: https://kauth.kakao.com/oauth/authorize
+            token_uri: https://kauth.kakao.com/oauth/token
+            user_info_uri: https://kapi.kakao.com/v2/user/me
+            user_name_attribute: id
+
 email.send: ${email.send}
 
 springdoc:

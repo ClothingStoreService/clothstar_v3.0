@@ -14,17 +14,25 @@ import org.springframework.web.bind.annotation.*
 import org.store.clothstar.common.dto.ErrorResponseDTO
 import org.store.clothstar.common.dto.MessageDTO
 import org.store.clothstar.common.dto.SaveResponseDTO
+import org.store.clothstar.common.error.ErrorCode
+import org.store.clothstar.common.error.exception.InvalidSignupMemberRequest
+import org.store.clothstar.common.error.exception.InvalidSignupType
 import org.store.clothstar.member.application.MemberServiceApplication
+import org.store.clothstar.member.authentication.domain.SignUpType
+import org.store.clothstar.member.authentication.service.KakaoSignUpService
+import org.store.clothstar.member.authentication.service.NormalSignUpService
+import org.store.clothstar.member.authentication.service.SignUpServiceFactory
 import org.store.clothstar.member.dto.request.CertifyNumRequest
-import org.store.clothstar.member.dto.request.CreateMemberRequest
 import org.store.clothstar.member.dto.request.MemberLoginRequest
 import org.store.clothstar.member.dto.request.ModifyPasswordRequest
+import org.store.clothstar.member.dto.request.SignUpRequest
 import org.store.clothstar.member.dto.response.MemberResponse
 
 @Tag(name = "Auth", description = "회원가입과 인증에 관한 API 입니다.")
 @RestController
 class AuthenticationController(
     private val memberServiceApplication: MemberServiceApplication,
+    private val signUpServiceFactory: SignUpServiceFactory,
 ) {
     private val log = KotlinLogging.logger {}
 
@@ -62,15 +70,35 @@ class AuthenticationController(
 
     @Operation(summary = "회원가입", description = "회원가입시 회원 정보를 저장한다.")
     @PostMapping("/v1/members")
-    fun signup(@Validated @RequestBody createMemberDTO: CreateMemberRequest): ResponseEntity<SaveResponseDTO> {
-        val memberId = memberServiceApplication.signUp(createMemberDTO)
+    fun signup(
+        @Validated @RequestBody signUpRequest: SignUpRequest,
+        @RequestParam signUpType: SignUpType,
+    ): ResponseEntity<SaveResponseDTO> {
+        val signUpService = signUpServiceFactory.getSignUpService(signUpType)
+        log.info { "SignUpService 종류: $signUpService" }
+
+        val memberId = when (signUpService) {
+            // 일반 회원가입
+            is NormalSignUpService -> {
+                val normalMemberRequest = signUpRequest.createMemberRequest
+                    ?: throw InvalidSignupMemberRequest(ErrorCode.INVALID_SIGNUP_MEMBER_REQUEST)
+                signUpService.signUp(normalMemberRequest)
+            }
+            // 카카오 회원가입
+            is KakaoSignUpService -> {
+                val kakaoMemberRequest = signUpRequest.kakaoMemberRequest
+                    ?: throw InvalidSignupMemberRequest(ErrorCode.INVALID_SIGNUP_MEMBER_REQUEST)
+                signUpService.signUp(kakaoMemberRequest)
+            }
+
+            else -> throw InvalidSignupType(ErrorCode.INVLIAD_SIGNUP_TYPE)
+        }
 
         val saveResponseDTO = SaveResponseDTO(
             id = memberId,
             statusCode = HttpStatus.CREATED.value(),
             message = "회원가입이 정상적으로 되었습니다.",
         )
-
         return ResponseEntity(saveResponseDTO, HttpStatus.CREATED)
     }
 

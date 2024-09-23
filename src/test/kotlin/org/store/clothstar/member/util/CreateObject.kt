@@ -3,10 +3,7 @@ package org.store.clothstar.member.util
 import org.store.clothstar.member.domain.*
 import org.store.clothstar.member.domain.vo.AddressInfo
 import org.store.clothstar.member.domain.vo.MemberShoppingActivity
-import org.store.clothstar.member.dto.request.CreateAddressRequest
-import org.store.clothstar.member.dto.request.CreateMemberRequest
-import org.store.clothstar.member.dto.request.CreateSellerRequest
-import org.store.clothstar.member.dto.request.MemberLoginRequest
+import org.store.clothstar.member.dto.request.*
 
 class CreateObject {
     companion object {
@@ -30,6 +27,15 @@ class CreateObject {
                 name = "현수",
                 telNo = "010-1234-1234",
                 certifyNum = certifyNum,
+            )
+        }
+
+        fun getKakaoMemberRequest(name: String, telNo: String, code: String): KakaoMemberRequest {
+            return KakaoMemberRequest(
+                name = name,
+                telNo = telNo,
+                code = code,
+                email = null,
             )
         }
 

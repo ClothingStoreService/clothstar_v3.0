@@ -16,8 +16,11 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.transaction.annotation.Transactional
+import org.store.clothstar.common.config.redis.RedisUtil
+import org.store.clothstar.member.authentication.domain.SignUpType
 import org.store.clothstar.member.dto.request.CreateMemberRequest
 import org.store.clothstar.member.dto.request.ModifyPasswordRequest
+import org.store.clothstar.member.dto.request.SignUpRequest
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -26,6 +29,7 @@ import org.store.clothstar.member.dto.request.ModifyPasswordRequest
 class MemberSignupValidTest(
     @Autowired private val mockMvc: MockMvc,
     @Autowired private val objectMapper: ObjectMapper,
+    @Autowired private val redisUtil: RedisUtil,
 ) {
     private val MEMBER_URL = "/v1/members"
 
@@ -41,19 +45,21 @@ class MemberSignupValidTest(
             telNo = "010-1234-1234",
             certifyNum = "gg"
         )
+        val signUpRequest = SignUpRequest(createMemberRequest, null)
+        val requestBody = objectMapper.writeValueAsString(signUpRequest)
 
-        val requestBody = objectMapper.writeValueAsString(createMemberRequest)
-
-        //when
         val actions = mockMvc.perform(
             post(MEMBER_URL)
+                .param("signUpType", SignUpType.NORMAL.toString())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody)
         )
 
         //then
         actions.andExpect(status().is4xxClientError())
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.errorMap.password").value("비밀번호는 최소 8자 이상이어야 합니다."))
+        actions.andExpect(
+            MockMvcResultMatchers.jsonPath("$.errorMap['createMemberRequest.password']").value("비밀번호는 최소 8자 이상이어야 합니다.")
+        )
     }
 
     @DisplayName("회원가입시 이름은 필수 값이다.")
@@ -68,12 +74,12 @@ class MemberSignupValidTest(
             telNo = "010-1234-1234",
             certifyNum = "gg"
         )
+        val signUpRequest = SignUpRequest(createMemberRequest, null)
+        val requestBody = objectMapper.writeValueAsString(signUpRequest)
 
-        val requestBody = objectMapper.writeValueAsString(createMemberRequest)
-
-        //when
         val actions = mockMvc.perform(
             post(MEMBER_URL)
+                .param("signUpType", SignUpType.NORMAL.toString())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody)
         )
@@ -81,7 +87,9 @@ class MemberSignupValidTest(
         //then
         Assertions.assertThat(createMemberRequest.password.length).isLessThan(8)
         actions.andExpect(status().is4xxClientError())
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.errorMap.name").value("이름은 비어 있을 수 없습니다."))
+        actions.andExpect(
+            MockMvcResultMatchers.jsonPath("$.errorMap.['createMemberRequest.name']").value("이름은 비어 있을 수 없습니다.")
+        )
     }
 
     @DisplayName("회원가입시 전화번호 양식이 지켜져야 한다.")
@@ -96,12 +104,12 @@ class MemberSignupValidTest(
             telNo = "010",
             certifyNum = "gg"
         )
+        val signUpRequest = SignUpRequest(createMemberRequest, null)
+        val requestBody = objectMapper.writeValueAsString(signUpRequest)
 
-        val requestBody = objectMapper.writeValueAsString(createMemberRequest)
-
-        //when
         val actions = mockMvc.perform(
             post(MEMBER_URL)
+                .param("signUpType", SignUpType.NORMAL.toString())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody)
         )
@@ -109,7 +117,9 @@ class MemberSignupValidTest(
         //then
         Assertions.assertThat(createMemberRequest.password.length).isLessThan(8)
         actions.andExpect(status().is4xxClientError())
-        actions.andExpect(MockMvcResultMatchers.jsonPath("$.errorMap.telNo").value("유효하지 않은 전화번호 형식입니다."))
+        actions.andExpect(
+            MockMvcResultMatchers.jsonPath("$.errorMap.['createMemberRequest.telNo']").value("유효하지 않은 전화번호 형식입니다.")
+        )
     }
 
     @DisplayName("비밀번호 변경 요청시에도 비밀번호는 8자리 이상이여야 한다.")

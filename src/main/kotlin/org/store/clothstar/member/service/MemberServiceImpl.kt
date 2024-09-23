@@ -15,6 +15,7 @@ import org.store.clothstar.common.error.exception.NotFoundMemberException
 import org.store.clothstar.member.domain.Member
 import org.store.clothstar.member.domain.vo.MemberShoppingActivity
 import org.store.clothstar.member.dto.request.CreateMemberRequest
+import org.store.clothstar.member.dto.request.KakaoMemberRequest
 import org.store.clothstar.member.dto.request.ModifyNameRequest
 import org.store.clothstar.member.dto.response.MemberResponse
 import org.store.clothstar.member.repository.AccountRepository
@@ -108,7 +109,7 @@ class MemberServiceImpl(
             ?: throw NotFoundMemberException(ErrorCode.NOT_FOUND_ACCOUNT)
 
         val encodedPassword = passwordEncoder.encode(password)
-        val originalPassword: String = account.password
+        val originalPassword: String = account.password!!
 
         //valid check
         if (!passwordEncoder.matches(originalPassword, encodedPassword)) {
@@ -126,6 +127,24 @@ class MemberServiceImpl(
         val member = Member(
             telNo = createMemberDTO.telNo,
             name = createMemberDTO.name,
+            memberShoppingActivity = MemberShoppingActivity.init(),
+        )
+
+        memberRepository.save(member)
+
+        return member.memberId!!
+    }
+
+    @Transactional
+    override fun saveKakaoMember(createKakaoMemberDTO: KakaoMemberRequest): Long {
+        // 전화번호 중복 검사
+        memberRepository.findByTelNo(createKakaoMemberDTO.telNo)?.let {
+            throw DuplicatedTelNoException(ErrorCode.DUPLICATED_TEL_NO)
+        }
+
+        val member = Member(
+            telNo = createKakaoMemberDTO.telNo,
+            name = createKakaoMemberDTO.name,
             memberShoppingActivity = MemberShoppingActivity.init(),
         )
 
