@@ -50,6 +50,7 @@ class MemberServiceApplication(
         accountService.updateDeletedAt(memberId, MemberRole.USER)
     }
 
+    @Transactional
     fun signUp(createMemberRequest: CreateMemberRequest): Long {
         //인증번호 확인
         authenticationService.verifyEmailCertifyNum(createMemberRequest.email, createMemberRequest.certifyNum)
