@@ -10,9 +10,5 @@
 - 강현수
 - 유수빈
 
-## 프로젝트 기간
-
-이 프로젝트의 기간은 2024년 7월 23일부터 2024년 8월 30일까지입니다.
-
 ## CI/CD Architecture 
 ![image](https://github.com/user-attachments/assets/8dc985e5-68b8-4982-897b-c8e60d8b1b6f)
