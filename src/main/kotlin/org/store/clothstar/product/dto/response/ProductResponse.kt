@@ -138,7 +138,7 @@ class ItemAttributeResponse(
         fun from(attribute: ItemAttribute): ItemAttributeResponse {
             return ItemAttributeResponse(
                 optionId = attribute.optionId,
-                name = attribute.name,
+                name = attribute.option,
                 value = attribute.value,
                 valueId = attribute.valueId
             )

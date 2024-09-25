@@ -58,7 +58,7 @@ class ItemService(
             attributes = optionValues.map { optionValue ->
                 ItemAttribute(
                     optionId = optionValue.productOption.productOptionId!!,
-                    name = optionValue.productOption.optionName,
+                    option = optionValue.productOption.optionName,
                     value = optionValue.value,
                     valueId = optionValue.optionValueId!!
                 )
